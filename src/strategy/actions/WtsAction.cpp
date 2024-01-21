@@ -48,7 +48,7 @@ bool WtsAction::Execute(Event event)
             continue;
 
         std::ostringstream tell;
-        tell << "I'll buy " << chat->FormatItem(proto) << " for " << chat->formatMoney(buyPrice);
+        tell << "我将购买 " << chat->FormatItem(proto) << " 买价 " << chat->formatMoney(buyPrice);
 
         // ignore random bot chat filter
         bot->Whisper(tell.str(), LANG_UNIVERSAL, owner);

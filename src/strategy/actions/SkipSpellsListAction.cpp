@@ -28,7 +28,7 @@ bool SkipSpellsListAction::Execute(Event event)
     if (cmd == "reset")
     {
         skipSpells.clear();
-        botAI->TellMaster("Ignored spell list is empty");
+        botAI->TellMaster("法术忽略清单是空的");
         return true;
     }
 
@@ -37,11 +37,11 @@ bool SkipSpellsListAction::Execute(Event event)
         std::ostringstream out;
         if (skipSpells.empty())
         {
-            botAI->TellMaster("Ignored spell list is empty");
+            botAI->TellMaster("法术忽略清单是空的");
             return true;
         }
 
-        out << "Ignored spell list: ";
+        out << "法术忽略清单：";
 
         bool first = true;
         for (uint32 spellId : skipSpells)
@@ -69,7 +69,7 @@ bool SkipSpellsListAction::Execute(Event event)
         uint32 spellId = chat->parseSpell(cmd);
         if (!spellId)
         {
-            botAI->TellError("Unknown spell");
+            botAI->TellError("未知法术");
             return false;
         }
 
@@ -85,7 +85,7 @@ bool SkipSpellsListAction::Execute(Event event)
                 skipSpells.erase(j);
 
                 std::ostringstream out;
-                out << chat->FormatSpell(spellInfo) << " removed from ignored spells";
+                out << chat->FormatSpell(spellInfo) << " 从被忽略的法术中移除";
                 botAI->TellMaster(out);
                 return true;
             }
@@ -98,7 +98,7 @@ bool SkipSpellsListAction::Execute(Event event)
                 skipSpells.insert(spellId);
 
                 std::ostringstream out;
-                out << chat->FormatSpell(spellInfo) << " added to ignored spells";
+                out << chat->FormatSpell(spellInfo) << " 添加到忽略法术";
                 botAI->TellMaster(out);
                 return true;
             }

@@ -32,7 +32,7 @@ bool UseMeetingStoneAction::Execute(Event event)
 
     if (bot->IsInCombat())
     {
-        botAI->TellError("I am in combat");
+        botAI->TellError("我正在战斗");
         return false;
     }
 
@@ -86,13 +86,13 @@ bool SummonAction::Execute(Event event)
 
     if (SummonUsingGos(master, bot) || SummonUsingNpcs(master, bot))
     {
-        botAI->TellMasterNoFacing("Hello!");
+        botAI->TellMasterNoFacing("你好！");
         return true;
     }
 
     if (SummonUsingGos(bot, master) || SummonUsingNpcs(bot, master))
     {
-        botAI->TellMasterNoFacing("Welcome!");
+        botAI->TellMasterNoFacing("欢迎！");
         return true;
     }
 
@@ -112,7 +112,7 @@ bool SummonAction::SummonUsingGos(Player* summoner, Player* player)
             return Teleport(summoner, player);
     }
 
-    botAI->TellError(summoner == bot ? "There is no meeting stone nearby" : "There is no meeting stone near you");
+    botAI->TellError(summoner == bot ? "附近没有集合石" : "你附近没有集合石");
     return false;
 }
 
@@ -132,13 +132,13 @@ bool SummonAction::SummonUsingNpcs(Player* summoner, Player* player)
         {
             if (!player->HasItemCount(6948, 1, false))
             {
-                botAI->TellError(player == bot ? "I have no hearthstone" : "You have no hearthstone");
+                botAI->TellError(player == bot ? "我没有炉石" : "你没有炉石");
                 return false;
             }
 
             if (player->HasSpellCooldown(8690))
             {
-                botAI->TellError(player == bot ? "My hearthstone is not ready" : "Your hearthstone is not ready");
+                botAI->TellError(player == bot ? "我的炉石还没准备好" : "你的炉石还没准备好");
                 return false;
             }
 
@@ -154,7 +154,7 @@ bool SummonAction::SummonUsingNpcs(Player* summoner, Player* player)
         }
     }
 
-    botAI->TellError(summoner == bot ? "There are no innkeepers nearby" : "There are no innkeepers near you");
+    botAI->TellError(summoner == bot ? "附近没有旅店老板" : "你附近没有旅店老板");
     return false;
 }
 
@@ -178,7 +178,7 @@ bool SummonAction::Teleport(Player* summoner, Player* player)
                 {
                     bot->ResurrectPlayer(1.0f, false);
                     bot->DurabilityRepairAll(false, 1.0f, false);
-                    botAI->TellMasterNoFacing("I live, again!");
+                    botAI->TellMasterNoFacing("我复活了！");
                 }
 
                 player->GetMotionMaster()->Clear();
@@ -188,6 +188,6 @@ bool SummonAction::Teleport(Player* summoner, Player* player)
         }
     }
 
-    botAI->TellError("Not enough place to summon");
+    botAI->TellError("没有足够的地方召唤");
     return false;
 }

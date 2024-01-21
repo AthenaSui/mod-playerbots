@@ -224,7 +224,7 @@ bool ChooseRpgTargetAction::Execute(Event event)
     if (botAI->HasStrategy("debug", BOT_STATE_NON_COMBAT) && guidP.GetWorldObject())
     {
         std::ostringstream out;
-        out << "found: ";
+        out << "发现：";
         out << chat->FormatWorldobject(guidP.GetWorldObject());
         out << " " << relevances.front();
 

@@ -44,7 +44,7 @@ bool DropQuestAction::Execute(Event event)
     bot->RemoveRewardedQuest(entry);
     bot->RemoveActiveQuest(entry, false);
 
-    botAI->TellMaster("Quest removed");
+    botAI->TellMaster("任务已移除");
     return true;
 }
 
@@ -143,7 +143,7 @@ void CleanQuestLogAction::DropQuestType(uint8& numQuest, uint8 wantNum, bool isG
 
         numQuest--;
 
-        botAI->TellMaster("Quest removed" + chat->FormatQuest(quest));
+        botAI->TellMaster("任务已移除" + chat->FormatQuest(quest));
     }
 }
 

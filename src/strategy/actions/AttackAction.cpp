@@ -32,7 +32,7 @@ bool AttackMyTargetAction::Execute(Event event)
     if (!guid)
     {
         if (verbose)
-            botAI->TellError("You have no target");
+            botAI->TellError("你没有目标");
 
         return false;
     }
@@ -49,7 +49,7 @@ bool AttackAction::Attack(Unit* target, bool with_pet /*true*/)
     if (bot->GetMotionMaster()->GetCurrentMovementGeneratorType() == FLIGHT_MOTION_TYPE || bot->HasUnitState(UNIT_STATE_IN_FLIGHT))
     {
         if (verbose)
-            botAI->TellError("I cannot attack in flight");
+            botAI->TellError("我不能在飞行中攻击");
 
         return false;
     }
@@ -57,7 +57,7 @@ bool AttackAction::Attack(Unit* target, bool with_pet /*true*/)
     if (!target)
     {
         if (verbose)
-            botAI->TellError("I have no target");
+            botAI->TellError("我没有目标");
 
         return false;
     }
@@ -67,7 +67,7 @@ bool AttackAction::Attack(Unit* target, bool with_pet /*true*/)
 
     if (bot->IsFriendlyTo(target))
     {
-        msg << " is friendly to me";
+        msg << " 是友善目标";
         if (verbose)
             botAI->TellError(msg.str());
 
@@ -76,14 +76,14 @@ bool AttackAction::Attack(Unit* target, bool with_pet /*true*/)
 
     if (!bot->IsWithinLOSInMap(target))
     {
-        msg << " is not on my sight";
+        msg << " 不在我的视野范围内";
         if (verbose)
             botAI->TellError(msg.str());
     }
 
     if (target->isDead())
     {
-        msg << " is dead";
+        msg << " 已经死亡";
         if (verbose)
             botAI->TellError(msg.str());
 

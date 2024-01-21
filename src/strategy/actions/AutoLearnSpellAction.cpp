@@ -18,10 +18,10 @@ bool AutoLearnSpellAction::Execute(Event event)
     {
         std::string const temp = out.str();
         out.seekp(0);
-        out << "Learned spells: ";
+        out << "已学法术：";
         out << temp;
         out.seekp(-2, out.cur);
-        out << ".";
+        out << "。";
         botAI->TellMaster(out);
     }
 
@@ -142,9 +142,9 @@ std::string const FormatSpell(SpellInfo const* sInfo)
     std::string const rank = sInfo->Rank[0];
 
     if (rank.empty())
-        out << "|cffffffff|Hspell:" << sInfo->Id << "|h[" << sInfo->SpellName[LOCALE_enUS] << "]|h|r";
+        out << "|cffffffff|H法术：" << sInfo->Id << "|h[" << sInfo->SpellName[LOCALE_enUS] << "]|h|r";
     else
-        out << "|cffffffff|Hspell:" << sInfo->Id << "|h[" << sInfo->SpellName[LOCALE_enUS] << " " << rank << "]|h|r";
+        out << "|cffffffff|H法术：" << sInfo->Id << "|h[" << sInfo->SpellName[LOCALE_enUS] << " " << rank << "]|h|r";
 
     return out.str();
 }

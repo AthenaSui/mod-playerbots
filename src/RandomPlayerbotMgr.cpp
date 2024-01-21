@@ -470,7 +470,7 @@ void RandomPlayerbotMgr::CheckBgQueue()
         BgCheckTimer = time(nullptr);
     }
 
-    LOG_INFO("playerbots", "Checking BG Queue...");
+    LOG_INFO("playerbots", "检查战场队列中...");
 
     for (uint32 i = BG_BRACKET_ID_FIRST; i < MAX_BATTLEGROUND_BRACKETS; ++i)
     {
@@ -687,7 +687,7 @@ void RandomPlayerbotMgr::CheckBgQueue()
         }
     }
 
-    LOG_INFO("playerbots", "BG Queue check finished");
+    LOG_INFO("playerbots", "战场队列检查完毕");
 }
 
 void RandomPlayerbotMgr::CheckLfgQueue()
@@ -725,7 +725,7 @@ void RandomPlayerbotMgr::CheckLfgQueue()
         }
     }
 
-    LOG_INFO("playerbots", "LFG Queue check finished");
+    LOG_INFO("playerbots", "LFG 队列检查完毕");
 }
 
 void RandomPlayerbotMgr::CheckPlayers()
@@ -1513,7 +1513,7 @@ void RandomPlayerbotMgr::Refresh(Player* bot)
     if (bot->InBattleground())
         return;
 
-    LOG_INFO("playerbots", "Refreshing bot {} <{}>", bot->GetGUID().ToString().c_str(), bot->GetName().c_str());
+    LOG_INFO("playerbots", "正在刷新机器人 {} <{}>", bot->GetGUID().ToString().c_str(), bot->GetName().c_str());
 
     PerformanceMonitorOperation* pmo = sPerformanceMonitor->start(PERF_MON_RNDBOT, "Refresh");
 
@@ -1931,7 +1931,7 @@ void RandomPlayerbotMgr::OnPlayerLogin(Player* player)
                 {
                     botAI->SetMaster(player);
                     botAI->ResetStrategies();
-                    botAI->TellMaster("Hello");
+                    botAI->TellMaster("你好");
                 }
 
                 break;

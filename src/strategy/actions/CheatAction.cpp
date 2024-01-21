@@ -59,17 +59,17 @@ std::string const CheatAction::GetCheatName(BotCheatMask cheatMask)
     switch (cheatMask)
     {
         case BotCheatMask::taxi:
-                return "taxi";
+                return "交通工具";
         case BotCheatMask::gold:
-            return "gold";
+            return "金币";
         case BotCheatMask::health:
-            return "health";
+            return "生命";
         case BotCheatMask::mana:
-            return "mana";
+            return "法力";
         case BotCheatMask::power:
-            return "power";
+            return "能量";
         default:
-            return "none";
+            return "无";
     }
 }
 

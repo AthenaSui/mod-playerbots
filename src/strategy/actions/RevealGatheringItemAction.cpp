@@ -74,18 +74,18 @@ bool RevealGatheringItemAction::Execute(Event event)
         return false;
 
     std::ostringstream msg;
-    msg << "I see a " << ChatHelper::FormatGameobject(go) << ". ";
+    msg << "我看见一个" << ChatHelper::FormatGameobject(go) << "。";
 
     switch (go->GetGoType())
     {
       case GAMEOBJECT_TYPE_CHEST:
-          msg << "Let's look at it.";
+          msg << "我们去看看。";
           break;
       case GAMEOBJECT_TYPE_FISHINGNODE:
-          msg << "Let's fish a bit.";
+          msg << "我们钓会鱼。";
           break;
       default:
-          msg << "Should we go nearer?";
+          msg << "我们应该走近一点吗？";
     }
 
     // everything is fine, do it

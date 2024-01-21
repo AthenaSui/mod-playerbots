@@ -53,9 +53,9 @@ bool MoveToTravelTargetAction::Execute(Event event)
             {
                 std::ostringstream out;
                 if (botAI->GetMaster() && !bot->GetGroup()->IsMember(botAI->GetMaster()->GetGUID()))
-                    out << "Waiting a bit for ";
+                    out << "等你一会儿 ";
                 else
-                    out << "Please hurry up ";
+                    out << "请快点 ";
 
                 out << member->GetName();
 

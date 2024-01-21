@@ -58,7 +58,7 @@ void UnequipAction::UnequipItem(Item* item)
     bot->GetSession()->HandleAutoStoreBagItemOpcode(packet);
 
     std::ostringstream out;
-    out << chat->FormatItem(item->GetTemplate()) << " unequipped";
+    out << chat->FormatItem(item->GetTemplate()) << " 未装备的";
     botAI->TellMaster(out);
 }
 

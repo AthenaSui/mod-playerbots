@@ -88,19 +88,19 @@ class HunterChecker : public ReadyChecker
             {
                 if (!bot->GetUInt32Value(PLAYER_AMMO_ID))
                 {
-                    botAI->TellError("Out of ammo!");
+                    botAI->TellError("弹药用完了");
                     return false;
                 }
 
                 if (!bot->GetPet())
                 {
-                    botAI->TellError("No pet!");
+                    botAI->TellError("没有宠物");
                     return false;
                 }
 
                 if (bot->GetPet()->GetHappinessState() == UNHAPPY)
                 {
-                    botAI->TellError("Pet is unhappy!");
+                    botAI->TellError("宠物不高兴！");
                     return false;
                 }
             }

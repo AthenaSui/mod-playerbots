@@ -43,7 +43,7 @@ bool RepairAllAction::Execute(Event event)
         if (totalCost > 0)
         {
             std::ostringstream out;
-            out << "Repair: " << chat->formatMoney(totalCost) << " (" << unit->GetName() << ")";
+            out << "修理：" << chat->formatMoney(totalCost) << "（" << unit->GetName() << "）";
             botAI->TellMasterNoFacing(out.str());
 
            bot->PlayDistanceSound(1116);
@@ -54,6 +54,6 @@ bool RepairAllAction::Execute(Event event)
         return true;
     }
 
-    botAI->TellError("Cannot find any npc to repair at");
+    botAI->TellError("找不到任何可以修复的NPC");
     return false;
 }

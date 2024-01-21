@@ -274,18 +274,18 @@ std::string const formatTime(uint32 secs)
     std::ostringstream out;
     if (secs < 3600)
     {
-        out << secs / 60 << " min";
+        out << secs / 60 << " 分钟";
     }
     else if (secs < 7200)
     {
-        out << "1 hr " << (secs - 3600) / 60 << " min";
+        out << "1 小时 " << (secs - 3600) / 60 << " 分钟";
     }
     else if (secs < 3600 * 24)
     {
-        out << secs / 3600 << " hr";
+        out << secs / 3600 << " 小时";
     } else
     {
-        out << secs / 3600 / 24 << " days";
+        out << secs / 3600 / 24 << " 天";
     }
 
     return out.str();

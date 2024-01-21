@@ -59,7 +59,7 @@ bool FollowChatShortcutAction::Execute(Event event)
 
         if (moved)
         {
-            botAI->TellMaster("Following");
+            botAI->TellMaster("正在跟随");
             return true;
         }
     }
@@ -80,7 +80,7 @@ bool FollowChatShortcutAction::Execute(Event event)
     }
     */
 
-    botAI->TellMaster("Following");
+    botAI->TellMaster("正在跟随");
     return true;
 }
 
@@ -96,7 +96,7 @@ bool StayChatShortcutAction::Execute(Event event)
 
     SetReturnPosition(bot->GetPositionX(), bot->GetPositionY(), bot->GetPositionZ());
 
-    botAI->TellMaster("Staying");
+    botAI->TellMaster("正在停留");
     return true;
 }
 
@@ -114,11 +114,11 @@ bool FleeChatShortcutAction::Execute(Event event)
 
     if (bot->GetMapId() != master->GetMapId() || bot->GetDistance(master) > sPlayerbotAIConfig->sightDistance)
     {
-        botAI->TellError("I will not flee with you - too far away");
+        botAI->TellError("我就不跟你一起逃跑了 - 太远了");
         return true;
     }
 
-    botAI->TellMaster("Fleeing");
+    botAI->TellMaster("逃跑中");
     return true;
 }
 
@@ -134,7 +134,7 @@ bool GoawayChatShortcutAction::Execute(Event event)
 
     ResetReturnPosition();
 
-    botAI->TellMaster("Running away");
+    botAI->TellMaster("正在逃跑");
     return true;
 }
 
@@ -149,7 +149,7 @@ bool GrindChatShortcutAction::Execute(Event event)
 
     ResetReturnPosition();
 
-    botAI->TellMaster("Grinding");
+    botAI->TellMaster("正在研磨");
     return true;
 }
 
@@ -168,7 +168,7 @@ bool TankAttackChatShortcutAction::Execute(Event event)
 
     ResetReturnPosition();
 
-    botAI->TellMaster("Attacking");
+    botAI->TellMaster("正在攻击");
     return true;
 }
 
@@ -184,7 +184,7 @@ bool MaxDpsChatShortcutAction::Execute(Event event)
     botAI->Reset();
 
     botAI->ChangeStrategy("-threat,-conserve mana,-cast time,+dps debuff,+boost", BOT_STATE_COMBAT);
-    botAI->TellMaster("Max DPS!");
+    botAI->TellMaster("全力输出！");
 
     return true;
 }
@@ -198,7 +198,7 @@ bool NaxxChatShortcutAction::Execute(Event event)
     botAI->Reset();
     botAI->ChangeStrategy("+naxx", BOT_STATE_NON_COMBAT);
     botAI->ChangeStrategy("+naxx", BOT_STATE_COMBAT);
-    botAI->TellMasterNoFacing("Add Naxx Strategies!");
+    botAI->TellMasterNoFacing("添加NAXX策略！");
     // bot->Say("Add Naxx Strategies!", LANG_UNIVERSAL);
     return true;
 }
@@ -212,6 +212,6 @@ bool BwlChatShortcutAction::Execute(Event event)
     botAI->Reset();
     botAI->ChangeStrategy("+bwl", BOT_STATE_NON_COMBAT);
     botAI->ChangeStrategy("+bwl", BOT_STATE_COMBAT);
-    botAI->TellMasterNoFacing("Add Bwl Strategies!");
+    botAI->TellMasterNoFacing("添加BWL策略！");
     return true;
 }

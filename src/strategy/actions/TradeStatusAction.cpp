@@ -122,7 +122,7 @@ void TradeStatusAction::BeginTrade()
     ListItemsVisitor visitor;
     IterateItems(&visitor);
 
-    botAI->TellMaster("=== Inventory ===");
+    botAI->TellMaster("=== 物品清单 ===");
     TellItems(visitor.items, visitor.soulbound);
 
     if (sRandomPlayerbotMgr->IsRandomBot(bot))
@@ -131,7 +131,7 @@ void TradeStatusAction::BeginTrade()
         if (discount)
         {
             std::ostringstream out;
-            out << "Discount up to: " << chat->formatMoney(discount);
+            out << "折扣至高可达：" << chat->formatMoney(discount);
             botAI->TellMaster(out);
         }
     }
@@ -170,9 +170,9 @@ bool TradeStatusAction::CheckTrade()
         if (isGettingItem)
         {
             if (bot->GetGroup() && bot->GetGroup()->IsMember(bot->GetTrader()->GetGUID()) && botAI->HasRealPlayerMaster())
-                botAI->TellMasterNoFacing("Thank you " + chat->FormatWorldobject(bot->GetTrader()));
+                botAI->TellMasterNoFacing("谢谢你 " + chat->FormatWorldobject(bot->GetTrader()));
             else
-                bot->Say("Thank you " + chat->FormatWorldobject(bot->GetTrader()), (bot->GetTeamId() == TEAM_ALLIANCE ? LANG_COMMON : LANG_ORCISH));
+                bot->Say("谢谢你 " + chat->FormatWorldobject(bot->GetTrader()), (bot->GetTeamId() == TEAM_ALLIANCE ? LANG_COMMON : LANG_ORCISH));
         }
         return isGettingItem;
     }
@@ -200,7 +200,7 @@ bool TradeStatusAction::CheckTrade()
         if (item && !item->GetTemplate()->SellPrice)
         {
             std::ostringstream out;
-            out << chat->FormatItem(item->GetTemplate()) << " - This is not for sale";
+            out << chat->FormatItem(item->GetTemplate()) << " - 非售品";
             botAI->TellMaster(out);
             botAI->PlaySound(TEXT_EMOTE_NO);
             return false;
@@ -215,7 +215,7 @@ bool TradeStatusAction::CheckTrade()
             if ((botMoney && !item->GetTemplate()->BuyPrice) || usage == ITEM_USAGE_NONE)
             {
                 std::ostringstream out;
-                out << chat->FormatItem(item->GetTemplate()) << " - I don't need this";
+                out << chat->FormatItem(item->GetTemplate()) << " - 我不需要这个";
                 botAI->TellMaster(out);
                 botAI->PlaySound(TEXT_EMOTE_NO);
                 return false;
@@ -228,7 +228,7 @@ bool TradeStatusAction::CheckTrade()
 
     if (!botItemsMoney && !playerItemsMoney)
     {
-        botAI->TellError("There are no items to trade");
+        botAI->TellError("没有可用于交易的物品");
         return false;
     }
 
@@ -242,7 +242,7 @@ bool TradeStatusAction::CheckTrade()
         {
             if (moneyDelta < 0)
             {
-                botAI->TellError("You can use discount to buy items only");
+                botAI->TellError("您只能使用折扣购买商品");
                 botAI->PlaySound(TEXT_EMOTE_NO);
                 return false;
             }
@@ -261,16 +261,16 @@ bool TradeStatusAction::CheckTrade()
         switch (urand(0, 4))
         {
             case 0:
-                botAI->TellMaster("A pleasure doing business with you");
+                botAI->TellMaster("很高兴和你做生意");
                 break;
             case 1:
-                botAI->TellMaster("Fair trade");
+                botAI->TellMaster("公平交易");
                 break;
             case 2:
-                botAI->TellMaster("Thanks");
+                botAI->TellMaster("谢谢");
                 break;
             case 3:
-                botAI->TellMaster("Off with you");
+                botAI->TellMaster("滚开");
                 break;
         }
 
@@ -279,7 +279,7 @@ bool TradeStatusAction::CheckTrade()
     }
 
     std::ostringstream out;
-    out << "I want " << chat->formatMoney(-(delta + discount)) << " for this";
+    out << "这个需要 " << chat->formatMoney(-(delta + discount));
     botAI->TellMaster(out);
     botAI->PlaySound(TEXT_EMOTE_NO);
     return false;

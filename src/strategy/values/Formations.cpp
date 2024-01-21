@@ -537,7 +537,7 @@ bool SetFormationAction::Execute(Event event)
     if (formation == "?" || formation.empty())
     {
         std::ostringstream str;
-        str << "Formation: |cff00ff00" << value->Get()->getName();
+        str << "队形：|cff00ff00" << value->Get()->getName();
         botAI->TellMaster(str);
         return true;
     }
@@ -554,14 +554,14 @@ bool SetFormationAction::Execute(Event event)
     if (!value->Load(formation))
     {
         std::ostringstream str;
-        str << "Invalid formation: |cffff0000" << formation;
+        str << "无效队形：|cffff0000" << formation;
         botAI->TellMaster(str);
-        botAI->TellMaster("Please set to any of:|cffffffff near (default), queue, chaos, circle, line, shield, arrow, melee, far");
+        botAI->TellMaster("请设置为以下任意一个：|cffffffff near（默认），queue, chaos, circle, line, shield, arrow, melee, far");
         return false;
     }
 
     std::ostringstream str;
-    str << "Formation set to: " << formation;
+    str << "队形设置为：" << formation;
     botAI->TellMaster(str);
     return true;
 }

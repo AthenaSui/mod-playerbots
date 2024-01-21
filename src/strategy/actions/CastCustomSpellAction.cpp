@@ -85,7 +85,7 @@ bool CastCustomSpellAction::Execute(Event event)
     std::ostringstream msg;
     if (!spell)
     {
-        msg << "Unknown spell " << text;
+        msg << "未知法术 " << text;
         botAI->TellError(msg.str());
         return false;
     }
@@ -93,7 +93,7 @@ bool CastCustomSpellAction::Execute(Event event)
     SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell);
     if (!spellInfo)
     {
-        msg << "Unknown spell " << text;
+        msg << "未知法术 " << text;
         botAI->TellError(msg.str());
         return false;
     }
@@ -122,7 +122,7 @@ bool CastCustomSpellAction::Execute(Event event)
 
     if (!bot->GetTrader() && !botAI->CanCastSpell(spell, target, true, itemTarget))
     {
-        msg << "Cannot cast " << spellName.str();
+        msg << "无法释放 " << spellName.str();
         botAI->TellError(msg.str());
         return false;
     }
@@ -130,7 +130,7 @@ bool CastCustomSpellAction::Execute(Event event)
     bool result = spell ? botAI->CastSpell(spell, target, itemTarget) : botAI->CastSpell(text, target, itemTarget);
     if (result)
     {
-        msg << "Casting " << spellName.str();
+        msg << "释放 " << spellName.str();
 
         if (castCount > 1)
         {
@@ -144,7 +144,7 @@ bool CastCustomSpellAction::Execute(Event event)
     }
     else
     {
-        msg << "Cast " << spellName.str() << " is failed";
+        msg << "释放 " << spellName.str() << " 失败";
         botAI->TellError(msg.str());
     }
 

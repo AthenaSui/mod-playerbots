@@ -92,7 +92,7 @@ bool AcceptQuestShareAction::Execute(Event event)
     if (bot->HasQuest(quest))
     {
         bot->SetDivider(ObjectGuid::Empty);
-        botAI->TellError("I have this quest");
+        botAI->TellError("我已经有这个任务了");
         return false;
     }
 
@@ -100,7 +100,7 @@ bool AcceptQuestShareAction::Execute(Event event)
     {
         // can't take quest
         bot->SetDivider(ObjectGuid::Empty);
-        botAI->TellError("I can't take this quest");
+        botAI->TellError("我无法接受这个任务");
 
         return false;
     }
@@ -128,7 +128,7 @@ bool AcceptQuestShareAction::Execute(Event event)
             bot->CastSpell( bot, qInfo->GetSrcSpell(), true);
         }
 
-        botAI->TellMaster("Quest accepted");
+        botAI->TellMaster("任务已接受");
         return true;
     }
 

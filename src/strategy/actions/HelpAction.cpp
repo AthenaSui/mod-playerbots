@@ -27,16 +27,16 @@ bool HelpAction::Execute(Event event)
 void HelpAction::TellChatCommands()
 {
     std::ostringstream out;
-    out << "Whisper any of: ";
+    out << "密语：";
     out << CombineSupported(chatContext->supports());
-    out << ", [item], [quest] or [object] link";
+    out << ", [装备], [任务] 或 [物品] 链接";
     botAI->TellError(out.str());
 }
 
 void HelpAction::TellStrategies()
 {
     std::ostringstream out;
-    out << "Possible strategies (co/nc/dead commands): ";
+    out << "可能的策略 (co/nc/dead 命令)：";
     out << CombineSupported(botAI->GetAiObjectContext()->GetSupportedStrategies());
     botAI->TellError(out.str());
 }

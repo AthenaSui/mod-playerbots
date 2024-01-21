@@ -40,12 +40,12 @@ bool QueryQuestAction::Execute(Event event)
 
         if (bot->GetQuestStatus(questId) == QUEST_STATUS_COMPLETE)
         {
-            out << "|c0000FF00completed|r ---";
+            out << "|c0000FF00已完成|r ---";
             botAI->TellMaster(out);
         }
         else
         {
-            out << "|c00FF0000not completed|r ---";
+            out << "|c00FF0000未完成|r ---";
             botAI->TellMaster(out);
             TellObjectives(questId);
         }
@@ -78,16 +78,16 @@ bool QueryQuestAction::Execute(Event event)
                 if (apoints < tpoints)
                     out << "/" << tpoints;
 
-                out << " points.";
+                out << " 点。";
 
                 if (!dest->isActive(bot))
-                    out << " not active";
+                    out << " 不可用";
 
                 if (dest->isFull(bot))
-                    out << " crowded";
+                    out << " 已满";
 
                 if (dest->isFull(bot))
-                    out << " crowded";
+                    out << " 已满";
 
                 botAI->TellMaster(out);
 

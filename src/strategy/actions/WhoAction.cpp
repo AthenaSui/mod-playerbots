@@ -50,7 +50,7 @@ bool WhoAction::Execute(Event event)
         if (!out.str().empty())
             out << ", ";
 
-        out << "playing with " << botAI->GetMaster()->GetName();
+        out << "正在与 " << botAI->GetMaster()->GetName() << "一起玩";
     }
 
     std::string const tell = out.str();
@@ -73,7 +73,7 @@ std::string const WhoAction::QueryTrade(std::string const text)
         if (!sellPrice)
             continue;
 
-        out << "Selling " << chat->FormatItem(sell->GetTemplate(), sell->GetCount()) << " for " << chat->formatMoney(sellPrice);
+        out << "正在出售 " << chat->FormatItem(sell->GetTemplate(), sell->GetCount()) << " 售价 " << chat->formatMoney(sellPrice);
         return out.str();
     }
 
@@ -94,7 +94,7 @@ std::string const WhoAction::QuerySkill(std::string const text)
     ObjectGuid guid = bot->GetGUID();
 
     std::string const data = "0";
-    out << "|cFFFFFF00|Htrade:" << spellId << ":" << value << ":" << maxSkill << ":" << std::hex << std::uppercase << guid.GetRawValue()
+    out << "|cFFFFFF00|H交易：" << spellId << ":" << value << ":" << maxSkill << ":" << std::hex << std::uppercase << guid.GetRawValue()
             << std::nouppercase << std::dec << ":" << data << "|h[" << skillName << "]|h|r" << " |h|cff00ff00" << value << "|h|cffffffff/"
             << "|h|cff00ff00" << maxSkill << "|h|cffffffff ";
 

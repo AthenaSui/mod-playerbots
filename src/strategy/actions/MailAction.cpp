@@ -15,7 +15,7 @@ class TellMailProcessor : public MailProcessor
     public:
        bool Before(PlayerbotAI* botAI) override
         {
-            botAI->TellMaster("=== Mailbox ===");
+            botAI->TellMaster("=== 邮箱 ===");
             tells.clear();
             return true;
         }
@@ -54,7 +54,7 @@ class TellMailProcessor : public MailProcessor
                 }
             }
 
-            out  << ", |cff00ff00" << days << " day(s)";
+            out  << ", |cff00ff00" << days << " 天";
             tells.push_front(out.str());
             return true;
         }
@@ -81,7 +81,7 @@ class TakeMailProcessor : public MailProcessor
             Player* bot = botAI->GetBot();
             if (!CheckBagSpace(bot))
             {
-                botAI->TellError("Not enough bag space");
+                botAI->TellError("没有足够的背包空间");
                 return false;
             }
 
@@ -89,7 +89,7 @@ class TakeMailProcessor : public MailProcessor
             if (mail->money)
             {
                 std::ostringstream out;
-                out << mail->subject << ", |cffffff00" << ChatHelper::formatMoney(mail->money) << "|cff00ff00 processed";
+                out << mail->subject << ", |cffffff00" << ChatHelper::formatMoney(mail->money) << "|cff00ff00 已处理";
                 botAI->TellMaster(out.str());
 
                 WorldPacket packet;
@@ -115,7 +115,7 @@ class TakeMailProcessor : public MailProcessor
                     Item* item = bot->GetMItem(*i);
 
                     std::ostringstream out;
-                    out << mail->subject << ", " << ChatHelper::FormatItem(item->GetTemplate()) << "|cff00ff00 processed";
+                    out << mail->subject << ", " << ChatHelper::FormatItem(item->GetTemplate()) << "|cff00ff00 已处理";
 
                     bot->GetSession()->HandleMailTakeItem(packet);
                     botAI->TellMaster(out.str());
@@ -159,7 +159,7 @@ class DeleteMailProcessor : public MailProcessor
         bool Process(uint32 index, Mail* mail, PlayerbotAI* botAI) override
         {
             std::ostringstream out;
-            out << "|cffffffff" << mail->subject << "|cffff0000 deleted";
+            out << "|cffffffff" << mail->subject << "|cffff0000 已删除";
             RemoveMail(botAI->GetBot(), mail->messageID, FindMailbox(botAI));
             botAI->TellMaster(out.str());
             return true;
@@ -255,7 +255,7 @@ bool MailAction::Execute(Event event)
 
     if (!MailProcessor::FindMailbox(botAI))
     {
-        botAI->TellError("There is no mailbox nearby");
+        botAI->TellError("附近没有邮箱");
         return false;
     }
 
@@ -270,7 +270,7 @@ bool MailAction::Execute(Event event)
     std::string const text = event.getParam();
     if (text.empty())
     {
-        botAI->TellMaster("whisper 'mail ?' to query mailbox, 'mail take/delete/read filter' to take/delete/read mails by filter");
+        botAI->TellMaster("密语 'mail ?' 以查询邮箱, 'mail take/delete/read filter' 以按 take/delete/read 筛选邮件");
         return false;
     }
 
@@ -281,7 +281,7 @@ bool MailAction::Execute(Event event)
     MailProcessor* processor = processors[action];
     if (!processor)
     {
-        std::ostringstream out; out << action << ": I don't know how to do that";
+        std::ostringstream out; out << action << ": 我不知道如何做";
         botAI->TellMaster(out.str());
         return false;
     }

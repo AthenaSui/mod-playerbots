@@ -42,19 +42,19 @@ void ListQuestsAction::ListQuests(QuestListFilter filter, QuestTravelDetail trav
     bool showCompleted = filter & QUEST_LIST_FILTER_COMPLETED;
 
     if (showIncompleted)
-        botAI->TellMaster("--- Incompleted quests ---");
+        botAI->TellMaster("--- 未完成 ---");
 
     uint32 incompleteCount = ListQuests(false, !showIncompleted, travelDetail);
 
     if (showCompleted)
-        botAI->TellMaster("--- Completed quests ---");
+        botAI->TellMaster("--- 已完成 ---");
 
     uint32 completeCount = ListQuests(true, !showCompleted, travelDetail);
 
-    botAI->TellMaster("--- Summary ---");
+    botAI->TellMaster("--- 概括 ---");
 
     std::ostringstream out;
-    out << "Total: " << (completeCount + incompleteCount) << " / 25 (incompleted: " << incompleteCount << ", completed: " << completeCount << ")";
+    out << "总计：" << (completeCount + incompleteCount) << " / 25 （未完成：" << incompleteCount << "，已完成：" << completeCount << "）";
     botAI->TellMaster(out);
 }
 
@@ -93,7 +93,7 @@ uint32 ListQuestsAction::ListQuests(bool completed, bool silent, QuestTravelDeta
                 if (QuestDestination->GetQuestTemplate()->GetQuestId() == questId)
                 {
                     std::ostringstream out;
-                    out << "[Active] traveling " << target->getPosition()->distance(botPos);
+                    out << "[活动的] 正赶往 " << target->getPosition()->distance(botPos);
                     out << " to " << QuestDestination->getTitle();
                     botAI->TellMaster(out);
                 }
@@ -126,7 +126,7 @@ uint32 ListQuestsAction::ListQuests(bool completed, bool silent, QuestTravelDeta
                 out << desFull << " crowded.";
 
             if (desRange > 0)
-                out << desRange << " out of range.";
+                out << desRange << " 超出距离。";
 
             botAI->TellMaster(out);
         }

@@ -104,7 +104,7 @@ bool TrainerAction::Execute(Event event)
 
     if (!creature->IsValidTrainerForPlayer(bot))
     {
-        botAI->TellError("This trainer cannot teach me");
+        botAI->TellError("这个训练师不能教我");
         return false;
     }
 
@@ -112,7 +112,7 @@ bool TrainerAction::Execute(Event event)
     TrainerSpellData const* cSpells = creature->GetTrainerSpells();
     if (!cSpells)
     {
-        botAI->TellError("No spells can be learned from this trainer");
+        botAI->TellError("不能从这个训练师那里学到任何法术");
         return false;
     }
 
@@ -133,7 +133,7 @@ bool TrainerAction::Execute(Event event)
 void TrainerAction::TellHeader(Creature* creature)
 {
     std::ostringstream out;
-    out << "--- Can learn from " << creature->GetName() << " ---";
+    out << "---可以从 " << creature->GetName() << " 学习---";
     botAI->TellMaster(out);
 }
 
@@ -142,7 +142,7 @@ void TrainerAction::TellFooter(uint32 totalCost)
     if (totalCost)
     {
         std::ostringstream out;
-        out << "Total cost: " << chat->formatMoney(totalCost);
+        out << "共花费：" << chat->formatMoney(totalCost);
         botAI->TellMaster(out);
     }
 }

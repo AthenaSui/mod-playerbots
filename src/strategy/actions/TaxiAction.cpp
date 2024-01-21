@@ -19,7 +19,7 @@ bool TaxiAction::Execute(Event event)
     {
         movement.taxiNodes.clear();
         movement.Set(nullptr);
-        botAI->TellMaster("I am ready for the next flight");
+        botAI->TellMaster("我已经为下一班飞机做好了准备");
         return true;
     }
 
@@ -46,7 +46,7 @@ bool TaxiAction::Execute(Event event)
 
         if (param == "?")
         {
-            botAI->TellMasterNoFacing("=== Taxi ===");
+            botAI->TellMasterNoFacing("=== 交通工具 ===");
 
             uint32 index = 1;
             for (uint32 node : nodes)
@@ -60,7 +60,7 @@ bool TaxiAction::Execute(Event event)
                     continue;
 
                 std::ostringstream out;
-                out << index++ << ": " << dest->name[0];
+                out << index++ << "：" << dest->name[0];
                 botAI->TellMasterNoFacing(out.str());
             }
 
@@ -82,13 +82,13 @@ bool TaxiAction::Execute(Event event)
         {
             movement.taxiNodes.clear();
             movement.Set(nullptr);
-            botAI->TellError("I can't fly with you");
+            botAI->TellError("我不能跟你一起飞");
             return false;
         }
 
         return true;
     }
 
-    botAI->TellError("Cannot find any flightmaster to talk");
+    botAI->TellError("找不到可交谈的飞行管理员");
     return false;
 }

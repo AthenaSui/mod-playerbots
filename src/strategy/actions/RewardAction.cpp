@@ -37,7 +37,7 @@ bool RewardAction::Execute(Event event)
     if (mtar && Reward(itemId, mtar))
         return true;
 
-    botAI->TellError("Cannot talk to quest giver");
+    botAI->TellError("无法与任务给予者交谈");
     return false;
 }
 
@@ -66,7 +66,7 @@ bool RewardAction::Reward(uint32 itemId, Object* questGiver)
                     std::string const itemName = pRewardItem->Name1;
 
                     std::ostringstream out;
-                    out << chat->FormatItem(pRewardItem) << " rewarded";
+                    out << chat->FormatItem(pRewardItem) << " 奖励";
                     botAI->TellMaster(out);
 
                     return true;

@@ -55,7 +55,7 @@ bool GossipHelloAction::Execute(Event event)
 	}
 	else if (!bot->PlayerTalkClass)
 	{
-	    botAI->TellError("I need to talk first");
+	    botAI->TellError("我需要先谈谈");
 	    return false;
 	}
 	else
@@ -119,7 +119,7 @@ bool GossipHelloAction::ProcessGossip(int32 menuToSelect)
     GossipMenu& menu = bot->PlayerTalkClass->GetGossipMenu();
     if (menuToSelect != -1 && menuToSelect >= menu.GetMenuItemCount())
     {
-        botAI->TellError("Unknown gossip option");
+        botAI->TellError("未知对话选项");
         return false;
     }
 

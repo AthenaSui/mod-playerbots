@@ -64,8 +64,8 @@ void TellLosAction::ListGameObjects(std::string const title, GuidVector gos)
 
 bool TellAuraAction::Execute(Event event)
 {
-    botAI->TellMaster("--- Auras ---");
-    sLog->outMessage("playerbot", LOG_LEVEL_DEBUG, "--- Auras ---");
+    botAI->TellMaster("--- 光环 ---");
+    sLog->outMessage("playerbot", LOG_LEVEL_DEBUG, "--- 光环 ---");
     Unit::AuraApplicationMap& map = bot->GetAppliedAuras();
 	for (Unit::AuraApplicationMap::iterator i = map.begin(); i != map.end(); ++i)
 	{
@@ -74,54 +74,54 @@ bool TellAuraAction::Execute(Event event)
 			continue;
 
 		const std::string auraName = aura->GetSpellInfo()->SpellName[0];
-        sLog->outMessage("playerbot", LOG_LEVEL_DEBUG, "Info of Aura - name: " + auraName);
+        sLog->outMessage("playerbot", LOG_LEVEL_DEBUG, "光环信息 - 名字：" + auraName);
 		AuraObjectType type = aura->GetType();
 		WorldObject* owner = aura->GetOwner();
-        std::string owner_name = owner ? owner->GetName() : "unknown";
+        std::string owner_name = owner ? owner->GetName() : "未知";
         float distance = bot->GetDistance2d(owner);
         Unit* caster = aura->GetCaster();
-        std::string caster_name = caster ? caster->GetName() : "unknown";
+        std::string caster_name = caster ? caster->GetName() : "未知";
         bool is_area = aura->IsArea();
         int32 duration = aura->GetDuration();
         const SpellInfo* spellInfo = aura->GetSpellInfo();
         int32 spellId = aura->GetSpellInfo()->Id;
         bool isPositive = aura->GetSpellInfo()->IsPositive();
-        sLog->outMessage("playerbot", LOG_LEVEL_DEBUG, "Info of Aura - name: " + auraName +
-                       " caster: " + caster_name + 
-                       " type: " + std::to_string(type) + 
-                       " owner: " + owner_name + 
-                       " distance: " + std::to_string(distance) +
-                       " isArea: " + std::to_string(is_area) +
-                       " duration: " + std::to_string(duration) +
-                       " spellId: " + std::to_string(spellId) +
-                       " isPositive: " + std::to_string(isPositive));
+        sLog->outMessage("playerbot", LOG_LEVEL_DEBUG, "光环信息 - 名字：" + auraName +
+                       " 施法者：" + caster_name + 
+                       " 类型：" + std::to_string(type) + 
+                       " 拥有者：" + owner_name + 
+                       " 距离：" + std::to_string(distance) +
+                       " 区域法术：" + std::to_string(is_area) +
+                       " 持续时间：" + std::to_string(duration) +
+                       " 法术Id：" + std::to_string(spellId) +
+                       " 增益：" + std::to_string(isPositive));
 
-		botAI->TellMaster("Info of Aura - name: " + auraName +
-                       " caster: " + caster_name + 
-                       " type: " + std::to_string(type) + 
-                       " owner: " + owner_name + 
-                       " distance: " + std::to_string(distance) +
-                       " isArea: " + std::to_string(is_area) +
-                       " duration: " + std::to_string(duration) +
-                       " spellId: " + std::to_string(spellId) +
-                       " isPositive: " + std::to_string(isPositive));
+		botAI->TellMaster("光环信息 - 名字：" + auraName +
+                       " 施法者：" + caster_name + 
+                       " 类型：" + std::to_string(type) + 
+                       " 拥有者：" + owner_name + 
+                       " 距离：" + std::to_string(distance) +
+                       " 区域法术：" + std::to_string(is_area) +
+                       " 持续时间：" + std::to_string(duration) +
+                       " 法术Id：" + std::to_string(spellId) +
+                       " 增益：" + std::to_string(isPositive));
 
         if (type == DYNOBJ_AURA_TYPE) {
             DynamicObject* dyn_owner = aura->GetDynobjOwner();
             float radius = dyn_owner->GetRadius();
             int32 spellId = dyn_owner->GetSpellId();
             int32 duration = dyn_owner->GetDuration();
-            sLog->outMessage("playerbot", LOG_LEVEL_DEBUG, std::string("Info of DynamicObject -") +
-                           " name: " + dyn_owner->GetName() + 
-                           " radius: " + std::to_string(radius) +
-                           " spell id: " + std::to_string(spellId) +
-                           " duration: " + std::to_string(duration));
+            sLog->outMessage("playerbot", LOG_LEVEL_DEBUG, std::string("动态物品信息 -") +
+                           " 名字：" + dyn_owner->GetName() + 
+                           " 半径：" + std::to_string(radius) +
+                           " 法术id: " + std::to_string(spellId) +
+                           " 持续时间：" + std::to_string(duration));
 
-            botAI->TellMaster(std::string("Info of DynamicObject -") +
-                           " name: " + dyn_owner->GetName() + 
-                           " radius: " + std::to_string(radius) +
-                           " spell id: " + std::to_string(spellId) +
-                           " duration: " + std::to_string(duration));
+            botAI->TellMaster(std::string("动态物品信息 -") +
+                           " 名字：" + dyn_owner->GetName() + 
+                           " 半径：" + std::to_string(radius) +
+                           " 法术id：" + std::to_string(spellId) +
+                           " 持续时间：" + std::to_string(duration));
         }
 	}
 	return true;
@@ -130,6 +130,6 @@ bool TellAuraAction::Execute(Event event)
 bool TellExpectedDpsAction::Execute(Event event)
 {
     float dps = AI_VALUE(float, "expected group dps");
-    botAI->TellMaster("Expected Group DPS: " + std::to_string(dps));
+    botAI->TellMaster("预期队伍DPS：" + std::to_string(dps));
 	return true;
 }

@@ -127,7 +127,7 @@ bool BuyAction::Execute(Event event)
                 if (!result)
                 {
                     std::ostringstream out;
-                    out << "Nobody sells " << ChatHelper::FormatItem(proto) << " nearby";
+                    out << "附近无人出售 " << ChatHelper::FormatItem(proto) << "。";
                     botAI->TellMaster(out.str());
                 }
             }
@@ -136,7 +136,7 @@ bool BuyAction::Execute(Event event)
 
     if (!vendored)
     {
-        botAI->TellError("There are no vendors nearby");
+        botAI->TellError("附近没有商人");
         return false;
     }
 
@@ -171,7 +171,7 @@ bool BuyAction::BuyItem(VendorItemData const* tItems, ObjectGuid vendorguid, Ite
             if (oldCount < AI_VALUE2(uint32, "item count", proto->Name1)) // BuyItem Always returns false (unless unique) so we have to check the item counts.
             {
                 std::ostringstream out;
-                out << "Buying " << ChatHelper::FormatItem(proto);
+                out << "正在购买 " << ChatHelper::FormatItem(proto);
                 botAI->TellMaster(out.str());
                 return true;
             }

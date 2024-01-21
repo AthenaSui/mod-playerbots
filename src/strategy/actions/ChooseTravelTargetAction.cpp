@@ -131,7 +131,7 @@ void ChooseTravelTargetAction::ReportTravelTarget(TravelTarget* newTarget, Trave
     std::ostringstream out;
 
     if (newTarget->isForced())
-        out << "(Forced) ";
+        out << "（强制）";
 
     if (destination->getName() == "QuestRelationTravelDestination" || destination->getName() == "QuestObjectiveTravelDestination")
     {
@@ -150,17 +150,17 @@ void ChooseTravelTargetAction::ReportTravelTarget(TravelTarget* newTarget, Trave
         std::string Sub;
 
         if (newTarget->isGroupCopy())
-            out << "Following group ";
+            out << "正在跟随小队 ";
         else if (oldDestination && oldDestination == destination)
-            out << "Continuing ";
+            out << "正在继续 ";
         else
-            out << "Traveling ";
+            out << "正在同行 ";
 
         out << round(newTarget->getDestination()->distanceTo(&botLocation)) << "y";
 
-        out << " for " << chat->FormatQuest(quest);
+        out << " 为了 " << chat->FormatQuest(quest);
 
-        out << " to " << QuestDestination->getTitle();
+        out << " 去 " << QuestDestination->getTitle();
 
         botAI->TellMaster(out);
     }
@@ -171,24 +171,24 @@ void ChooseTravelTargetAction::ReportTravelTarget(TravelTarget* newTarget, Trave
         WorldPosition botLocation(bot);
 
         if (newTarget->isGroupCopy())
-            out << "Following group ";
+            out << "正在跟随小队 ";
         else if (oldDestination && oldDestination == destination)
-            out << "Continuing ";
+            out << "正在继续 ";
         else
-            out << "Traveling ";
+            out << "正在旅行 ";
 
         out << round(newTarget->getDestination()->distanceTo(&botLocation)) << "y";
 
-       out << " for ";
+       out << " 为了 ";
 
         if (AI_VALUE2(bool, "group or", "should sell,can sell"))
-            out << "selling items";
+            out << "出售物品";
         else if (AI_VALUE2(bool, "group or", "should repair,can repair"))
-            out << "repairing";
+            out << "修理";
         else
             out << "rpg";
 
-        out << " to " << RpgDestination->getTitle();
+        out << " 去 " << RpgDestination->getTitle();
 
         botAI->TellMaster(out);
     }
@@ -199,17 +199,17 @@ void ChooseTravelTargetAction::ReportTravelTarget(TravelTarget* newTarget, Trave
         WorldPosition botLocation(bot);
 
         if (newTarget->isGroupCopy())
-            out << "Following group ";
+            out << "正在跟随小队 ";
         else if (oldDestination && oldDestination == destination)
-            out << "Continuing ";
+            out << "正在继续 ";
         else
-            out << "Traveling ";
+            out << "正在旅行 ";
 
         out << round(newTarget->getDestination()->distanceTo(&botLocation)) << "y";
 
-        out << " for exploration";
+        out << " 为了探索";
 
-        out << " to " << ExploreDestination->getTitle();
+        out << " 去 " << ExploreDestination->getTitle();
 
         botAI->TellMaster(out);
     }
@@ -220,17 +220,17 @@ void ChooseTravelTargetAction::ReportTravelTarget(TravelTarget* newTarget, Trave
         WorldPosition botLocation(bot);
 
         if (newTarget->isGroupCopy())
-            out << "Following group ";
+            out << "正在跟随小队 ";
         else if (oldDestination && oldDestination == destination)
-            out << "Continuing ";
+            out << "正在继续 ";
         else
-            out << "Traveling ";
+            out << "正在旅行 ";
 
         out << round(newTarget->getDestination()->distanceTo(&botLocation)) << "y";
 
-        out << " for grinding money";
+        out << " 为了赚钱";
 
-        out << " to " << GrindDestination->getTitle();
+        out << " 去 " << GrindDestination->getTitle();
 
         botAI->TellMaster(out);
     }
@@ -241,17 +241,17 @@ void ChooseTravelTargetAction::ReportTravelTarget(TravelTarget* newTarget, Trave
         WorldPosition botLocation(bot);
 
         if (newTarget->isGroupCopy())
-            out << "Following group ";
+            out << "正在跟随小队 ";
         else if (oldDestination && oldDestination == destination)
-            out << "Continuing ";
+            out << "正在继续 ";
         else
-            out << "Traveling ";
+            out << "正在旅行 ";
 
         out << round(newTarget->getDestination()->distanceTo(&botLocation)) << "y";
 
-        out << " for good loot";
+        out << " 为了更好的战利品";
 
-        out << " to " << BossDestination->getTitle();
+        out << " 去 " << BossDestination->getTitle();
 
         botAI->TellMaster(out);
     }
@@ -259,7 +259,7 @@ void ChooseTravelTargetAction::ReportTravelTarget(TravelTarget* newTarget, Trave
     {
         if (!oldTarget->getDestination() || oldTarget->getDestination()->getName() != "NullTravelDestination")
         {
-            botAI->TellMaster("No where to travel. Idling a bit.");
+            botAI->TellMaster("没有目的地。闲逛一会儿。");
         }
     }
 }

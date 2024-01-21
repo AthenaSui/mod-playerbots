@@ -29,7 +29,7 @@ bool ArenaTeamAcceptAction::Execute(Event event)
     if (bot->GetArenaTeamId(at->GetSlot()))
     {
         // bot is already in an arena team
-        bot->Say("Sorry, I am already in such team", LANG_UNIVERSAL);
+        bot->Say("对不起，我已经在这样的队伍力里了。", LANG_UNIVERSAL);
         accept = false;
     }
 
@@ -37,15 +37,15 @@ bool ArenaTeamAcceptAction::Execute(Event event)
     {
         WorldPacket data(CMSG_ARENA_TEAM_ACCEPT);
         bot->GetSession()->HandleArenaTeamAcceptOpcode(data);
-        bot->Say("Thanks for the invite!", LANG_UNIVERSAL);
-        LOG_INFO("playerbots", "Bot {} <{}> accepts Arena Team invite", bot->GetGUID().ToString().c_str(), bot->GetName().c_str());
+        bot->Say("谢谢邀请！", LANG_UNIVERSAL);
+        LOG_INFO("playerbots", "机器人 {} <{}> 接受竞技场队伍邀请", bot->GetGUID().ToString().c_str(), bot->GetName().c_str());
         return true;
     }
     else
     {
         WorldPacket data(CMSG_ARENA_TEAM_DECLINE);
         bot->GetSession()->HandleArenaTeamDeclineOpcode(data);
-        LOG_INFO("playerbots", "Bot {} <{}> declines Arena Team invite", bot->GetGUID().ToString().c_str(), bot->GetName().c_str());
+        LOG_INFO("playerbots", "机器人 {} <{}> 拒绝竞技场队伍邀请", bot->GetGUID().ToString().c_str(), bot->GetName().c_str());
         return false;
     }
 

@@ -71,7 +71,7 @@ void StatsAction::ListBagSlots(std::ostringstream &out)
 	if (totalfree < total / 4)
 		color = "ffff0000";
 
-    out << "|h|c" << color << totalfree << "/" << total << "|h|cffffffff Bag";
+    out << "|h|c" << color << totalfree << "/" << total << "|h|cffffffff 背包";
 }
 
 void StatsAction::ListXP(std::ostringstream& out)
@@ -118,7 +118,7 @@ void StatsAction::ListRepairCost(std::ostringstream& out)
     if (repairPercent < 25)
         color = "ffff0000";
 
-    out << "|c" << color << (uint32)ceil(repairPercent) << "% (" << chat->formatMoney(totalCost) << ")|cffffffff Dur";
+    out << "|c" << color << (uint32)ceil(repairPercent) << "% (" << chat->formatMoney(totalCost) << ")|cffffffff 耐久度";
 }
 
 uint32 StatsAction::EstRepair(uint16 pos)
@@ -143,7 +143,7 @@ uint32 StatsAction::EstRepair(uint16 pos)
         DurabilityCostsEntry const* dcost = sDurabilityCostsStore.LookupEntry(ditemProto->ItemLevel);
         if (!dcost)
         {
-            LOG_ERROR("playerbots", "RepairDurability: Wrong item lvl {}", ditemProto->ItemLevel);
+            LOG_ERROR("playerbots", "修复耐久度：错误的装备等级 {}", ditemProto->ItemLevel);
             return TotalCost;
         }
 
@@ -151,7 +151,7 @@ uint32 StatsAction::EstRepair(uint16 pos)
         DurabilityQualityEntry const* dQualitymodEntry = sDurabilityQualityStore.LookupEntry(dQualitymodEntryId);
         if (!dQualitymodEntry)
         {
-            LOG_ERROR("playerbots", "RepairDurability: Wrong dQualityModEntry {}", dQualitymodEntryId);
+            LOG_ERROR("playerbots", "修复耐久度：Wrong dQualityModEntry {}", dQualitymodEntryId);
             return TotalCost;
         }
 

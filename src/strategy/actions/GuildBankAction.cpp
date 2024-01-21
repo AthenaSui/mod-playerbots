@@ -14,7 +14,7 @@ bool GuildBankAction::Execute(Event event)
 
     if (!bot->GetGuildId() || (GetMaster() && GetMaster()->GetGuildId() != bot->GetGuildId()))
     {
-        botAI->TellMaster("I'm not in your guild!");
+        botAI->TellMaster("我不在你的公会中！");
         return false;
     }
 
@@ -28,7 +28,7 @@ bool GuildBankAction::Execute(Event event)
         return Execute(text, go);
     }
 
-    botAI->TellMaster("Cannot find the guild bank nearby");
+    botAI->TellMaster("找不到附近的公会银行");
     return false;
 }
 
@@ -62,10 +62,10 @@ bool GuildBankAction::MoveFromCharToBank(Item* item, GameObject* bank)
 
     // check source pos rights (item moved to bank)
     if (!guild->MemberHasTabRights(bot->GetGUID(), 0, GUILD_BANK_RIGHT_DEPOSIT_ITEM))
-        out << "I can't put " << chat->FormatItem(item->GetTemplate()) << " to guild bank. I have no rights to put items in the first guild bank tab";
+        out << "我不能把 " << chat->FormatItem(item->GetTemplate()) << " 放到公会银行。我没有权利将物品放入公会银行第一个标签";
     else
     {
-        out << chat->FormatItem(item->GetTemplate()) << " put to guild bank";
+        out << chat->FormatItem(item->GetTemplate()) << " 放入公会银行";
         guild->SwapItemsWithInventory(bot, false, 0, 255, playerBag, playerSlot, 0);
     }
 

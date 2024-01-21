@@ -26,26 +26,26 @@ bool TellCastFailedAction::Execute(Event event)
     switch (result)
     {
         case SPELL_FAILED_NOT_READY:
-            out << "not ready";
+            out << "没有准备好";
             break;
         case SPELL_FAILED_REQUIRES_SPELL_FOCUS:
-            out << "requires spell focus";
+            out << "需要法术焦点";
             break;
         case SPELL_FAILED_REQUIRES_AREA:
-            out << "cannot cast here";
+            out << "不能在此释放";
             break;
         case SPELL_FAILED_EQUIPPED_ITEM_CLASS:
-            out << "requires item";
+            out << "需要物品";
             break;
         case SPELL_FAILED_EQUIPPED_ITEM_CLASS_MAINHAND:
         case SPELL_FAILED_EQUIPPED_ITEM_CLASS_OFFHAND:
-            out << "requires weapon";
+            out << "需要武器";
             break;
         case SPELL_FAILED_PREVENTED_BY_MECHANIC:
-            out << "interrupted";
+            out << "被打断";
             break;
         default:
-            out << "cannot cast";
+            out << "无法释放";
     }
 
     if (spellInfo->CalcCastTime() >= 2000)

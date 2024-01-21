@@ -26,7 +26,7 @@ bool TeleportAction::Execute(Event event)
             continue;
 
         std::ostringstream out;
-        out << "Teleporting using " << goInfo->name;
+        out << "正在传送，使用：" << goInfo->name;
         botAI->TellMasterNoFacing(out.str());
 
         botAI->ChangeStrategy("-follow,+stay", BOT_STATE_NON_COMBAT);
@@ -51,6 +51,6 @@ bool TeleportAction::Execute(Event event)
         return true;
     }
 
-    botAI->TellError("Cannot find any portal to teleport");
+    botAI->TellError("找不到任何传送门");
     return false;
 }

@@ -43,13 +43,13 @@ bool ChangeTalentsAction::Execute(Event event)
             param = param.substr(6);
             out << SpecApply(param);
         } else {
-            out << "Unknown command.";
+            out << "未知命令。";
         }
     }
     else
     {
         uint32 tab = AiFactory::GetPlayerSpecTab(bot);
-        out << "My current talent spec is: " << "|h|cffffffff";
+        out << "我当前天赋是：" << "|h|cffffffff";
         out << chat->FormatClass(bot, tab) << "\n";
         out << TalentsHelp();
     }
@@ -62,8 +62,8 @@ bool ChangeTalentsAction::Execute(Event event)
 std::string ChangeTalentsAction::TalentsHelp()
 {
     std::ostringstream out;
-    out << "Talents usage: talents switch <1/2>, talents autopick, talents spec list, "
-            "talents spec <specName>, talents apply <link>.";
+    out << "天赋使用：天赋切换 <1/2>, 自动使用天赋点, 天赋点清单，"
+            "天赋专精 <specName>, 应用天赋点 <link>。";
     return out.str();
 }
 
@@ -88,7 +88,7 @@ std::string ChangeTalentsAction::SpecList()
         out << tabCount[0] << "-" << tabCount[1] << "-" << tabCount[2] << ")";
         botAI->TellMasterNoFacing(out.str());
     }
-    out << "Total " << specFound << " specs found";
+    out << "总计 " << specFound << " 天赋";
     return out.str();
 }
 
@@ -108,7 +108,7 @@ std::string ChangeTalentsAction::SpecPick(std::string param)
         }
     }
     std::ostringstream out;
-    out << "Spec " << param << " not found";
+    out << "天赋 " << param << " 未找到";
     return out.str();
 }
 
@@ -119,11 +119,11 @@ std::string ChangeTalentsAction::SpecApply(std::string param)
     std::ostringstream out;
     std::vector<std::vector<uint32>> parsedSpecLink = PlayerbotAIConfig::ParseTempTalentsOrder(cls, param);
     if (parsedSpecLink.size() == 0) {
-        out << "Invalid link " << param;
+        out << "无效链接 " << param;
         return out.str();
     }
     PlayerbotFactory::InitTalentsByParsedSpecLink(bot, parsedSpecLink, true);
-    out << "Applying " << param;
+    out << "正在应用 " << param;
     return out.str();
 }
 

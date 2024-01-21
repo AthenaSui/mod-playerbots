@@ -43,13 +43,13 @@ bool GiveItemAction::Execute(Event event)
             moved = true;
 
             std::ostringstream out;
-            out << "Got " << chat->FormatItem(item->GetTemplate(), item->GetCount()) << " from " << bot->GetName();
+            out << "从 " << bot->GetName() << " 获得 " << chat->FormatItem(item->GetTemplate(), item->GetCount());
             receiverAi->TellMasterNoFacing(out.str());
         }
         else
         {
             std::ostringstream out;
-            out << "Cannot get " << chat->FormatItem(item->GetTemplate(), item->GetCount()) << " from " << bot->GetName() << "- my bags are full";
+            out << "无法从 " << bot->GetName() << " 获得 " << chat->FormatItem(item->GetTemplate(), item->GetCount()) << "—— 我的背包满了";
             receiverAi->TellError(out.str());
         }
     }

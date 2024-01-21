@@ -22,7 +22,7 @@ bool SetCraftAction::Execute(Event event)
     if (link == "reset")
     {
         data.Reset();
-        botAI->TellMaster("I will not craft anything");
+        botAI->TellMaster("我什么都不会做了");
         return true;
     }
 
@@ -35,7 +35,7 @@ bool SetCraftAction::Execute(Event event)
     ItemIds itemIds = chat->parseItems(link);
     if (itemIds.empty())
     {
-        botAI->TellMaster("Usage: 'craft [itemId]' or 'craft reset'");
+        botAI->TellMaster("用法：'craft [itemId]' 或 'craft reset'");
         return false;
     }
 
@@ -94,7 +94,7 @@ bool SetCraftAction::Execute(Event event)
 
     if (data.required.empty())
     {
-        botAI->TellMaster("I cannot craft this");
+        botAI->TellMaster("这个我不会做");
         return false;
     }
 
@@ -109,7 +109,7 @@ void SetCraftAction::TellCraft()
     CraftData& data = AI_VALUE(CraftData&, "craft");
     if (data.IsEmpty())
     {
-        botAI->TellMaster("I will not craft anything");
+        botAI->TellMaster("我什么都不会做");
         return;
     }
 
@@ -118,7 +118,7 @@ void SetCraftAction::TellCraft()
         return;
 
     std::ostringstream out;
-    out << "I will craft " << chat->FormatItem(proto) << " using reagents: ";
+    out << "我将制作 " << chat->FormatItem(proto) << " 需要使用药剂：";
 
     bool first = true;
     for (std::map<uint32, uint32>::iterator i = data.required.begin(); i != data.required.end(); ++i)
