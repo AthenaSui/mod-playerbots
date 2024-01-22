@@ -109,7 +109,7 @@ void PlayerbotHolder::HandlePlayerBotLoginCallback(PlayerbotLoginQueryHolder con
         if (masterSession)
         {
             ChatHandler ch(masterSession);
-            ch.PSendSysMessage("You are not allowed to control bot %s", bot->GetName());
+            ch.PSendSysMessage("你不允许控制机器人 %s", bot->GetName());
         }
         OnBotLogin(bot);
         LogoutPlayerBot(bot->GetGUID());
@@ -232,7 +232,7 @@ void PlayerbotHolder::LogoutPlayerBot(ObjectGuid guid)
             sPlayerbotDbStore->Save(botAI);
         }
 
-        LOG_INFO("playerbots", "Bot {} logging out", bot->GetName().c_str());
+        LOG_INFO("playerbots", "机器人 {} 已登出", bot->GetName().c_str());
         bot->SaveToDB(false, false);
 
         WorldSession* botWorldSessionPtr = bot->GetSession();
@@ -508,7 +508,7 @@ void PlayerbotHolder::OnBotLogin(Player* const bot)
 std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, ObjectGuid guid, ObjectGuid masterguid, bool admin, uint32 masterAccountId, uint32 masterGuildId)
 {
     if (!sPlayerbotAIConfig->enabled || guid.IsEmpty())
-        return "bot system is disabled";
+        return "机器人系统已禁用";
 
     uint32 botAccount = sCharacterCache->GetCharacterAccountIdByGuid(guid);
     bool isRandomBot = sRandomPlayerbotMgr->IsRandomBot(guid.GetCounter());
@@ -519,13 +519,13 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
     {
         Player* master = ObjectAccessor::FindConnectedPlayer(masterguid);
         if (master && (!sPlayerbotAIConfig->allowGuildBots || !masterGuildId || (masterGuildId && sCharacterCache->GetCharacterGuildIdByGuid(guid) != masterGuildId)))
-            return "not in your guild or account";
+            return "不在你的公会或账号";
     }
 
     if (cmd == "add" || cmd == "login")
     {
         if (ObjectAccessor::FindPlayer(guid))
-            return "player already logged in";
+            return "玩家已登录";
 
         AddPlayerBot(guid, masterAccountId);
         return "ok";
@@ -533,10 +533,10 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
     else if (cmd == "remove" || cmd == "logout" || cmd == "rm")
     {
         if (!ObjectAccessor::FindPlayer(guid))
-            return "player is offline";
+            return "玩家离线";
 
         if (!GetPlayerBot(guid))
-            return "not your bot";
+            return "不是你的机器人";
 
         LogoutPlayerBot(guid);
         return "ok";
@@ -549,17 +549,17 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
         bot = sRandomPlayerbotMgr->GetPlayerBot(guid);
 
     if (!bot)
-        return "bot not found";
+        return "机器人未找到";
 
     if (!isRandomAccount || isRandomBot) {
-        return "ERROR: You can not use this command on non-summoned random bot.";
+        return "错误：您不能在未召唤的随机机器人上使用此命令。";
     }
 
     if (GET_PLAYERBOT_AI(bot)) {
         if (Player* master = GET_PLAYERBOT_AI(bot)->GetMaster())
         {
             if (master->GetSession()->GetSecurity() <= SEC_PLAYER && sPlayerbotAIConfig->autoInitOnly && cmd != "init=auto") {
-                return "The command is not allowed, use init=auto instead.";
+                return "不允许使用该命令，请改用init=auto。";
             }
             int gs;
             if (cmd == "init=white" || cmd == "init=common")
@@ -627,21 +627,21 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
     }
     // }
 
-    return "unknown command";
+    return "未知命令";
 }
 
 bool PlayerbotMgr::HandlePlayerbotMgrCommand(ChatHandler* handler, char const* args)
 {
     if (!sPlayerbotAIConfig->enabled)
     {
-        handler->PSendSysMessage("|cffff0000Playerbot system is currently disabled!");
+        handler->PSendSysMessage("|cffff0000Playerbot系统当前被禁用！");
         return false;
     }
 
     WorldSession* m_session = handler->GetSession();
     if (!m_session)
     {
-        handler->PSendSysMessage("You may only add bots from an active session");
+        handler->PSendSysMessage("您只能从活动会话中添加机器人");
         return false;
     }
 
@@ -649,7 +649,7 @@ bool PlayerbotMgr::HandlePlayerbotMgrCommand(ChatHandler* handler, char const* a
     PlayerbotMgr* mgr = GET_PLAYERBOT_MGR(player);
     if (!mgr)
     {
-        handler->PSendSysMessage("You cannot control bots yet");
+        handler->PSendSysMessage("你还不能控制机器人");
         return false;
     }
 
@@ -671,7 +671,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
 
     if (!*args)
     {
-        messages.push_back("usage: list/reload/tweak/self or add/init/remove PLAYERNAME");
+        messages.push_back("用法：list/reload/tweak/self 或 add/init/remove PLAYERNAME");
         messages.push_back("       addclass CLASSNAME");
         return messages;
     }
@@ -680,7 +680,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
     char* charname = strtok (nullptr, " ");
     if (!cmd)
     {
-        messages.push_back("usage: list/reload/tweak/self or add/init/remove PLAYERNAME or addclass CLASSNAME");
+        messages.push_back("用法：list/reload/tweak/self 或 add/init/remove PLAYERNAME 或 addclass CLASSNAME");
         return messages;
     }
 
@@ -689,10 +689,10 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
             // OnBotLogin(master);
             PlayerbotFactory factory(master, master->getLevel(), ITEM_QUALITY_EPIC);
             factory.Randomize(false);
-            messages.push_back("initself ok");
+            messages.push_back("初始化自身正常");
             return messages;
         } else {
-            messages.push_back("ERROR: Only GM can use this command.");
+            messages.push_back("错误：只有GM可以使用此命令。");
             return messages;
         }
     }
@@ -703,10 +703,10 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
                 // OnBotLogin(master);
                 PlayerbotFactory factory(master, master->getLevel(), ITEM_QUALITY_RARE);
                 factory.Randomize(false);
-                messages.push_back("initself ok");
+                messages.push_back("初始化自身正常");
                 return messages;
             } else {
-                messages.push_back("ERROR: Only GM can use this command.");
+                messages.push_back("错误：只有GM可以使用此命令。");
                 return messages;
             }
         }
@@ -715,10 +715,10 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
                 // OnBotLogin(master);
                 PlayerbotFactory factory(master, master->getLevel(), ITEM_QUALITY_EPIC);
                 factory.Randomize(false);
-                messages.push_back("initself ok");
+                messages.push_back("初始化自身正常");
                 return messages;
             } else {
-                messages.push_back("ERROR: Only GM can use this command.");
+                messages.push_back("错误：只有GM可以使用此命令。");
                 return messages;
             }
         }
@@ -728,10 +728,10 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
                 // OnBotLogin(master);
                 PlayerbotFactory factory(master, master->getLevel(), ITEM_QUALITY_LEGENDARY, gs);
                 factory.Randomize(false);
-                messages.push_back("initself ok, gs = " + std::to_string(gs));
+                messages.push_back("初始化自身正常，gs = " + std::to_string(gs));
                 return messages;
             } else {
-                messages.push_back("ERROR: Only GM can use this command.");
+                messages.push_back("错误：只有GM可以使用此命令。");
                 return messages;
             }
         }
@@ -745,7 +745,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
 
     if (!strcmp(cmd, "reload"))
     {
-        messages.push_back("Reloading config");
+        messages.push_back("正在重新加载配置");
         sPlayerbotAIConfig->Initialize();
         return messages;
     }
@@ -756,7 +756,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
         if (sPlayerbotAIConfig->tweakValue > 2)
             sPlayerbotAIConfig->tweakValue = 0;
 
-        messages.push_back("Set tweakvalue to " + std::to_string(sPlayerbotAIConfig->tweakValue));
+        messages.push_back("将调整值设置为 " + std::to_string(sPlayerbotAIConfig->tweakValue));
         return messages;
     }
 
@@ -764,16 +764,16 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
     {
         if (GET_PLAYERBOT_AI(master))
         {
-            messages.push_back("Disable player botAI");
+            messages.push_back("禁用玩家机器人AI");
             DisablePlayerBot(master->GetGUID());
         }
         else if (sPlayerbotAIConfig->selfBotLevel == 0)
-            messages.push_back("Self-bot is disabled");
+            messages.push_back("Self-bot已禁用");
         else if (sPlayerbotAIConfig->selfBotLevel == 1 && master->GetSession()->GetSecurity() < SEC_GAMEMASTER)
-            messages.push_back("You do not have permission to enable player botAI");
+            messages.push_back("你没有启用玩家机器人AI的权限");
         else
         {
-            messages.push_back("Enable player botAI");
+            messages.push_back("启用玩家机器人AI");
             OnBotLogin(master);
         }
 
@@ -789,11 +789,11 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
     if (!strcmp(cmd, "addclass"))
     {
         if (sPlayerbotAIConfig->addClassCommand == 0 && master->GetSession()->GetSecurity() < SEC_GAMEMASTER) {
-            messages.push_back("You do not have permission to create bot by addclass command");
+            messages.push_back("你没有权限通过 addclass 命令创建机器人");
             return messages;
         }
         if (!charname) {
-            messages.push_back("addclass: invalid CLASSNAME(warrior/paladin/hunter/rogue/priest/shaman/mage/warlock/druid/dk)");
+            messages.push_back("addclass：无效职业名字(warrior/paladin/hunter/rogue/priest/shaman/mage/warlock/druid/dk)");
             return messages;
         }
         uint8 claz;
@@ -839,7 +839,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
         }
         else
         {
-            messages.push_back("Error: Invalid Class. Try again.");
+            messages.push_back("错误：无效职业。请重试。");
             return messages;
         }
         uint8 master_race = master->getRace();
@@ -874,7 +874,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
             messages.push_back("addclass " + std::string(charname) + " ok");
             return messages;
         }
-        messages.push_back("addclass failed.");
+        messages.push_back("addclass 失败。");
         return messages;
     }
 
@@ -888,7 +888,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
         if (isPlayer) {
             charnameStr = name;
         } else {
-            messages.push_back("usage: list/reload/tweak/self or add/init/remove PLAYERNAME");
+            messages.push_back("用法：list/reload/tweak/self 或 add/init/remove PLAYERNAME");
             return messages;
         }
     } else {
@@ -903,7 +903,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
         Group* group = master->GetGroup();
         if (!group)
         {
-            messages.push_back("you must be in group");
+            messages.push_back("你必须在队伍中");
             return messages;
         }
 
@@ -965,7 +965,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
         ObjectGuid member = sCharacterCache->GetCharacterGuidByName(bot);
         if (!member)
         {
-            out << "character not found";
+            out << "角色未找到";
         }
         else if (master && member != master->GetGUID())
         {
@@ -1080,7 +1080,7 @@ std::string const PlayerbotHolder::ListBots(Player* master)
 
     std::ostringstream out;
     bool first = true;
-    out << "Bot roster: ";
+    out << "机器人名册：";
     for (std::vector<std::string>::iterator i = names.begin(); i != names.end(); ++i)
     {
         if (first)
@@ -1098,18 +1098,18 @@ std::string const PlayerbotHolder::ListBots(Player* master)
 std::string const PlayerbotHolder::LookupBots(Player* master)
 {
     std::list<std::string> messages;
-    messages.push_back("Classes Available:");
-    messages.push_back("|TInterface\\icons\\INV_Sword_27.png:25:25:0:-1|t Warrior");
-    messages.push_back("|TInterface\\icons\\INV_Hammer_01.png:25:25:0:-1|t Paladin");
-    messages.push_back("|TInterface\\icons\\INV_Weapon_Bow_07.png:25:25:0:-1|t Hunter");
-    messages.push_back("|TInterface\\icons\\INV_ThrowingKnife_04.png:25:25:0:-1|t Rogue");
-    messages.push_back("|TInterface\\icons\\INV_Staff_30.png:25:25:0:-1|t Priest");
-    messages.push_back("|TInterface\\icons\\inv_jewelry_talisman_04.png:25:25:0:-1|t Shaman");
-    messages.push_back("|TInterface\\icons\\INV_staff_30.png:25:25:0:-1|t Mage");
-    messages.push_back("|TInterface\\icons\\INV_staff_30.png:25:25:0:-1|t Warlock");
-    messages.push_back("|TInterface\\icons\\Ability_Druid_Maul.png:25:25:0:-1|t Druid");
-    messages.push_back("DK");
-    messages.push_back("(Usage: .bot lookup CLASS)");
+    messages.push_back("可用职业：");
+    messages.push_back("|TInterface\\icons\\INV_Sword_27.png:25:25:0:-1|t 战士");
+    messages.push_back("|TInterface\\icons\\INV_Hammer_01.png:25:25:0:-1|t 圣骑士");
+    messages.push_back("|TInterface\\icons\\INV_Weapon_Bow_07.png:25:25:0:-1|t 猎人");
+    messages.push_back("|TInterface\\icons\\INV_ThrowingKnife_04.png:25:25:0:-1|t 盗贼");
+    messages.push_back("|TInterface\\icons\\INV_Staff_30.png:25:25:0:-1|t 牧师");
+    messages.push_back("|TInterface\\icons\\inv_jewelry_talisman_04.png:25:25:0:-1|t 萨满祭司");
+    messages.push_back("|TInterface\\icons\\INV_staff_30.png:25:25:0:-1|t 法师");
+    messages.push_back("|TInterface\\icons\\INV_staff_30.png:25:25:0:-1|t 术士");
+    messages.push_back("|TInterface\\icons\\Ability_Druid_Maul.png:25:25:0:-1|t 德鲁伊");
+    messages.push_back("死亡骑士");
+    messages.push_back("（用法：.bot 查看职业）");
     std::string ret_msg;
     for (std::string msg: messages) {
         ret_msg += msg + "\n";

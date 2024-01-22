@@ -118,7 +118,7 @@ void StatsAction::ListRepairCost(std::ostringstream& out)
     if (repairPercent < 25)
         color = "ffff0000";
 
-    out << "|c" << color << (uint32)ceil(repairPercent) << "% (" << chat->formatMoney(totalCost) << ")|cffffffff 耐久度";
+    out << "|c" << color << (uint32)ceil(100 - repairPercent) << "% (" << chat->formatMoney(totalCost) << ")|cffffffff 耐久度";
 }
 
 uint32 StatsAction::EstRepair(uint16 pos)

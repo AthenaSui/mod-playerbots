@@ -25,15 +25,15 @@ bool ChangeTalentsAction::Execute(Event event)
         } else if (param.find("switch") != std::string::npos) {
             if (param == "1") {
                 bot->ActivateSpec(0);
-                out << "Active first talent";
+                out << "第一天赋启用";
             } else if (param == "2") {
                 bot->ActivateSpec(1);
-                out << "Active second talent";
+                out << "第二天赋启用";
             }
         } else if (param.find("autopick") != std::string::npos) {
             PlayerbotFactory factory(bot, bot->GetLevel());
             factory.InitTalentsTree(true);
-            out << "Auto pick talents";
+            out << "自动使用天赋点";
         } else if (param.find("spec list") != std::string::npos) {
             out << SpecList();
         } else if (param.find("spec ") != std::string::npos) {
@@ -62,8 +62,8 @@ bool ChangeTalentsAction::Execute(Event event)
 std::string ChangeTalentsAction::TalentsHelp()
 {
     std::ostringstream out;
-    out << "天赋使用：天赋切换 <1/2>, 自动使用天赋点, 天赋点清单，"
-            "天赋专精 <specName>, 应用天赋点 <link>。";
+    out << "天赋用法：talents switch <1/2>，talents autopick，talents spec list，"
+            "talents spec <specName>，talents apply <link>。";
     return out.str();
 }
 
@@ -84,11 +84,11 @@ std::string ChangeTalentsAction::SpecList()
         for (auto &item : parsed) {
             tabCount[item[0]] += item[3];
         }
-        out << specFound << ". " << sPlayerbotAIConfig->premadeSpecName[cls][specNo] << " (";
-        out << tabCount[0] << "-" << tabCount[1] << "-" << tabCount[2] << ")";
+        out << specFound << ". " << sPlayerbotAIConfig->premadeSpecName[cls][specNo] << "（";
+        out << tabCount[0] << "-" << tabCount[1] << "-" << tabCount[2] << "）";
         botAI->TellMasterNoFacing(out.str());
     }
-    out << "总计 " << specFound << " 天赋";
+    out << "总计 " << specFound << " 天赋发现";
     return out.str();
 }
 
@@ -103,7 +103,7 @@ std::string ChangeTalentsAction::SpecPick(std::string param)
         if (sPlayerbotAIConfig->premadeSpecName[cls][specNo] == param) {
             PlayerbotFactory::InitTalentsBySpecNo(bot, specNo, true);
             std::ostringstream out;
-            out << "Picking " << sPlayerbotAIConfig->premadeSpecName[cls][specNo];
+            out << "正在使用 " << sPlayerbotAIConfig->premadeSpecName[cls][specNo];
             return out.str();
         }
     }

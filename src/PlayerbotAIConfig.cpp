@@ -159,7 +159,7 @@ bool PlayerbotAIConfig::Initialize()
     perfMonEnabled = sConfigMgr->GetOption<bool>("AiPlayerbot.PerfMonEnabled", false);
 
     LOG_INFO("server.loading", "---------------------------------------");
-    LOG_INFO("server.loading", "          Loading TalentSpecs          ");
+    LOG_INFO("server.loading", "             加载天赋专精              ");
     LOG_INFO("server.loading", "---------------------------------------");
 
     for (uint32 cls = 1; cls < MAX_CLASSES; ++cls)

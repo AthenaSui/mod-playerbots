@@ -402,7 +402,7 @@ void RandomPlayerbotMgr::LoadBattleMastersCache()
     BattleMastersCache.clear();
 
     LOG_INFO("playerbots", "---------------------------------------");
-    LOG_INFO("playerbots", "          Loading BattleMasters Cache  ");
+    LOG_INFO("playerbots", "          加载战场管理员缓存  ");
     LOG_INFO("playerbots", "---------------------------------------");
 
     QueryResult result = WorldDatabase.Query("SELECT `entry`,`bg_template` FROM `battlemaster_entry`");
@@ -695,7 +695,7 @@ void RandomPlayerbotMgr::CheckLfgQueue()
     if (!LfgCheckTimer || time(nullptr) > (LfgCheckTimer + 30))
         LfgCheckTimer = time(nullptr);
 
-    LOG_INFO("playerbots", "Checking LFG Queue...");
+    LOG_INFO("playerbots", "LFG 队列检查中...");
 
     // Clear LFG list
     LfgDungeons[TEAM_ALLIANCE].clear();
@@ -733,7 +733,7 @@ void RandomPlayerbotMgr::CheckPlayers()
     if (!PlayersCheckTimer || time(nullptr) > (PlayersCheckTimer + 60))
         PlayersCheckTimer = time(nullptr);
 
-    LOG_INFO("playerbots", "Checking Players...");
+    LOG_INFO("playerbots", "玩家检查中...");
 
     if (!playersLevel)
         playersLevel = sPlayerbotAIConfig->randombotStartingLevel;
@@ -752,7 +752,7 @@ void RandomPlayerbotMgr::CheckPlayers()
             playersLevel = player->getLevel() + 3;
     }
 
-    LOG_INFO("playerbots", "Max player level is {}, max bot level set to {}", playersLevel - 3, playersLevel);
+    LOG_INFO("playerbots", "玩家最大等级为 {}，机器人最大等级设置为 {}", playersLevel - 3, playersLevel);
 }
 
 void RandomPlayerbotMgr::ScheduleRandomize(uint32 bot, uint32 time)
@@ -790,9 +790,9 @@ bool RandomPlayerbotMgr::ProcessBot(uint32 bot)
 		if (!player || !player->GetGroup())
 		{
             if (player)
-                LOG_INFO("playerbots", "Bot #{} {}:{} <{}>: log out", bot, IsAlliance(player->getRace()) ? "A" : "H", player->getLevel(), player->GetName().c_str());
+                LOG_INFO("playerbots", "Bot #{} {}:{} <{}>: 登出", bot, IsAlliance(player->getRace()) ? "A" : "H", player->getLevel(), player->GetName().c_str());
             else
-                LOG_INFO("playerbots", "Bot #{}: log out", bot);
+                LOG_INFO("playerbots", "Bot #{}: 登出", bot);
 
 			SetEventValue(bot, "add", 0, 0);
 			currentBots.erase(std::remove(currentBots.begin(), currentBots.end(), bot), currentBots.end());
@@ -1070,7 +1070,7 @@ void RandomPlayerbotMgr::RandomTeleport(Player* bot, std::vector<WorldLocation>&
 
             z = 0.05f + ground;
 
-            LOG_INFO("playerbots", "Random teleporting bot {} to {} {},{},{} ({}/{} locations)",
+            LOG_INFO("playerbots", "随机传送机器人 {} 到 {} {},{},{} ({}/{} 位置)",
                 bot->GetName().c_str(), zone->area_name[0], x, y, z, attemtps, tlocs.size());
 
             if (hearth)
@@ -1261,7 +1261,7 @@ void RandomPlayerbotMgr::RandomTeleportForLevel(Player* bot)
 
     uint32 level = bot->getLevel();
     uint8 race = bot->getRace();
-    LOG_INFO("playerbots", "Random teleporting bot {} for level {} ({} locations available)", bot->GetName().c_str(), bot->GetLevel(), locsPerLevelCache[level].size());
+    LOG_INFO("playerbots", "Random teleporting bot {} for level {} ({} 可用位置)", bot->GetName().c_str(), bot->GetLevel(), locsPerLevelCache[level].size());
     if (urand(0, 100) < sPlayerbotAIConfig->probTeleToBankers * 100) {
         RandomTeleport(bot, bankerLocsPerLevelCache[level], true);
     } else {
@@ -1276,7 +1276,7 @@ void RandomPlayerbotMgr::RandomTeleportGrindForLevel(Player* bot)
 
     uint32 level = bot->getLevel();
     uint8 race = bot->getRace();
-    LOG_INFO("playerbots", "Random teleporting bot {} for level {} ({} locations available)", bot->GetName().c_str(), bot->GetLevel(), locsPerLevelCache[level].size());
+    LOG_INFO("playerbots", "Random teleporting bot {} for level {} ({} 可用位置)", bot->GetName().c_str(), bot->GetLevel(), locsPerLevelCache[level].size());
 
     RandomTeleport(bot, locsPerLevelCache[level]);
 }
@@ -1898,7 +1898,7 @@ void RandomPlayerbotMgr::OnPlayerLogout(Player* player)
 
 void RandomPlayerbotMgr::OnBotLoginInternal(Player * const bot)
 {
-    LOG_INFO("playerbots", "{}/{} Bot {} logged in", playerBots.size(), sRandomPlayerbotMgr->GetMaxAllowedBotCount(), bot->GetName().c_str());
+    LOG_INFO("playerbots", "{}/{} 机器人 {} 已登录", playerBots.size(), sRandomPlayerbotMgr->GetMaxAllowedBotCount(), bot->GetName().c_str());
 }
 
 void RandomPlayerbotMgr::OnPlayerLogin(Player* player)
@@ -2295,7 +2295,7 @@ std::string const RandomPlayerbotMgr::HandleRemoteCommand(std::string const requ
     if (pos == request.end())
     {
         std::ostringstream out;
-        out << "invalid request: " << request;
+        out << "无效的请求：" << request;
         return out.str();
     }
 
@@ -2353,7 +2353,7 @@ void RandomPlayerbotMgr::RandomTeleportForRpg(Player* bot)
 {
     uint32 race = bot->getRace();
     uint32 level = bot->GetLevel();
-    LOG_INFO("playerbots", "Random teleporting bot {} for RPG ({} locations available)", bot->GetName().c_str(), rpgLocsCacheLevel[race].size());
+    LOG_INFO("playerbots", "Random teleporting bot {} for RPG ({} 可用位置)", bot->GetName().c_str(), rpgLocsCacheLevel[race].size());
     RandomTeleport(bot, rpgLocsCacheLevel[race][level], true);
 }
 

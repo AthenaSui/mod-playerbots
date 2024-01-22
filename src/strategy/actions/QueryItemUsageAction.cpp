@@ -93,7 +93,7 @@ std::string const QueryItemUsageAction::QueryItem(ItemTemplate const* item, uint
     if (usage.empty())
         usage = (quest.empty() ? "Useless" : "Quest");
 
-    out << chat->FormatItem(item, count, total) << ": " << usage;
+    out << chat->FormatItem(item, count, total) << "：" << usage;
     if (!quest.empty())
         out << ", " << quest;
 
@@ -111,29 +111,29 @@ std::string const QueryItemUsageAction::QueryItemUsage(ItemTemplate const* item)
     switch (usage)
     {
         case ITEM_USAGE_EQUIP:
-            return "Equip";
+            return "装备";
         case ITEM_USAGE_REPLACE:
-            return "Equip (replace)";
+            return "装备（替换）";
         case ITEM_USAGE_BAD_EQUIP:
-            return "Equip (temporary)";
+            return "装备（临时）";
         case ITEM_USAGE_BROKEN_EQUIP:
-            return "Broken Equip";
+            return "停止装备";
         case ITEM_USAGE_QUEST:
-            return "Quest (other)";
+            return "任务（其他）";
         case ITEM_USAGE_SKILL:
-            return "Tradeskill";
+            return "商业技能";
         case ITEM_USAGE_USE:
-            return "Use";
+            return "使用";
 	    case ITEM_USAGE_GUILD_TASK:
-		    return "Guild task";
+		    return "公会任务";
 	    case ITEM_USAGE_DISENCHANT:
-		    return "Disenchant";
+		    return "分解";
         case ITEM_USAGE_VENDOR:
-            return "Vendor";
+            return "商人";
         case ITEM_USAGE_AH:
-            return "Auctionhouse";
+            return "拍卖行";
         case ITEM_USAGE_AMMO:
-            return "Ammunition";
+            return "弹药";
 	}
 
     return "";
@@ -161,7 +161,7 @@ std::string const QueryItemUsageAction::QueryItemPrice(ItemTemplate const* item)
         }
     }
     if (sellPrice)
-        msg << "Sell: " << chat->formatMoney(sellPrice);
+        msg << "卖价：" << chat->formatMoney(sellPrice);
 
     std::ostringstream out;
     out << item->ItemId;
@@ -175,7 +175,7 @@ std::string const QueryItemUsageAction::QueryItemPrice(ItemTemplate const* item)
         if (sellPrice)
             msg << " ";
 
-        msg << "Buy: " << chat->formatMoney(buyPrice);
+        msg << "买价：" << chat->formatMoney(buyPrice);
     }
 
     return msg.str();
