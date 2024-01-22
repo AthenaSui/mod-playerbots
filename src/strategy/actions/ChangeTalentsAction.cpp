@@ -25,10 +25,10 @@ bool ChangeTalentsAction::Execute(Event event)
         } else if (param.find("switch") != std::string::npos) {
             if (param == "1") {
                 bot->ActivateSpec(0);
-                out << "第一天赋启用";
+                out << "第一天赋已启用";
             } else if (param == "2") {
                 bot->ActivateSpec(1);
-                out << "第二天赋启用";
+                out << "第二天赋已启用";
             }
         } else if (param.find("autopick") != std::string::npos) {
             PlayerbotFactory factory(bot, bot->GetLevel());
@@ -49,7 +49,7 @@ bool ChangeTalentsAction::Execute(Event event)
     else
     {
         uint32 tab = AiFactory::GetPlayerSpecTab(bot);
-        out << "我当前天赋是：" << "|h|cffffffff";
+        out << "当前天赋：" << "|h|cffffffff";
         out << chat->FormatClass(bot, tab) << "\n";
         out << TalentsHelp();
     }
@@ -88,7 +88,7 @@ std::string ChangeTalentsAction::SpecList()
         out << tabCount[0] << "-" << tabCount[1] << "-" << tabCount[2] << "）";
         botAI->TellMasterNoFacing(out.str());
     }
-    out << "总计 " << specFound << " 天赋发现";
+    out << "总计 " << specFound << " 天赋";
     return out.str();
 }
 
@@ -103,12 +103,12 @@ std::string ChangeTalentsAction::SpecPick(std::string param)
         if (sPlayerbotAIConfig->premadeSpecName[cls][specNo] == param) {
             PlayerbotFactory::InitTalentsBySpecNo(bot, specNo, true);
             std::ostringstream out;
-            out << "正在使用 " << sPlayerbotAIConfig->premadeSpecName[cls][specNo];
+            out << "天赋切换为：" << sPlayerbotAIConfig->premadeSpecName[cls][specNo];
             return out.str();
         }
     }
     std::ostringstream out;
-    out << "天赋 " << param << " 未找到";
+    out << "天赋：" << param << " 未找到";
     return out.str();
 }
 

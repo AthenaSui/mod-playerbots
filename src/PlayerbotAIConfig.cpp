@@ -318,7 +318,7 @@ bool PlayerbotAIConfig::Initialize()
     }
 
     LOG_INFO("server.loading", "---------------------------------------");
-    LOG_INFO("server.loading", "        AI Playerbots initialized       ");
+    LOG_INFO("server.loading", "          AI 玩家机器人已初始化        ");
     LOG_INFO("server.loading", "---------------------------------------");
 
     return true;
