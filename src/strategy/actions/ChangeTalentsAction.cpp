@@ -25,10 +25,10 @@ bool ChangeTalentsAction::Execute(Event event)
         } else if (param.find("switch") != std::string::npos) {
             if (param == "1") {
                 bot->ActivateSpec(0);
-                out << "第一天赋已启用";
+                out << "主天赋已启用";
             } else if (param == "2") {
                 bot->ActivateSpec(1);
-                out << "第二天赋已启用";
+                out << "副天赋已启用";
             }
         } else if (param.find("autopick") != std::string::npos) {
             PlayerbotFactory factory(bot, bot->GetLevel());
@@ -62,8 +62,9 @@ bool ChangeTalentsAction::Execute(Event event)
 std::string ChangeTalentsAction::TalentsHelp()
 {
     std::ostringstream out;
-    out << "天赋用法：talents switch <1/2>，talents autopick，talents spec list，"
-            "talents spec <specName>，talents apply <link>。";
+    out << "用法：talents switch <1/2>（切换主副天赋），talents autopick（自动使用天赋点），"
+			"talents spec list（显示可用预设专精），talents spec <专精名字>（切换天赋），"
+			"talents apply <link>（应用天赋点链接）。";
     return out.str();
 }
 
@@ -88,7 +89,7 @@ std::string ChangeTalentsAction::SpecList()
         out << tabCount[0] << "-" << tabCount[1] << "-" << tabCount[2] << "）";
         botAI->TellMasterNoFacing(out.str());
     }
-    out << "总计 " << specFound << " 天赋";
+    out << "总计 " << specFound << " 天赋可用";
     return out.str();
 }
 

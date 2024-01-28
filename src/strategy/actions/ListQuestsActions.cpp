@@ -94,7 +94,7 @@ uint32 ListQuestsAction::ListQuests(bool completed, bool silent, QuestTravelDeta
                 {
                     std::ostringstream out;
                     out << "[活动的] 正赶往 " << target->getPosition()->distance(botPos);
-                    out << " to " << QuestDestination->getTitle();
+                    out << " 去 " << QuestDestination->getTitle();
                     botAI->TellMaster(out);
                 }
             }
@@ -120,10 +120,10 @@ uint32 ListQuestsAction::ListQuests(bool completed, bool silent, QuestTravelDeta
                 apoints += dest->getPoints().size();
 
             std::ostringstream out;
-            out << desAvail << "/" << desTot << " destinations " << apoints << "/" << tpoints << " points. ";
+            out << desAvail << "/" << desTot << " 目的地 " << apoints << "/" << tpoints << " 点。 ";
 
             if (desFull > 0)
-                out << desFull << " crowded.";
+                out << desFull << " 人太多了。";
 
             if (desRange > 0)
                 out << desRange << " 超出距离。";

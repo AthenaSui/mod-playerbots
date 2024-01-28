@@ -2888,7 +2888,7 @@ bool BGTactics::selectObjective(bool reset)
                         BgObjective = pVanndar;
                         endBoss = true;
                         std::ostringstream out;
-                        out << "Attacking Vanndar!";
+                        out << "进攻范达尔·雷矛！";
                         //bot->Say(out.str(), LANG_UNIVERSAL);
                     }
                 }
@@ -2906,7 +2906,7 @@ bool BGTactics::selectObjective(bool reset)
                         {
                             BgObjective = pGO;
                             std::ostringstream out;
-                            out << "Attacking Snowfall GY!";
+                            out << "进攻雪落墓地!";
                             //bot->Say(out.str(), LANG_UNIVERSAL);
                         }
                 }
@@ -2928,13 +2928,13 @@ bool BGTactics::selectObjective(bool reset)
                                     AV_STONEHEARTH_WAITING_HORDE.GetPositionZ(), bg->GetMapId());
 
                                 std::ostringstream out;
-                                out << "Taking position at Stonehearth!";
+                                out << "石炉集合！";
                                 //bot->Say(out.str(), LANG_UNIVERSAL);
                             }
                             else
                             {
                                 std::ostringstream out;
-                                out << "Attacking Balinda!";
+                                out << "进攻巴琳达!";
                                 //bot->Say(out.str(), LANG_UNIVERSAL);
                             }
 
@@ -3028,7 +3028,7 @@ bool BGTactics::selectObjective(bool reset)
                         BgObjective = pDrek;
                         endBoss = true;
                         std::ostringstream out;
-                        out << "Attacking DrekThar!";
+                        out << "进攻德雷克塔尔！";
                         //bot->Say(out.str(), LANG_UNIVERSAL);
                     }
                 }
@@ -3046,7 +3046,7 @@ bool BGTactics::selectObjective(bool reset)
                         {
                             BgObjective = pGO;
                             std::ostringstream out;
-                            out << "Attacking Snowfall GY!";
+                            out << "进攻雪落墓地";
                             //bot->Say(out.str(), LANG_UNIVERSAL);
                         }
                 }

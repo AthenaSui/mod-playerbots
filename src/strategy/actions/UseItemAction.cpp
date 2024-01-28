@@ -177,7 +177,7 @@ bool UseItemAction::UseItem(Item* item, ObjectGuid goGuid, Item* itemTarget, Uni
             bot->GetSession()->HandleQuestgiverAcceptQuestOpcode(packet);
 
             std::ostringstream out;
-            out << "Got quest " << chat->FormatQuest(qInfo);
+            out << "获得任务 " << chat->FormatQuest(qInfo);
             botAI->TellMasterNoFacing(out.str());
             return true;
         }

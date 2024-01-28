@@ -351,7 +351,7 @@ void PlayerbotAI::UpdateAIInternal([[maybe_unused]] uint32 elapsed, bool minimal
         if (!helper.ParseChatCommand(command, owner) && holder.GetType() == CHAT_MSG_WHISPER)
         {
             std::ostringstream out;
-            out << "未知命令 " << command;
+            out << "未知命令：" << command;
             TellMaster(out);
             helper.ParseChatCommand("help");
         }
