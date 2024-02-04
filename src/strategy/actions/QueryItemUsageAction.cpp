@@ -91,14 +91,15 @@ std::string const QueryItemUsageAction::QueryItem(ItemTemplate const* item, uint
     std::string const quest = QueryQuestItem(item->ItemId);
     std::string const price = QueryItemPrice(item);
     if (usage.empty())
-        usage = (quest.empty() ? "Useless" : "Quest");
+        usage = (quest.empty() ? "无用" : "任务");
 
     out << chat->FormatItem(item, count, total) << "：" << usage;
     if (!quest.empty())
-        out << ", " << quest;
+        out << "，" << quest;
 
     if (!price.empty())
-        out << ", " << price;
+        out << "，" << price;
+        out << "，" << price;
 
     return out.str();
 }

@@ -117,7 +117,7 @@ bool UseItemAction::UseItem(Item* item, ObjectGuid goGuid, Item* itemTarget, Uni
 
         packet << targetFlag;
         packet << goGuid.WriteAsPacked();
-        out << " on " << chat->FormatGameobject(go);
+        out << " 目标：" << chat->FormatGameobject(go);
         targetSelected = true;
     }
 
@@ -136,7 +136,7 @@ bool UseItemAction::UseItem(Item* item, ObjectGuid goGuid, Item* itemTarget, Uni
             targetFlag = TARGET_FLAG_ITEM;
             packet << targetFlag;
             packet << itemTarget->GetGUID().WriteAsPacked();
-            out << " on " << chat->FormatItem(itemTarget->GetTemplate());
+            out << " 目标：" << chat->FormatItem(itemTarget->GetTemplate());
             targetSelected = true;
         }
     }
@@ -151,7 +151,7 @@ bool UseItemAction::UseItem(Item* item, ObjectGuid goGuid, Item* itemTarget, Uni
             {
 			    targetFlag = TARGET_FLAG_UNIT;
 				packet << targetFlag << masterSelection.WriteAsPacked();
-				out << " on " << unit->GetName();
+				out << " 目标：" << unit->GetName();
 				targetSelected = true;
 			}
 		}
@@ -161,7 +161,7 @@ bool UseItemAction::UseItem(Item* item, ObjectGuid goGuid, Item* itemTarget, Uni
     {
         targetFlag = TARGET_FLAG_UNIT;
         packet << targetFlag << unitTarget->GetGUID().WriteAsPacked();
-        out << " on " << unitTarget->GetName();
+        out << " 目标：" << unitTarget->GetName();
         targetSelected = true;
     }
 
@@ -228,7 +228,7 @@ bool UseItemAction::UseItem(Item* item, ObjectGuid goGuid, Item* itemTarget, Uni
                 packet << targetFlag;
                 packet << itemForSpell->GetGUID().WriteAsPacked();
                 targetSelected = true;
-                out << " on "<< chat->FormatItem(itemForSpell->GetTemplate());
+                out << " 目标："<< chat->FormatItem(itemForSpell->GetTemplate());
             }
 
             Spell* spell = new Spell(bot, spellInfo, TRIGGERED_NONE);
@@ -245,7 +245,7 @@ bool UseItemAction::UseItem(Item* item, ObjectGuid goGuid, Item* itemTarget, Uni
         packet << targetFlag;
         packet << bot->GetPackGUID();
         targetSelected = true;
-        out << " 自己";
+        out << "目标：自己";
     }
 
     ItemTemplate const* proto = item->GetTemplate();
@@ -264,17 +264,17 @@ bool UseItemAction::UseItem(Item* item, ObjectGuid goGuid, Item* itemTarget, Uni
         if (isDrink && isFood)
         {
             p = std::min(hp, mp);
-            TellConsumableUse(item, "Feasting", p);
+            TellConsumableUse(item, "享用", p);
         }
         else if (isDrink)
         {
             p = mp;
-            TellConsumableUse(item, "Drinking", p);
+            TellConsumableUse(item, "饮用", p);
         }
         else if (isFood)
         {
             p = std::min(hp, mp);
-            TellConsumableUse(item, "Eating", p);
+            TellConsumableUse(item, "食用", p);
         }
 
         if (!bot->IsInCombat() && !bot->InBattleground())

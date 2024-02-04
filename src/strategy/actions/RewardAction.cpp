@@ -66,7 +66,7 @@ bool RewardAction::Reward(uint32 itemId, Object* questGiver)
                     std::string const itemName = pRewardItem->Name1;
 
                     std::ostringstream out;
-                    out << chat->FormatItem(pRewardItem) << " 奖励";
+                    out  << "已选择：" << chat->FormatItem(pRewardItem);
                     botAI->TellMaster(out);
 
                     return true;

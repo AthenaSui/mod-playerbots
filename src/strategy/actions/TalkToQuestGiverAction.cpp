@@ -14,7 +14,7 @@
 void TalkToQuestGiverAction::ProcessQuest(Quest const* quest, Object* questGiver)
 {
     std::ostringstream out;
-    out << "Quest ";
+    out << "任务 ";
 
     QuestStatus status = bot->GetQuestStatus(quest->GetQuestId());
     Player* master = GetMaster();
