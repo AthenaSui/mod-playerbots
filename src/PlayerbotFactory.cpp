@@ -97,9 +97,11 @@ void PlayerbotFactory::Prepare()
         bot->ResurrectPlayer(1.0f, false);
 
     bot->CombatStop(true);
-
+    uint32 currentLevel = bot->GetLevel();
     bot->GiveLevel(level);
-    bot->SetUInt32Value(PLAYER_XP, 0);
+    if (level != currentLevel) {
+        bot->SetUInt32Value(PLAYER_XP, 0);
+    }
     if (!sPlayerbotAIConfig->randomBotShowHelmet || !urand(0, 4))
     {
         bot->SetFlag(PLAYER_FLAGS, PLAYER_FLAGS_HIDE_HELM);
@@ -158,6 +160,7 @@ void PlayerbotFactory::Randomize(bool incremental)
 
     if (sPlayerbotAIConfig->randomBotPreQuests)
     {
+        uint32 currentXP = bot->GetUInt32Value(PLAYER_XP);
         LOG_INFO("playerbots", "Initializing quests...");
         pmo = sPerformanceMonitor->start(PERF_MON_RNDBOT, "PlayerbotFactory_Quests");
         InitQuests(classQuestIds);
@@ -169,7 +172,7 @@ void PlayerbotFactory::Randomize(bool incremental)
         
 
         ClearInventory();
-        bot->SetUInt32Value(PLAYER_XP, 0);
+        bot->SetUInt32Value(PLAYER_XP, currentXP);
         CancelAuras();
         bot->SaveToDB(false, false);
         if (pmo)
@@ -195,7 +198,9 @@ void PlayerbotFactory::Randomize(bool incremental)
 
     pmo = sPerformanceMonitor->start(PERF_MON_RNDBOT, "PlayerbotFactory_Talents");
     LOG_INFO("playerbots", "Initializing talents...");
-    InitTalentsTree();
+    if (!sPlayerbotAIConfig->equipmentPersistence || bot->GetLevel() < sPlayerbotAIConfig->equipmentPersistenceLevel) {
+        InitTalentsTree();
+    }
     sRandomPlayerbotMgr->SetValue(bot->GetGUID().GetCounter(), "specNo", 0);
     if (botAI) {
         sPlayerbotDbStore->Reset(botAI);
@@ -2261,8 +2266,8 @@ void PlayerbotFactory::InitTalentsByTemplate(uint32 specTab)
         }
         for (std::vector<uint32> &p : sPlayerbotAIConfig->parsedSpecLinkOrder[cls][specIndex][level]) {
             uint32 tab = p[0], row = p[1], col = p[2], lvl = p[3];
-            uint32 talentID = -1;
-
+            uint32 talentID = 0;
+            uint32 learnLevel = 0;
             std::vector<TalentEntry const*> &spells = spells_row[row];
             if (spells.size() <= 0) {
                 return;
@@ -2279,8 +2284,19 @@ void PlayerbotFactory::InitTalentsByTemplate(uint32 specTab)
                     bot->LearnTalent(talentInfo->DependsOn, std::min(talentInfo->DependsOnRank, bot->GetFreeTalentPoints() - 1));            
                 }
                 talentID = talentInfo->TalentID;
+
+                uint32 currentTalentRank = 0;
+                for (uint8 rank = 0; rank < MAX_TALENT_RANK; ++rank)
+                {
+                    if (talentInfo->RankID[rank] && bot->HasTalent(talentInfo->RankID[rank], bot->GetActiveSpec()))
+                    {
+                        currentTalentRank = rank + 1;
+                        break;
+                    }
+                }
+                learnLevel = std::min(lvl, bot->GetFreeTalentPoints() + currentTalentRank) - 1;
             }
-            bot->LearnTalent(talentID, std::min(lvl, bot->GetFreeTalentPoints()) - 1);
+            bot->LearnTalent(talentID, learnLevel);
             if (bot->GetFreeTalentPoints() == 0) {
                 break;
             }
@@ -2616,8 +2632,7 @@ void PlayerbotFactory::InitFood()
                 j--;
                 continue;
             }
-            // bot->StoreNewItemInBestSlots(itemId, urand(1, proto->GetMaxStackSize()));
-            bot->StoreNewItemInBestSlots(itemId, proto->GetMaxStackSize());
+            StoreItem(itemId, proto->GetMaxStackSize());
         }
    }
 }
@@ -2662,21 +2677,17 @@ void PlayerbotFactory::InitReagents()
             break;
         case CLASS_PRIEST:
             if (level >= 48 && level < 60) {
-                items.push_back({17028, 40});
-                // bot->StoreNewItemInBestSlots(17028, 40); // Wild Berries
+                items.push_back({17028, 40}); // Wild Berries
             } else if (level >= 60 && level < 80) {
-                items.push_back({17029, 40});
-                // bot->StoreNewItemInBestSlots(17029, 40); // Wild Berries
+                items.push_back({17029, 40}); // Wild Berries
             } else if (level >= 80) {
-                items.push_back({44615, 40});
-                // bot->StoreNewItemInBestSlots(44615, 40); // Wild Berries
+                items.push_back({44615, 40}); // Wild Berries
             }
             break;
         case CLASS_MAGE:
-            items.push_back({17020, 40});
+            items.push_back({17020, 40}); // Arcane Powder
             items.push_back({17031, 40}); // portal
             items.push_back({17032, 40}); // portal
-            // bot->StoreNewItemInBestSlots(17020, 40); // Arcane Powder
             break;
         case CLASS_DRUID:
             if (level >= 20 && level < 30) {
@@ -2709,13 +2720,13 @@ void PlayerbotFactory::InitReagents()
             items.push_back({21177, 100});
             break;
         case CLASS_DEATH_KNIGHT:
-            items.push_back({21177, 40});
+            items.push_back({37201, 40});
             break;
         default:
             break;
     }
     for (std::pair item : items) {
-        bot->StoreNewItemInBestSlots(item.first, item.second);
+        StoreItem(item.first, item.second);
     }
 }
 

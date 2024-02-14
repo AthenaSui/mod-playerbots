@@ -155,7 +155,6 @@ AiPlayerbot.AutoInitEquipLevelLimitRatio = 1.0
 # 默认：1 (启用)
 AiPlayerbot.AddClassCommand = 1
 
-
 # 自动化
 
 # Bots keep looting when group loop method is free for all
@@ -163,6 +162,12 @@ AiPlayerbot.AddClassCommand = 1
 AiPlayerbot.FreeMethodLoot = 0
 
 # 机器人选择任务奖励 (yes = 选择第一个可用物品，no = 列出所有奖励，ask = 选择可用物品并列出如果多个)
+# Bots loot roll level (0 = pass, 1 = greed, 2 = need)
+# Default: 1 (greed)
+AiPlayerbot.LootRollLevel = 1
+
+# Bots pick their quest reward (yes = picks first useful item, no = list all rewards, ask = pick useful item and lists if multiple)
+
 AiPlayerbot.AutoPickReward = no
 
 # 机器人装备升级 (机器人将装备任何拾取或任务获取的有提升的物品)
@@ -275,7 +280,7 @@ AiPlayerbot.HealDistance = 38.5
 AiPlayerbot.LootDistance = 15.0
 AiPlayerbot.FleeDistance = 5.0
 AiPlayerbot.TooCloseDistance = 5.0
-AiPlayerbot.MeleeDistance = 0.01
+AiPlayerbot.MeleeDistance = 0.75
 AiPlayerbot.FollowDistance = 1.5
 AiPlayerbot.WhisperDistance = 6000.0
 AiPlayerbot.ContactDistance = 0.45
@@ -485,6 +490,7 @@ AiPlayerbot.PremadeSpecName.3.2 = 生存pve
 AiPlayerbot.PremadeSpecLink.3.2.60 = 
 AiPlayerbot.PremadeSpecLink.3.2.80 = -0053041-5000032500033330523134321331
 # Rogue
+
 AiPlayerbot.PremadeSpecName.4.0 = 刺杀pve
 AiPlayerbot.PremadeSpecLink.4.0.60 = 
 AiPlayerbot.PremadeSpecLink.4.0.80 = 005323005350100520103331051-005005003-502
@@ -503,7 +509,7 @@ AiPlayerbot.PremadeSpecLink.5.1.60 =
 AiPlayerbot.PremadeSpecLink.5.1.80 = 05032031-235050032302152530000331351
 AiPlayerbot.PremadeSpecName.5.2 = 暗影pve
 AiPlayerbot.PremadeSpecLink.5.2.60 = 
-AiPlayerbot.PremadeSpecLink.5.2.80 = 0053231-2-5120222030321121050135231251
+AiPlayerbot.PremadeSpecLink.5.2.80 = 0503203--325023051223010323152301351
 # DeathKnight
 AiPlayerbot.PremadeSpecName.6.0 = 鲜血pve
 AiPlayerbot.PremadeSpecLink.6.0.60 = 

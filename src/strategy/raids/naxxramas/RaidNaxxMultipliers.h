@@ -14,23 +14,25 @@ public:
     virtual float GetValue(Action* action);
 };
 
-// class LoathebGenericMultiplier : public Multiplier
-// {
-// public:
-//     LoathebGenericMultiplier(PlayerbotAI* ai) : Multiplier(ai, "loatheb generic") {}
+class LoathebGenericMultiplier : public Multiplier
+{
+public:
+    LoathebGenericMultiplier(PlayerbotAI* ai) : Multiplier(ai, "loatheb generic") {}
 
-// public:
-//     virtual float GetValue(Action* action);
-// };
+public:
+    virtual float GetValue(Action* action);
+};
 
-// class ThaddiusGenericMultiplier : public Multiplier
-// {
-// public:
-//     ThaddiusGenericMultiplier(PlayerbotAI* ai) : Multiplier(ai, "thaddius generic") {}
+class ThaddiusGenericMultiplier : public Multiplier
+{
+    public:
+        ThaddiusGenericMultiplier(PlayerbotAI* ai) : Multiplier(ai, "thaddius generic"), helper(ai) {}
 
-// public:
-//     virtual float GetValue(Action* action);
-// };
+    public:
+        virtual float GetValue(Action* action);
+    private:
+        ThaddiusBossHelper helper;    
+};
 
 class SapphironGenericMultiplier : public Multiplier
 {
@@ -69,14 +71,14 @@ public:
     virtual float GetValue(Action* action);
 };
 
-// class FourhorsemanGenericMultiplier : public Multiplier
-// {
-// public:
-//     FourhorsemanGenericMultiplier(PlayerbotAI* ai) : Multiplier(ai, "fourhorseman generic") {}
+class FourhorsemanGenericMultiplier : public Multiplier
+{
+public:
+    FourhorsemanGenericMultiplier(PlayerbotAI* ai) : Multiplier(ai, "fourhorseman generic") {}
 
-// public:
-//     virtual float GetValue(Action* action);
-// };
+public:
+    virtual float GetValue(Action* action);
+};
 
 // class GothikGenericMultiplier : public Multiplier
 // {

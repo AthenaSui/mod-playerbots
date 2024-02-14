@@ -38,6 +38,7 @@
 #include "GuildMgr.h"
 #include "SayAction.h"
 #include <cmath>
+#include <sstream>
 #include <string>
 
 std::vector<std::string> PlayerbotAI::dispel_whitelist = {
@@ -1377,9 +1378,46 @@ bool PlayerbotAI::IsCaster(Player* player)
     return IsRanged(player) && player->getClass() != CLASS_HUNTER;
 }
 
+bool PlayerbotAI::IsCombo(Player* player)
+{
+    int tab = AiFactory::GetPlayerSpecTab(player);
+    return player->getClass() == CLASS_ROGUE ||
+        (player->getClass() == CLASS_DRUID && tab == DRUID_TAB_FERAL && !IsTank(bot));
+}
+
 bool PlayerbotAI::IsRangedDps(Player* player)
 {
     return IsRanged(player) && IsDps(player);
+}
+
+bool PlayerbotAI::IsHealAssistantOfIndex(Player* player, int index)
+{
+    Group* group = bot->GetGroup();
+    if (!group) {
+        return false;
+    }
+    Group::MemberSlotList const& slots = group->GetMemberSlots();
+    int counter = 0;
+    for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next()) {
+        Player* member = ref->GetSource();
+        if (group->IsAssistant(member->GetGUID()) && IsHeal(member)) {
+            if (index == counter) {
+                return player == member;
+            }
+            counter++;
+        }
+    }
+    // not enough
+    for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next()) {
+        Player* member = ref->GetSource();
+        if (!group->IsAssistant(member->GetGUID()) && IsHeal(member)) {
+            if (index == counter) {
+                return player == member;
+            }
+            counter++;
+        }
+    }
+    return false;
 }
 
 bool PlayerbotAI::IsRangedDpsAssistantOfIndex(Player* player, int index)
@@ -2441,10 +2479,6 @@ bool PlayerbotAI::CastSpell(uint32 spellId, Unit* target, Item* itemTarget)
     if (failWithDelay)
     {
         SetNextCheckDelay(sPlayerbotAIConfig->reactDelay);
-        // if (!sPlayerbotAIConfig->logInGroupOnly || (bot->GetGroup() && HasRealPlayerMaster())) {
-        //     LOG_DEBUG("playerbots", "Spell cast fail with delay - target name: {}, spellid: {}, bot name: {}", 
-        //         target->GetName(), spellId, bot->GetName());
-        // }
         return false;
     }
 
@@ -2963,8 +2997,8 @@ bool PlayerbotAI::IsInVehicle(bool canControl, bool canCast, bool canAttack, boo
 void PlayerbotAI::WaitForSpellCast(Spell* spell)
 {
     SpellInfo const* spellInfo = spell->GetSpellInfo();
-
-    float castTime = spell->GetCastTime();
+    uint32 castTime = spell->GetCastTime();
+    // float castTime = spell->GetCastTime();
 	// if (spellInfo->IsChanneled())
     // {
     //     int32 duration = spellInfo->GetDuration();
@@ -2973,9 +3007,9 @@ void PlayerbotAI::WaitForSpellCast(Spell* spell)
     //         castTime += duration;
     // }
 
-    castTime = ceil(castTime);
+    // castTime = ceil(castTime);
 
-    uint32 globalCooldown = CalculateGlobalCooldown(spellInfo->Id);
+    // uint32 globalCooldown = CalculateGlobalCooldown(spellInfo->Id);
     // if (castTime < globalCooldown)
     //     castTime = globalCooldown;
 

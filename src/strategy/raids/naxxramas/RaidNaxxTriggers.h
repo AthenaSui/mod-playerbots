@@ -115,47 +115,60 @@ public:
     AnubrekhanTrigger(PlayerbotAI* ai) : BossPhaseTrigger(ai, "anub'rekhan", 0, "anub'rekhan trigger") {}
 };
 
-// class ThaddiusPhasePetTrigger : public BossPhaseTrigger
-// {
-// public:
-//     ThaddiusPhasePetTrigger(PlayerbotAI* ai) : BossPhaseTrigger(ai, "thaddius", 1 << (2 - 1), "thaddius phase pet") {}
-// };
+class ThaddiusPhasePetTrigger : public Trigger
+{
+    public:
+        ThaddiusPhasePetTrigger(PlayerbotAI* ai) : Trigger(ai, "thaddius phase pet"), helper(ai) {}
+        bool IsActive() override;
+    private:
+        ThaddiusBossHelper helper;
+};
 
-// class ThaddiusPhasePetLoseAggroTrigger : public ThaddiusPhasePetTrigger
-// {
-// public:
-//     ThaddiusPhasePetLoseAggroTrigger(PlayerbotAI* ai) : ThaddiusPhasePetTrigger(ai) {}
-//     virtual bool IsActive() {
-//         Unit* target = AI_VALUE(Unit*, "current target");
-//         return ThaddiusPhasePetTrigger::IsActive() && ai->IsTank(bot) && target && target->GetVictim() != bot;
-//     }
-// };
+class ThaddiusPhasePetLoseAggroTrigger : public ThaddiusPhasePetTrigger
+{
+public:
+    ThaddiusPhasePetLoseAggroTrigger(PlayerbotAI* ai) : ThaddiusPhasePetTrigger(ai) {}
+    virtual bool IsActive() {
+        Unit* target = AI_VALUE(Unit*, "current target");
+        return ThaddiusPhasePetTrigger::IsActive() && botAI->IsTank(bot) && target && target->GetVictim() != bot;
+    }
+};
 
-// class ThaddiusPhaseTransitionTrigger : public BossPhaseTrigger
-// {
-// public:
-//     ThaddiusPhaseTransitionTrigger(PlayerbotAI* ai) : BossPhaseTrigger(ai, "thaddius", 1 << (3 - 1), "thaddius phase transition") {}
-// };
+class ThaddiusPhaseTransitionTrigger : public Trigger
+{
+    public:
+        ThaddiusPhaseTransitionTrigger(PlayerbotAI* ai) : Trigger(ai, "thaddius phase transition"), helper(ai) {}
+        bool IsActive() override;
+    private:
+        ThaddiusBossHelper helper;
+};
 
-// class ThaddiusPhaseThaddiusTrigger : public BossPhaseTrigger
-// {
-// public:
-//     ThaddiusPhaseThaddiusTrigger(PlayerbotAI* ai) : BossPhaseTrigger(ai, "thaddius", 1 << (4 - 1), "thaddius phase thaddius") {}
-// };
+class ThaddiusPhaseThaddiusTrigger : public Trigger
+{
+    public:
+        ThaddiusPhaseThaddiusTrigger(PlayerbotAI* ai) : Trigger(ai, "thaddius phase thaddius"), helper(ai) {}
+        bool IsActive() override;
+    private:
+        ThaddiusBossHelper helper;
+};
 
-// class HorsemanAttractorsTrigger : public BossPhaseTrigger
-// {
-// public:
-//     HorsemanAttractorsTrigger(PlayerbotAI* ai) : BossPhaseTrigger(ai, "sir zeliek", 0, "horseman attractors") {}
-//     virtual bool IsActive();
-// };
+class HorsemanAttractorsTrigger : public Trigger
+{
+    public:
+        HorsemanAttractorsTrigger(PlayerbotAI* ai) : Trigger(ai, "fourhorsemen attractors"), helper(ai) {}
+        bool IsActive() override;
+    private:
+        FourhorsemanBossHelper helper;
+};
 
-// class HorsemanExceptAttractorsTrigger : public BossPhaseTrigger
-// {
-// public:
-//     HorsemanExceptAttractorsTrigger(PlayerbotAI* ai) : BossPhaseTrigger(ai, "sir zeliek", 0, "horseman except attractors") {}
-//     virtual bool IsActive();
-// };
+class HorsemanExceptAttractorsTrigger : public Trigger
+{
+    public:
+        HorsemanExceptAttractorsTrigger(PlayerbotAI* ai) : Trigger(ai, "fourhorsemen except attractors"), helper(ai) {}
+        bool IsActive() override;
+    private:
+        FourhorsemanBossHelper helper;
+};
 
 class SapphironGroundTrigger : public Trigger
 {
@@ -215,11 +228,14 @@ class GluthMainTankMortalWoundTrigger : public Trigger
         GluthBossHelper helper;
 };
 
-// class LoathebTrigger : public BossPhaseTrigger
-// {
-// public:
-//     LoathebTrigger(PlayerbotAI* ai) : BossPhaseTrigger(ai, "loatheb", 0, "loatheb trigger") {}
-// };
+class LoathebTrigger : public Trigger
+{
+    public:
+        LoathebTrigger(PlayerbotAI* ai) : Trigger(ai, "loatheb"), helper(ai) {}
+        bool IsActive() override;
+    private:
+        LoathebBossHelper helper;
+};
     
 
 // template BossEventTrigger<class boss_grobbulus::boss_grobbulusAI>;

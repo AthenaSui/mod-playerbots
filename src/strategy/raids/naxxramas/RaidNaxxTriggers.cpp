@@ -110,22 +110,21 @@ bool RazuviousNontankTrigger::IsActive()
     return helper.UpdateBossAI() && !(bot->getClass() == CLASS_PRIEST);
 }
 
-// bool HorsemanAttractorsTrigger::IsActive()
-// {
-//     Difficulty diff = bot->GetRaidDifficulty();
-//     if (diff == RAID_DIFFICULTY_25MAN_NORMAL) {
-//         return BossPhaseTrigger::IsActive() && (botAI->IsRangedDpsAssistantOfIndex(bot, 0) || botAI->IsHealAssistantOfIndex(bot, 0) || 
-//            botAI->IsHealAssistantOfIndex(bot, 1) || botAI->IsHealAssistantOfIndex(bot, 2));
-//     }
-//     return BossPhaseTrigger::IsActive() && (botAI->IsRangedDpsAssistantOfIndex(bot, 0) || botAI->IsHealAssistantOfIndex(bot, 0));
-// }
+bool HorsemanAttractorsTrigger::IsActive()
+{
+    if (!helper.UpdateBossAI()) {
+        return false;
+    }
+    return helper.IsAttracter(bot);
+}
 
-// bool HorsemanExceptAttractorsTrigger::IsActive()
-// {
-//     return BossPhaseTrigger::IsActive() && 
-//         !(botAI->IsRangedDpsAssistantOfIndex(bot, 0) || botAI->IsHealAssistantOfIndex(bot, 0) || 
-//           botAI->IsHealAssistantOfIndex(bot, 1) || botAI->IsHealAssistantOfIndex(bot, 2));
-// }
+bool HorsemanExceptAttractorsTrigger::IsActive()
+{
+    if (!helper.UpdateBossAI()) {
+        return false;
+    }
+    return !helper.IsAttracter(bot);
+}
 
 bool SapphironGroundTrigger::IsActive()
 {
@@ -185,6 +184,35 @@ bool GluthMainTankMortalWoundTrigger::IsActive()
 bool KelthuzadTrigger::IsActive() 
 {
     return helper.UpdateBossAI();
+}
+
+bool LoathebTrigger::IsActive()
+{
+    return helper.UpdateBossAI();
+}
+
+bool ThaddiusPhasePetTrigger::IsActive()
+{
+    if (!helper.UpdateBossAI()) {
+        return false;
+    }
+    return helper.IsPhasePet();
+}
+
+bool ThaddiusPhaseTransitionTrigger::IsActive()
+{
+    if (!helper.UpdateBossAI()) {
+        return false;
+    }
+    return helper.IsPhaseTransition();
+}
+
+bool ThaddiusPhaseThaddiusTrigger::IsActive()
+{
+    if (!helper.UpdateBossAI()) {
+        return false;
+    }
+    return helper.IsPhaseThaddius();
 }
 
 template bool BossEventTrigger<boss_grobbulus::boss_grobbulusAI>::IsActive();

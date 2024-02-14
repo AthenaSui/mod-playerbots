@@ -87,13 +87,15 @@ protected:
     std::pair<float, float> platform;
 };
 
-// class ThaddiusAttackNearestPetAction : public AttackAction
-// {
-// public:
-//     ThaddiusAttackNearestPetAction(PlayerbotAI* ai) : AttackAction(ai, "thaddius attack nearest pet") {}
-//     virtual bool Execute(Event event);
-//     virtual bool isUseful();
-// };
+class ThaddiusAttackNearestPetAction : public AttackAction
+{
+    public:
+        ThaddiusAttackNearestPetAction(PlayerbotAI* ai) : AttackAction(ai, "thaddius attack nearest pet"), helper(ai) {}
+        virtual bool Execute(Event event);
+        virtual bool isUseful();
+    private:
+        ThaddiusBossHelper helper;
+};
 
 // class ThaddiusMeleeToPlaceAction : public MovementAction
 // {
@@ -111,21 +113,21 @@ protected:
 //     virtual bool isUseful();
 // };
 
-// class ThaddiusMoveToPlatformAction : public MovementAction
-// {
-// public:
-//     ThaddiusMoveToPlatformAction(PlayerbotAI* ai) : MovementAction(ai, "thaddius move to platform") {}
-//     virtual bool Execute(Event event);
-//     virtual bool isUseful();
-// };
+class ThaddiusMoveToPlatformAction : public MovementAction
+{
+    public:
+        ThaddiusMoveToPlatformAction(PlayerbotAI* ai) : MovementAction(ai, "thaddius move to platform") {}
+        virtual bool Execute(Event event);
+        virtual bool isUseful();
+};
 
-// class ThaddiusMovePolarityAction : public MovementAction
-// {
-// public:
-//     ThaddiusMovePolarityAction(PlayerbotAI* ai) : MovementAction(ai, "thaddius move polarity") {}
-//     virtual bool Execute(Event event);
-//     virtual bool isUseful();
-// };
+class ThaddiusMovePolarityAction : public MovementAction
+{
+    public:
+        ThaddiusMovePolarityAction(PlayerbotAI* ai) : MovementAction(ai, "thaddius move polarity") {}
+        virtual bool Execute(Event event);
+        virtual bool isUseful();
+};
 
 class RazuviousUseObedienceCrystalAction : public MovementAction
 {
@@ -145,24 +147,23 @@ class RazuviousTargetAction : public AttackAction
         RazuviousBossHelper helper;
 };
 
-// class HorsemanAttractAlternativelyAction : public AttackAction
-// {
-// public:
-//     HorsemanAttractAlternativelyAction(PlayerbotAI* ai) : AttackAction(ai, "horseman attract alternatively") {
-//         this->last_voidzone = 0;
-//         this->voidzone_counter = 0;
-//     }
-//     virtual bool Execute(Event event);
-// protected:
-//     uint32 last_voidzone, voidzone_counter;
-// };
+class HorsemanAttractAlternativelyAction : public AttackAction
+{
+    public:
+        HorsemanAttractAlternativelyAction(PlayerbotAI* ai) : AttackAction(ai, "horseman attract alternatively"), helper(ai) {}
+        bool Execute(Event event) override;
+    protected:
+        FourhorsemanBossHelper helper;
+};
 
-// class HorsemanAttactInOrderAction : public AttackAction
-// {
-// public:
-//     HorsemanAttactInOrderAction(PlayerbotAI* ai) : AttackAction(ai, "horseman attact in order") {}
-//     virtual bool Execute(Event event);
-// };
+class HorsemanAttactInOrderAction : public AttackAction
+{
+    public:
+        HorsemanAttactInOrderAction(PlayerbotAI* ai) : AttackAction(ai, "horseman attact in order"), helper(ai) {}
+        bool Execute(Event event) override;
+    protected:
+        FourhorsemanBossHelper helper;
+};
 
 // class SapphironGroundMainTankPositionAction : public MovementAction
 // {
@@ -256,19 +257,23 @@ class GluthSlowdownAction : public Action
         GluthBossHelper helper;
 };
 
-// class LoathebPositionAction : public MovementAction
-// {
-// public:
-//     LoathebPositionAction(PlayerbotAI* ai) : MovementAction(ai, "loatheb position") {}
-//     virtual bool Execute(Event event);
-// };
+class LoathebPositionAction : public MovementAction
+{
+    public:
+        LoathebPositionAction(PlayerbotAI* ai) : MovementAction(ai, "loatheb position"), helper(ai) {}
+        virtual bool Execute(Event event);
+    private:
+        LoathebBossHelper helper;
+};
 
-// class LoathebChooseTargetAction : public AttackAction
-// {
-// public:
-//     LoathebChooseTargetAction(PlayerbotAI* ai) : AttackAction(ai, "loatheb choose target") {}
-//     virtual bool Execute(Event event);
-// };
+class LoathebChooseTargetAction : public AttackAction
+{
+    public:
+        LoathebChooseTargetAction(PlayerbotAI* ai) : AttackAction(ai, "loatheb choose target"), helper(ai) {}
+        virtual bool Execute(Event event);
+    private:
+        LoathebBossHelper helper;
+};
     
 
 #endif

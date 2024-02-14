@@ -13,6 +13,7 @@ void CombatStrategy::InitTriggers(std::vector<TriggerNode*> &triggers)
     // triggers.push_back(new TriggerNode("out of react range", NextAction::array(0, new NextAction("flee to master", 55), nullptr)));
     triggers.push_back(new TriggerNode("combat stuck", NextAction::array(0, new NextAction("reset", 1.0f), nullptr)));
     triggers.push_back(new TriggerNode("not facing target", NextAction::array(0, new NextAction("set facing", ACTION_MOVE + 7), nullptr)));
+    triggers.push_back(new TriggerNode("pet attack", NextAction::array(0, new NextAction("pet attack", ACTION_NORMAL), nullptr)));
     // triggers.push_back(new TriggerNode("combat long stuck", NextAction::array(0, new NextAction("hearthstone", 0.9f), new NextAction("repop", 0.8f), nullptr)));
 }
 
@@ -51,7 +52,7 @@ float AvoidAoeStrategyMultiplier::GetValue(Action* action)
     else if (spellId && pSpellInfo->Targets & TARGET_FLAG_SOURCE_LOCATION)
         return 1.0f;
 
-    uint32 castTime = pSpellInfo->CalcCastTime();
+    uint32 castTime = pSpellInfo->CalcCastTime(bot);
 
     if (AI_VALUE2(bool, "has area debuff", "self target") && spellId && castTime > 0)
     {
