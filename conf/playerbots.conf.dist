@@ -77,10 +77,10 @@ AiPlayerbot.RandomBotMaxLevelChance = 0.15
 # 机器人选择 RPG (那他们等级传动到随机营地)而不是grinding的概率
 AiPlayerbot.RandomBotRpgChance = 0.20 #unused now
 
-# Set randombots movement speed to walking anywhere
+# 将随机机器人移动速度设置为在任何地方走
 AiPlayerbot.RandombotsWalkingRPG = 0
 
-# Set randombots movement speed to walking only inside buildings
+# 将随机机器人移动速度设置为仅在建筑物内行走
 AiPlayerbot.RandombotsWalkingRPG.InDoors = 0
 
 # 机器人向玩家致意
@@ -104,8 +104,8 @@ AiPlayerbot.RandombotStartingLevel = 5
 # Server XP Rate * AiPlayerbot.KillXPRate
 AiPlayerbot.KillXPRate = 1
 
-# Specify percent of active bots
-# 默认是10。每分钟有10%的机器人处于活动或非活动状态。
+# 指定活动机器人的百分比
+# 默认是10。每分钟将有10%的机器人转为活动或非活动状态。
 AiPlayerbot.BotActiveAlone = 100
 
 # 设置随机机器人获得装备时附魔的最低等级 (Maxlevel + 1 to disable)
@@ -125,7 +125,7 @@ AiPlayerbot.RandomBotGroupNearby = 0
 # 没有主人的机器人会说出他们的台词
 AiPlayerbot.RandomBotSayWithoutMaster = 0
 
-# Set RandomBotMaxLevel bots to RandomBotMinLevel or not
+# 将RandomBotMaxLevel机器人设置为RandomBotMinLevel 或不设置
 AiPlayerbot.DowngradeMaxLevelBot = 0
 
 # 启用/禁用 达到EquipmentPersistenceLevel设置等级后，机器人装备不再随机初始化 
@@ -143,55 +143,54 @@ AiPlayerbot.GroupInvitationPermission = 1
 # 默认：1 (非战斗启用)
 AiPlayerbot.BotReviveWhenSummon = 1
 
-# Non-GM player can only use init=auto to initialize bots based on their own level and gear score
-# 默认：0 (non-gm player can use any intialization commands)
+# 非GM玩家只能使用init=auto来初始化机器人 根据他们的等级和装备GS
+# 默认：0 (非GM玩家可以使用任何初始化命令)
 AiPlayerbot.AutoInitOnly = 0
 
-# The upper limit ratio of bot equipment level for init=auto
-# 默认：1.0 (same with the player)
+# init=auto初始化后机器人装备等级上限比例
+# 默认：1.0 (与玩家相同)
 AiPlayerbot.AutoInitEquipLevelLimitRatio = 1.0
 
 # 启用/禁用 通过addclass命令创建机器人(0 = 只有GM ，1 = 启用)
 # 默认：1 (启用)
 AiPlayerbot.AddClassCommand = 1
 
+
 # 自动化
 
-# Bots keep looting when group loop method is free for all
+# 当队伍拾取方式设置为自由拾取时机器人保持拾取战利品
 # 默认：0 (禁用)
 AiPlayerbot.FreeMethodLoot = 0
 
-# 机器人选择任务奖励 (yes = 选择第一个可用物品，no = 列出所有奖励，ask = 选择可用物品并列出如果多个)
-# Bots loot roll level (0 = pass, 1 = greed, 2 = need)
-# Default: 1 (greed)
+# 机器人战利品需求设置 (0 = 放弃, 1 = 贪婪, 2 = 需求)
+# Default: 1 (贪婪)
 AiPlayerbot.LootRollLevel = 1
 
-# Bots pick their quest reward (yes = picks first useful item, no = list all rewards, ask = pick useful item and lists if multiple)
-
+# 机器人选择任务奖励 (yes = 选择第一个可用物品，no = 列出所有奖励，ask = 选择可用物品并列出如有多个)
 AiPlayerbot.AutoPickReward = no
 
 # 机器人装备升级 (机器人将装备任何拾取或任务获取的有提升的物品)
 # 默认：1 (启用)
 AiPlayerbot.AutoEquipUpgradeLoot = 1
 
-# Equip upgrade threshold for auto equip upgrade
-# 默认：1.1 (Equip when the equipment score is 1.1 times higher than the current)
+# 自动装备升级的装备升级阈值
+# 默认：1.1 (当装备得分比当前高1.1倍时装备)
 AiPlayerbot.EquipUpgradeThreshold = 1.1
 
 # 与玩家同步任务 (当你提交任务时机器人将完成任务。机器人将忽略任务物品需求。)
 # 默认：1 (启用)
 AiPlayerbot.SyncQuestWithPlayer = 1
 
-# Bots will auto-complete quests for the player when handing in
-# 默认：0 (disabled)
+# 机器人将在玩家提交任务时自动为玩家完成任务
+# 默认：0 (禁用)
 AiPlayerbot.SyncQuestForPlayer = 0
 
-# Sync max random bot level with max level of online players
-# 默认：0 (disabled)
+# 将随机机器人最大等级与在线玩家最大等级同步
+# 默认：0 (禁用)
 AiPlayerbot.SyncLevelWithPlayers = 0
 
-# Give free food to random bots
-# 默认：1 (enabled)
+# 为随机机器人提供免费食物
+# 默认：1 (启用)
 AiPlayerbot.FreeFood = 1
 
 # 机器人在于训练师对话时自动学习法术 (yes = 只要机器人有钱，就训练所有可用的法术, free = 自动学习免费法术, no = 仅列出法术)
@@ -200,32 +199,32 @@ AiPlayerbot.AutoTrainSpells = yes
 
 # 机器人在升级时自动学习职业任务奖励法术
 # 仅用于随机机器人
-# 默认：0 (disabled)
+# 默认：0 (禁用)
 AiPlayerbot.AutoLearnQuestSpells = 0
 
 # 机器人在升级时自动学习可用法术
 # 仅用于随机机器人
-# 默认：1 (enabled)
+# 默认：1 (启用)
 AiPlayerbot.AutoLearnTrainerSpells = 1
 
 # 机器人在升级时自动传送至另一地图以继续升级
 # 仅用于随机机器人
-# 默认：1 (enabled)
+# 默认：1 (启用)
 AiPlayerbot.AutoTeleportForLevel = 1
 
 # 机器人在升级时自动使用天赋点
 # 仅用于随机机器人
-# 默认：1 (enabled)
+# 默认：1 (启用)
 AiPlayerbot.AutoPickTalents = 1
 
 # 机器人在升级时自动升级装备
 # 仅用于随机机器人
-# 默认：1 (enabled)
+# 默认：1 (启用)
 AiPlayerbot.AutoUpgradeEquip = 1
 
 # 随机机器人将自己挑选任务并尝试完成
 # 仅用于随机机器人
-# 默认：1 (enabled)
+# 默认：1 (启用)
 AiPlayerbot.AutoDoQuests = 1
 
 # 机器人聊天命令的前缀 (e.g. follow, stay)
@@ -234,42 +233,42 @@ AiPlayerbot.CommandPrefix = ""
 # 机器人聊天命令的分隔符
 AiPlayerbot.CommandSeparator = "\\\\"
 
-# Max AI iterations per tick
+# 每个tick的最大AI迭代次数
 AiPlayerbot.IterationsPerTick = 10
 
-# Allow/deny bots from your guild
+# 允许/拒绝来自你的公会的机器人
 AiPlayerbot.AllowGuildBots = 1
 
 # 两次短期施法之间的延迟
 AiPlayerbot.GlobalCooldown = 500
 
-# Max wait time when moving
+# 移动时的最长等待时间 Max wait time when moving 
 AiPlayerbot.MaxWaitForMove = 5000
 
-# Action expiration time
+# 操作过期时间 Action expiration time
 AiPlayerbot.ExpireActionTime = 5000
 
-# Max dispel auras duration
+# 最大驱散光环持续时间 Max dispel auras duration
 AiPlayerbot.DispelAuraDuration = 700
 
 # 两个机器人动作的延迟
 AiPlayerbot.ReactDelay = 100
 
-# Inactivity delay
+# 不活动延迟 Inactivity delay
 AiPlayerbot.PassiveDelay = 10000
 
-# 重复操作之间的最小延迟 (chat messages, emotes etc)
+# 重复操作之间的最小延迟 (聊天信息，表情等)
 AiPlayerbot.RepeatDelay = 5000
 
 # 延迟计时器
 AiPlayerbot.ErrorDelay = 100
 AiPlayerbot.RpgDelay = 10000
 AiPlayerbot.SitDelay = 20000
-# ReturnDelay has a minimum value of 2000 - lower values will cause a crash!
+# ReturnDelay 最小值为2000 - 较低的值将导致崩溃！
 AiPlayerbot.ReturnDelay = 2000
 AiPlayerbot.LootDelay = 1000
 
-# Distances
+# 距离
 AiPlayerbot.FarDistance = 20.0
 AiPlayerbot.SightDistance = 75.0
 AiPlayerbot.SpellDistance = 28.5
@@ -288,10 +287,10 @@ AiPlayerbot.AoeRadius = 10
 AiPlayerbot.RpgDistance = 200
 AiPlayerbot.AggroDistance = 22
 
-# Bot can flee for enemy
+# 机器人遇到敌人时可以逃跑
 AiPlayerbot.FleeingEnabled = 1
 
-# Health/Mana levels
+# 生命值/法力值 等级
 AiPlayerbot.CriticalHealth = 25
 AiPlayerbot.LowHealth = 45
 AiPlayerbot.MediumHealth = 65
@@ -299,58 +298,58 @@ AiPlayerbot.AlmostFullHealth = 85
 AiPlayerbot.LowMana = 15
 AiPlayerbot.MediumMana = 40
 
-# Random bot default strategies (applied after defaults)
+# 随机机器人默认策略 (在默认值之后应用)
 AiPlayerbot.RandomBotCombatStrategies = "+dps,+dps assist,-threat"
 # AiPlayerbot.RandomBotNonCombatStrategies = "+grind,+loot,+rpg,+custom::say"
 AiPlayerbot.RandomBotNonCombatStrategies = ""
 AiPlayerbot.CombatStrategies = ""
 AiPlayerbot.NonCombatStrategies = ""
 
-# How often tasks are changed
+# 任务更改的频率
 AiPlayerbot.MinGuildTaskChangeTime = 172800
 AiPlayerbot.MaxGuildTaskChangeTime = 432000
 
-# Mail spam interval
+# 垃圾邮件间隔
 AiPlayerbot.MinGuildTaskAdvertisementTime = 300
 AiPlayerbot.MaxGuildTaskAdvertisementTime = 28800
 
-# Delay before reward is sent
+# 奖励发送前延迟
 AiPlayerbot.MinGuildTaskRewardTime = 300
 AiPlayerbot.MaxGuildTaskRewardTime = 3600
 
-# Cleanup of guild tasks interval
+# 清理公会任务间隔
 AiPlayerbot.GuildTaskAdvertCleanupTime = 300
 
-# Specify max distance between victim and bot when creating guild kill task
+# 指定创建公会击杀任务时受害者和机器人之间的最大距离
 AiPlayerbot.GuildTaskKillTaskDistance = 200
 
-# Distance margin for facade calculations
+# 立面计算的距离裕度 Distance margin for facade calculations
 AiPlayerbot.TargetPosRecalcDistance = 0.1
 
-# Maps where bots can be teleported to
+# 机器人可以传送到的地图
 AiPlayerbot.RandomBotMaps = 0,1,530,571
 
-# Probabilty bots teleport to banker (city)
+# 机器人传送到银行职员的可能性 (城市)
 # 默认：0.25
 AiPlayerbot.ProbTeleToBankers = 0.25
 
-# Quest items to leave (do not destroy)
+# 保留的任务物品 (不要摧毁)
 AiPlayerbot.RandomBotQuestItems = "6948,5175,5176,5177,5178,16309,12382,13704,11000"
 
-# PvP Restricted Zones (bots don't pvp)
+# PvP 受限区域 (机器人不能 pvp)
 AiPlayerbot.PvpProhibitedZoneIds = "2255,656,2361,2362,2363,976,35,2268,3425,392,541,1446,3828,3712,3738,3565,3539,3623,4152,3988,4658,4284,4418,4436,4275,4323,4395,3703" # 33(stranglethorn vale),440(tanaris)
 
-# PvP Restricted Areas (bots don't pvp)
+# PvP 受限地区 (机器人不能 pvp)
 AiPlayerbot.PvpProhibitedAreaIds = "976,35,392"
 
-# Spells every random bot will learn on randomize (54197 - cold weather flying)
+# 随机化时每个机器人学习的法术 (54197 - 寒冷天气飞行)
 AiPlayerbot.RandomBotSpellIds = "54197"
 
-# Level diff between random bots and nearby creatures for random teleports
+# 用以随机机器人传送的机器人和附近生物之间的等级差
 AiPlayerbot.RandomBotTeleLowerLevel = 3
 AiPlayerbot.RandomBotTeleHigherLevel = 1
 
-# ID of spell to open lootable chests
+# 打开战利品箱子的法术ID
 AiPlayerbot.OpenGoSpell = 6477
 
 # 时间间隔
@@ -372,7 +371,7 @@ AiPlayerbot.MinRandomBotTeleportInterval = 3600
 AiPlayerbot.MaxRandomBotTeleportInterval = 18000
 AiPlayerbot.RandomBotInWorldWithRotaionDisabled = 31104000
 
-# How far random bots are teleported after death
+# 随机机器人死后被传送距离
 AiPlayerbot.RandomBotTeleportDistance = 100
 
 # Debug switches
@@ -381,16 +380,16 @@ AiPlayerbot.LogInGroupOnly = 1
 AiPlayerbot.LogValuesPerTick = 0
 AiPlayerbot.RandomChangeMultiplier = 1
 
-# Command server port, 0 - disabled
+# Command server port, 0 - 禁用
 AiPlayerbot.CommandServerPort = 8888
 
-# 启用/禁用 performance monitor
+# 启用/禁用 性能监视
 AiPlayerbot.PerfMonEnabled = 0
 
-# Allow bots to be summoned near innkeepers
+# 允许在旅店老板附近召唤机器人
 AiPlayerbot.SummonAtInnkeepersEnabled = 1
 
-# Custom config to allow logfiles to be created.
+# 允许创建日志文件的自定义配置。
 # 例如：AiPlayerbot.AllowedLogFiles = travelNodes.csv,travelPaths.csv,TravelNodeStore.h,bot_movement.csv,bot_location.csv
 AiPlayerbot.AllowedLogFiles = ""
 
@@ -409,13 +408,13 @@ AiPlayerbot.RandomBotRandomPassword = 0
 
 ##################################################################################
 #                                                                                #
-# Database Stuff 																 #
+#                         数据库内容 Database Stuff 							 #
 #                                                                                #
 ##################################################################################
 
 #
 #    PlayerbotsDatabaseInfo
-#        描述：Database connection settings for the playerbots server.
+#        描述：playerbots服务器的数据库连接设置。
 #        例如："hostname;port;username;password;database"
 #              ".;somenumber;username;password;database" - (Use named pipes on Windows
 #                                                           "enable-named-pipe" to [mysqld]
@@ -437,7 +436,7 @@ PlayerbotsDatabase.WorkerThreads     = 1
 
 #
 #    PlayerbotsDatabase.SynchThreads
-#        描述：The amount of MySQL connections spawned to handle.
+#        描述：要处理的MySQL连接数。
 #        默认：1 - (PlayerbotDatabase.WorkerThreads)
 
 PlayerbotsDatabase.SynchThreads     = 1
@@ -451,10 +450,10 @@ PlayerbotsDatabase.SynchThreads     = 1
 Playerbots.Updates.EnableDatabases = 1
 
 ##############################################
-# PremadeSpec                                #
+#                  预置专精                  #
 ##############################################
 # AiPlayerbot.PremadeSpecName.<class>.<specno> = <name>         #天赋专精名字
-# AiPlayerbot.PremadeSpecLink.<class>.<specno>.<level> = <link> #Wowhead style link the bot should work towards at given level.
+# AiPlayerbot.PremadeSpecLink.<class>.<specno>.<level> = <link> #Wowhead样式链接 机器人在达到既定等级时
 # 0 <= specno < 20, 1 <= level <= 80
 
 # Warrior
@@ -490,7 +489,6 @@ AiPlayerbot.PremadeSpecName.3.2 = 生存pve
 AiPlayerbot.PremadeSpecLink.3.2.60 = 
 AiPlayerbot.PremadeSpecLink.3.2.80 = -0053041-5000032500033330523134321331
 # Rogue
-
 AiPlayerbot.PremadeSpecName.4.0 = 刺杀pve
 AiPlayerbot.PremadeSpecLink.4.0.60 = 
 AiPlayerbot.PremadeSpecLink.4.0.80 = 005323005350100520103331051-005005003-502
@@ -562,10 +560,10 @@ AiPlayerbot.PremadeSpecLink.11.2.60 =
 AiPlayerbot.PremadeSpecLink.11.2.80 = 05320001--230033312031512531153313051
 
 ##############################################
-# Default TalentSpec for random bots         #
+#           随机机器人默认天赋专精           #
 ##############################################
-# AiPlayerbot.RandomClassSpecProb.<class>.<specno>  # The probability to choose the spec
-# AiPlayerbot.RandomClassSpecIndex.<class>.<specno> # The spec index in PremadeSpec
+# AiPlayerbot.RandomClassSpecProb.<class>.<specno>  # 选择专精的概率
+# AiPlayerbot.RandomClassSpecIndex.<class>.<specno> # 预置专精的专精目录
 # Warrior
 AiPlayerbot.RandomClassSpecProb.1.0 = 20
 AiPlayerbot.RandomClassSpecIndex.1.0 = 0
