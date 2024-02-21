@@ -124,7 +124,7 @@ std::string const QueryItemUsageAction::QueryItemUsage(ItemTemplate const* item)
         case ITEM_USAGE_SKILL:
             return "商业技能";
         case ITEM_USAGE_USE:
-            return "使用";
+            return "可使用";
 	    case ITEM_USAGE_GUILD_TASK:
 		    return "公会任务";
 	    case ITEM_USAGE_DISENCHANT:

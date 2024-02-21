@@ -38,13 +38,13 @@ AiPlayerbot.RandomBotAutoJoinBG = 0
 # 将任务等级 <= 机器人等级的任务标记为已完成（减慢机器人创建速度）
 AiPlayerbot.PreQuests = 0
 
-# 随机机器人账号
+# 随机机器人数量、等级
 AiPlayerbot.MinRandomBots = 500
 AiPlayerbot.MaxRandomBots = 500
 AiPlayerbot.RandomBotMinLevel = 1
 AiPlayerbot.RandomBotMaxLevel = 70
 
-# 启用/禁用随机机器人轮换 (从机器人角色库中随机选择一个机器人上限并定期轮换)
+# 启用/禁用随机机器人轮换 (从机器人角色库中随机选择一个机器人上线并定期轮换)
 # 改变设置后需重置随机机器人
 # 默认: 0 (禁用，在线机器人是固定的)
 AiPlayerbot.EnableRotation = 0
@@ -74,10 +74,10 @@ AiPlayerbot.RandomGearLoweringChance = 0
 # 第一次随机化时随机机器人拥有最大等级的概率 (默认 0.15)
 AiPlayerbot.RandomBotMaxLevelChance = 0.15
 
-# 机器人选择 RPG (那他们等级传动到随机营地)而不是grinding的概率
+# 机器人选择 RPG (依等级传动到随机营地)而不是grinding的概率
 AiPlayerbot.RandomBotRpgChance = 0.20 #unused now
 
-# 将随机机器人移动速度设置为在任何地方走
+# 将随机机器人移动速度设置为在任何地方行走
 AiPlayerbot.RandombotsWalkingRPG = 0
 
 # 将随机机器人移动速度设置为仅在建筑物内行走
@@ -94,7 +94,7 @@ AiPlayerbot.RandomBotShowHelmet = 1
 AiPlayerbot.RandomBotShowCloak = 1
 
 # 禁用随机机器人随机等级
-# 每一个机器人都从指定的级别开始，并通过杀死暴徒来升级。
+# 每一个机器人都从指定的等级开始，并通过杀死怪物升级。
 AiPlayerbot.DisableRandomLevels = 0
 
 # 设置随机机器人起始等级，如果 "AiPlayerbot.DisableRandomLevels" 启用
@@ -122,7 +122,7 @@ AiPlayerbot.RandomBotQuestIds = "7848,3802,5505,6502,7761"
 # 随机机器人将与附近的机器人组队去做共有任务
 AiPlayerbot.RandomBotGroupNearby = 0
 
-# 没有主人的机器人会说出他们的台词
+# 没有队长的机器人会说他们的状态信息
 AiPlayerbot.RandomBotSayWithoutMaster = 0
 
 # 将RandomBotMaxLevel机器人设置为RandomBotMinLevel 或不设置
@@ -173,11 +173,11 @@ AiPlayerbot.AutoPickReward = no
 # 默认：1 (启用)
 AiPlayerbot.AutoEquipUpgradeLoot = 1
 
-# 自动装备升级的装备升级阈值
-# 默认：1.1 (当装备得分比当前高1.1倍时装备)
+# 自动装备有提升装备的阈值
+# 默认：1.1 (当装备得分比当前高1.1倍时替换装备)
 AiPlayerbot.EquipUpgradeThreshold = 1.1
 
-# 与玩家同步任务 (当你提交任务时机器人将完成任务。机器人将忽略任务物品需求。)
+# 与玩家同步任务 (当你提交任务时机器人将自动完成任务。机器人将忽略任务物品需求。)
 # 默认：1 (启用)
 AiPlayerbot.SyncQuestWithPlayer = 1
 
@@ -193,7 +193,7 @@ AiPlayerbot.SyncLevelWithPlayers = 0
 # 默认：1 (启用)
 AiPlayerbot.FreeFood = 1
 
-# 机器人在于训练师对话时自动学习法术 (yes = 只要机器人有钱，就训练所有可用的法术, free = 自动学习免费法术, no = 仅列出法术)
+# 机器人在与训练师对话时自动学习法术 (yes = 只要机器人有钱，就学习所有可用的法术, free = 自动学习免费法术, no = 仅列出法术)
 # 仅用于随机机器人
 AiPlayerbot.AutoTrainSpells = yes
 
@@ -227,7 +227,7 @@ AiPlayerbot.AutoUpgradeEquip = 1
 # 默认：1 (启用)
 AiPlayerbot.AutoDoQuests = 1
 
-# 机器人聊天命令的前缀 (e.g. follow, stay)
+# 机器人聊天命令的前缀 (例如：follow, stay)
 AiPlayerbot.CommandPrefix = ""
 
 # 机器人聊天命令的分隔符
@@ -305,7 +305,7 @@ AiPlayerbot.RandomBotNonCombatStrategies = ""
 AiPlayerbot.CombatStrategies = ""
 AiPlayerbot.NonCombatStrategies = ""
 
-# 任务更改的频率
+# 公会任务更改的频率
 AiPlayerbot.MinGuildTaskChangeTime = 172800
 AiPlayerbot.MaxGuildTaskChangeTime = 432000
 
@@ -342,10 +342,10 @@ AiPlayerbot.PvpProhibitedZoneIds = "2255,656,2361,2362,2363,976,35,2268,3425,392
 # PvP 受限地区 (机器人不能 pvp)
 AiPlayerbot.PvpProhibitedAreaIds = "976,35,392"
 
-# 随机化时每个机器人学习的法术 (54197 - 寒冷天气飞行)
+# 随机化时每个机器人将学习的法术 (54197 - 寒冷天气飞行)
 AiPlayerbot.RandomBotSpellIds = "54197"
 
-# 用以随机机器人传送的机器人和附近生物之间的等级差
+# 随机机器人和附近生物之间的等级差 用于随机传送机器人
 AiPlayerbot.RandomBotTeleLowerLevel = 3
 AiPlayerbot.RandomBotTeleHigherLevel = 1
 
