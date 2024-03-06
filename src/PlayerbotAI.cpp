@@ -1878,18 +1878,19 @@ bool PlayerbotAI::TellMasterNoFacing(std::string const text, PlayerbotSecurityLe
         return false;
 
     time_t lastSaid = whispers[text];
-    if (!lastSaid || (time(nullptr) - lastSaid) >= sPlayerbotAIConfig->repeatDelay / 1000)
-    {
-        whispers[text] = time(nullptr);
+    // Yunfan: Remove tell cooldown
+    // if (!lastSaid || (time(nullptr) - lastSaid) >= sPlayerbotAIConfig->repeatDelay / 1000)
+    // {
+    whispers[text] = time(nullptr);
 
-        ChatMsg type = CHAT_MSG_WHISPER;
-        if (currentChat.second - time(nullptr) >= 1)
-            type = currentChat.first;
+    ChatMsg type = CHAT_MSG_WHISPER;
+    if (currentChat.second - time(nullptr) >= 1)
+        type = currentChat.first;
 
-        WorldPacket data;
-        ChatHandler::BuildChatPacket(data, type == CHAT_MSG_ADDON ? CHAT_MSG_PARTY : type, type == CHAT_MSG_ADDON ? LANG_ADDON : LANG_UNIVERSAL, bot, nullptr, text.c_str());
-        master->SendDirectMessage(&data);
-    }
+    WorldPacket data;
+    ChatHandler::BuildChatPacket(data, type == CHAT_MSG_ADDON ? CHAT_MSG_PARTY : type, type == CHAT_MSG_ADDON ? LANG_ADDON : LANG_UNIVERSAL, bot, nullptr, text.c_str());
+    master->SendDirectMessage(&data);
+    // }
 
     return true;
 }
@@ -2125,7 +2126,7 @@ bool PlayerbotAI::CanCastSpell(std::string const name, Unit* target, Item* itemT
     return CanCastSpell(aiObjectContext->GetValue<uint32>("spell id", name)->Get(), target, true, itemTarget);
 }
 
-bool PlayerbotAI::CanCastSpell(uint32 spellid, Unit* target, bool checkHasSpell, Item* itemTarget)
+bool PlayerbotAI::CanCastSpell(uint32 spellid, Unit* target, bool checkHasSpell, Item* itemTarget, Item* castItem)
 {
     if (!spellid) {
         if (!sPlayerbotAIConfig->logInGroupOnly || (bot->GetGroup() && HasRealPlayerMaster())) {
@@ -2249,9 +2250,11 @@ bool PlayerbotAI::CanCastSpell(uint32 spellid, Unit* target, bool checkHasSpell,
 	Spell* spell = new Spell(bot, spellInfo, TRIGGERED_NONE);
 
     spell->m_targets.SetUnitTarget(target);
-
-    spell->m_CastItem = itemTarget ? itemTarget : aiObjectContext->GetValue<Item*>("item for spell", spellid)->Get();
-    spell->m_targets.SetItemTarget(spell->m_CastItem);
+    spell->m_CastItem = castItem;
+    if (itemTarget == nullptr) {
+        itemTarget = aiObjectContext->GetValue<Item*>("item for spell", spellid)->Get();;
+    }
+    spell->m_targets.SetItemTarget(itemTarget);
 
     SpellCastResult result = spell->CheckCast(true);
     delete spell;
