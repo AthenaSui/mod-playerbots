@@ -29,7 +29,7 @@ bool ArenaTeamAcceptAction::Execute(Event event)
     if (bot->GetArenaTeamId(at->GetSlot()))
     {
         // bot is already in an arena team
-        bot->Say("对不起，我已经在这样的队伍力里了。", LANG_UNIVERSAL);
+        bot->Say("对不起，我已经在这样的队伍里了。", LANG_UNIVERSAL);
         accept = false;
     }
 

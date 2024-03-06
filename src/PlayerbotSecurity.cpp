@@ -207,7 +207,7 @@ bool PlayerbotSecurity::CheckLevelFor(PlayerbotSecurityLevel level, bool silent,
                     int fromGS = (int)botAI->GetEquipGearScore(from, false, false);
                     int diff = (100 * (botGS - fromGS) / botGS);
                     int req = 12 * sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL) / from->getLevel();
-                    out << "你的装备等级太低了|cffff0000" << fromGS << "|cffffffff/|cff00ff00" << botGS << " |cffff0000" << diff << "%|cffffffff/|cff00ff00" << req << "%";
+                    out << "你的装备等级太低了：|cffff0000" << fromGS << "|cffffffff/|cff00ff00" << botGS << " |cffff0000" << diff << "%|cffffffff/|cff00ff00" << req << "%";
                 }
                 break;
             case PLAYERBOT_DENY_NOT_YOURS:
@@ -236,10 +236,10 @@ bool PlayerbotSecurity::CheckLevelFor(PlayerbotSecurityLevel level, bool silent,
                 }
                 break;
             case PLAYERBOT_DENY_FULL_GROUP:
-                out << "我在一个完整的小组。稍后再做";
+                out << "我在一个满员的队伍里。稍后再做";
                 break;
             case PLAYERBOT_DENY_IS_LEADER:
-                out << "我目前正在带领一个小组。如果你愿意，我可以邀请你。";
+                out << "我目前正在带领一个队伍。如果你愿意，我可以邀请你。";
                 break;
             case PLAYERBOT_DENY_NOT_LEADER:
                 if (botAI->GetGroupMaster())
@@ -248,14 +248,14 @@ bool PlayerbotSecurity::CheckLevelFor(PlayerbotSecurityLevel level, bool silent,
                 }
                 else
                 {
-                    out << "我和其他人在一个小组里。你可以让他邀请你。";
+                    out << "我和其他人在一个队伍里。你可以让他邀请你。";
                 }
                 break;
             case PLAYERBOT_DENY_BG:
-                out << "我在排队等待战场。稍后再做";
+                out << "我在排战场。稍后再做";
                 break;
             case PLAYERBOT_DENY_LFG:
-                out << "我在排队地下城。稍后再做";
+                out << "我在排副本。稍后再做";
                 break;
             default:
                 out << "我不能那样做。";
