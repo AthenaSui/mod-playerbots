@@ -112,6 +112,10 @@ AiPlayerbot.BotActiveAlone = 100
 # 默认: 60
 AiPlayerbot.MinEnchantingBotLevel = 60
 
+# Enable expansion limitation
+# Default: 1
+AiPlayerbot.LimitEnchantExpansion = 1
+
 # 随机机器人检查玩家装备GS等级，如果太低则拒绝邀请
 # 默认: 1 (启用)
 AiPlayerbot.GearScoreCheck = 0
@@ -300,6 +304,16 @@ AiPlayerbot.MediumHealth = 65
 AiPlayerbot.AlmostFullHealth = 85
 AiPlayerbot.LowMana = 15
 AiPlayerbot.MediumMana = 40
+
+# Enable healer bot save mana
+# Default: 1 (enable)
+AiPlayerbot.AutoSaveMana = 1
+
+# Healer bot save mana threshold
+# Default: 60 (60%)
+AiPlayerbot.SaveManaThreshold = 60
+
+
 
 # 随机机器人默认策略 (在默认值之后应用)
 AiPlayerbot.RandomBotCombatStrategies = "+dps,+dps assist,-threat"

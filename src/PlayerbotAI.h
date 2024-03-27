@@ -184,7 +184,7 @@ enum class GuilderType : uint8
     SMALL  = 50,
     MEDIUM = 70,
     LARGE  = 120,
-    HUGE   = 250
+    VERY_LARGE   = 250
 };
 
 enum ActivityType
@@ -332,6 +332,7 @@ class PlayerbotAI : public PlayerbotAIBase
         bool IsHeal(Player* player);
         bool IsDps(Player* player);
         bool IsRanged(Player* player);
+        bool IsMelee(Player* player);
         bool IsCaster(Player* player);
         bool IsCombo(Player* player);
         bool IsRangedDps(Player* player);
@@ -352,7 +353,7 @@ class PlayerbotAI : public PlayerbotAIBase
         Player* GetPlayer(ObjectGuid guid);
         static Unit* GetUnit(CreatureData const* creatureData);
         GameObject* GetGameObject(ObjectGuid guid);
-        static GameObject* GetGameObject(GameObjectData const* gameObjectData);
+        // static GameObject* GetGameObject(GameObjectData const* gameObjectData);
         WorldObject* GetWorldObject(ObjectGuid guid);
         bool TellMaster(std::ostringstream& stream, PlayerbotSecurityLevel securityLevel = PLAYERBOT_SECURITY_ALLOW_ALL);
         bool TellMaster(std::string const text, PlayerbotSecurityLevel securityLevel = PLAYERBOT_SECURITY_ALLOW_ALL);
