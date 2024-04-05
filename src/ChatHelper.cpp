@@ -281,21 +281,21 @@ ItemIds ChatHelper::parseItems(std::string const text)
 std::string const ChatHelper::FormatQuest(Quest const* quest)
 {
     std::ostringstream out;
-    out << "|cFFFFFF00|H任务：" << quest->GetQuestId() << ':' << quest->GetQuestLevel() << "|h[" << quest->GetLocalizeTitle(LOCALE_zhCN) << "]|h|r";
+    out << "|cFFFFFF00|Hquest:" << quest->GetQuestId() << ':' << quest->GetQuestLevel() << "|h[" << quest->GetLocalizeTitle(LOCALE_zhCN) << "]|h|r";
     return out.str();
 }
 
 std::string const ChatHelper::FormatGameobject(GameObject* go)
 {
     std::ostringstream out;
-    out << "|cFFFFFF00|H发现：" << go->GetGUID().GetRawValue() << ":" << go->GetEntry() << ":" <<  "|h[" << go->GetGOInfo()->name << "]|h|r";
+    out << "|cFFFFFF00|Hfound:" << go->GetGUID().GetRawValue() << ":" << go->GetEntry() << ":" <<  "|h[" << go->GetGOInfo()->name << "]|h|r";
     return out.str();
 }
 
 std::string const ChatHelper::FormatWorldobject(WorldObject* wo)
 {
     std::ostringstream out;
-    out << "|cFFFFFF00|H发现：" << wo->GetGUID().GetRawValue() << ":" << wo->GetEntry() << ":" << "|h[";
+    out << "|cFFFFFF00|Hfound:" << wo->GetGUID().GetRawValue() << ":" << wo->GetEntry() << ":" << "|h[";
     out << (wo->ToGameObject() ? ((GameObject*)wo)->GetGOInfo()->name : wo->GetName()) << "]|h|r";
     return out.str();
 }
@@ -327,7 +327,7 @@ std::string const ChatHelper::FormatWorldEntry(int32 entry)
 std::string const ChatHelper::FormatSpell(SpellInfo const* spellInfo)
 {
     std::ostringstream out;
-    out << "|cffffffff|H法术：" << spellInfo->Id << "|h[" << spellInfo->SpellName[LOCALE_zhCN] << "]|h|r";
+    out << "|cffffffff|Hspell:" << spellInfo->Id << "|h[" << spellInfo->SpellName[LOCALE_zhCN] << "]|h|r";
     return out.str();
 }
 

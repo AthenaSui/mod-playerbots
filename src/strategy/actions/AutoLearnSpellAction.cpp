@@ -142,9 +142,9 @@ std::string const FormatSpell(SpellInfo const* sInfo)
     std::string const rank = sInfo->Rank[0];
 
     if (rank.empty())
-        out << "|cffffffff|H法术：" << sInfo->Id << "|h[" << sInfo->SpellName[LOCALE_enUS] << "]|h|r";
+        out << "|cffffffff|Hspell:" << sInfo->Id << "|h[" << sInfo->SpellName[LOCALE_zhCN] << "]|h|r";
     else
-        out << "|cffffffff|H法术：" << sInfo->Id << "|h[" << sInfo->SpellName[LOCALE_enUS] << " " << rank << "]|h|r";
+        out << "|cffffffff|Hspell:" << sInfo->Id << "|h[" << sInfo->SpellName[LOCALE_zhCN] << " " << rank << "]|h|r";
 
     return out.str();
 }

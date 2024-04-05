@@ -71,7 +71,7 @@ void StatsAction::ListBagSlots(std::ostringstream &out)
 	if (totalfree < total / 4)
 		color = "ffff0000";
 
-    out << "|h|c" << color << totalfree << "/" << total << "|h|cffffffff 背包";
+    out << "|h|c" << color << totalfree << "/" << total << "|h|cffffffff 背包(空闲/总共)";
 }
 
 void StatsAction::ListXP(std::ostringstream& out)
@@ -88,7 +88,7 @@ void StatsAction::ListXP(std::ostringstream& out)
     if (restXP && nextLevelXP)
         restPercent = 2 * (100 * restXP / nextLevelXP);
 
-    out << "|cff00ff00" << xpPercent << "|cffffd333/|cff00ff00" << restPercent << "%|cffffffff XP";
+    out << "|cff00ff00" << xpPercent << "|cffffd333/|cff00ff00" << restPercent << "%|cffffffff 经验(当前/双倍)";
 }
 
 void StatsAction::ListRepairCost(std::ostringstream& out)
@@ -118,7 +118,7 @@ void StatsAction::ListRepairCost(std::ostringstream& out)
     if (repairPercent < 25)
         color = "ffff0000";
 
-    out << "|c" << color << (uint32)ceil(100 - repairPercent) << "% (" << chat->formatMoney(totalCost) << ")|cffffffff 耐久度";
+    out << "|c" << color << (uint32)ceil(repairPercent) << "%(" << chat->formatMoney(totalCost) << ")|cffffffff耐久度(修理花费)";
 }
 
 uint32 StatsAction::EstRepair(uint16 pos)

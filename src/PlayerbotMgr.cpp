@@ -76,7 +76,7 @@ void PlayerbotHolder::HandlePlayerBotLoginCallback(PlayerbotLoginQueryHolder con
 {
     uint32 botAccountId = holder.GetAccountId();
 
-    WorldSession* botSession = new WorldSession(botAccountId, "", nullptr, SEC_PLAYER, EXPANSION_WRATH_OF_THE_LICH_KING, time_t(0), LOCALE_enUS, 0, false, false, 0, true);
+    WorldSession* botSession = new WorldSession(botAccountId, "", nullptr, SEC_PLAYER, EXPANSION_WRATH_OF_THE_LICH_KING, time_t(0), LOCALE_zhCN, 0, false, false, 0, true);
 
     botSession->HandlePlayerLoginFromDB(holder); // will delete lqh
 
@@ -671,8 +671,8 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
 
     if (!*args)
     {
-        messages.push_back("用法：list/reload/tweak/self 或 add/init/remove PLAYERNAME");
-        messages.push_back("       addclass CLASSNAME");
+        messages.push_back("用法：list/reload/tweak/self 或 add/init/remove 角色名字");
+        messages.push_back("         或 addclass 职业名字");
         return messages;
     }
 
@@ -680,7 +680,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
     char* charname = strtok (nullptr, " ");
     if (!cmd)
     {
-        messages.push_back("用法：list/reload/tweak/self 或 add/init/remove PLAYERNAME 或 addclass CLASSNAME");
+        messages.push_back("用法：list/reload/tweak/self 或 add/init/remove 角色名字 或 addclass 职业名字");
         return messages;
     }
 
@@ -793,47 +793,47 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
             return messages;
         }
         if (!charname) {
-            messages.push_back("addclass：无效职业名字(warrior/paladin/hunter/rogue/priest/shaman/mage/warlock/druid/dk)");
+            messages.push_back("添加机器人：无效职业名字(warrior/paladin/hunter/rogue/priest/shaman/mage/warlock/druid/dk)");
             return messages;
         }
         uint8 claz;
-        if (!strcmp(charname, "warrior"))
+        if (!strcmp(charname, "ZS"))
         {
             claz = 1;
         }
-        else if (!strcmp(charname, "paladin"))
+        else if (!strcmp(charname, "QS"))
         {
             claz = 2;
         }
-        else if (!strcmp(charname, "hunter"))
+        else if (!strcmp(charname, "LR"))
         {
             claz = 3;
         }
-        else if (!strcmp(charname, "rogue"))
+        else if (!strcmp(charname, "DZ"))
         {
             claz = 4;
         }
-        else if (!strcmp(charname, "priest"))
+        else if (!strcmp(charname, "MS"))
         {
             claz = 5;
         }
-        else if (!strcmp(charname, "shaman"))
+        else if (!strcmp(charname, "SM"))
         {
             claz = 7;
         }
-        else if (!strcmp(charname, "mage"))
+        else if (!strcmp(charname, "FS"))
         {
             claz = 8;
         }
-        else if (!strcmp(charname, "warlock"))
+        else if (!strcmp(charname, "SS"))
         {
             claz = 9;
         }
-        else if (!strcmp(charname, "druid"))
+        else if (!strcmp(charname, "DLY"))
         {
             claz = 11;
         }
-        else if (!strcmp(charname, "dk"))
+        else if (!strcmp(charname, "DK"))
         {
             claz = 6;
         }
@@ -871,10 +871,10 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
             ObjectGuid guid = ObjectGuid(HighGuid::Player, fields[0].Get<uint32>());
             AddPlayerBot(guid, master->GetSession()->GetAccountId());
 
-            messages.push_back("addclass " + std::string(charname) + " ok");
+            messages.push_back("添加机器人" + std::string(charname) + "成功");
             return messages;
         }
-        messages.push_back("addclass 失败。");
+        messages.push_back("添加机器人失败。");
         return messages;
     }
 
@@ -888,7 +888,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
         if (isPlayer) {
             charnameStr = name;
         } else {
-            messages.push_back("用法：list/reload/tweak/self 或 add/init/remove PLAYERNAME");
+            messages.push_back("用法：list/reload/tweak/self 或 add/init/remove 角色名字");
             return messages;
         }
     } else {
@@ -1105,11 +1105,11 @@ std::string const PlayerbotHolder::LookupBots(Player* master)
     messages.push_back("|TInterface\\icons\\INV_ThrowingKnife_04.png:25:25:0:-1|t 盗贼");
     messages.push_back("|TInterface\\icons\\INV_Staff_30.png:25:25:0:-1|t 牧师");
     messages.push_back("|TInterface\\icons\\inv_jewelry_talisman_04.png:25:25:0:-1|t 萨满祭司");
-    messages.push_back("|TInterface\\icons\\INV_staff_30.png:25:25:0:-1|t 法师");
-    messages.push_back("|TInterface\\icons\\INV_staff_30.png:25:25:0:-1|t 术士");
+    messages.push_back("|TInterface\\icons\\INV_staff_13.png:25:25:0:-1|t 法师");
+    messages.push_back("|TInterface\\icons\\spell_nature_drowsy.png:25:25:0:-1|t 术士");
     messages.push_back("|TInterface\\icons\\Ability_Druid_Maul.png:25:25:0:-1|t 德鲁伊");
-    messages.push_back("死亡骑士");
-    messages.push_back("（用法：.bot 查看职业）");
+    messages.push_back("|TInterface\\icons\\spell_deathknight_classicon.png:25:25:0:-1|t 死亡骑士");
+    messages.push_back("（用法：.bot lookup 职业）");
     std::string ret_msg;
     for (std::string msg: messages) {
         ret_msg += msg + "\n";

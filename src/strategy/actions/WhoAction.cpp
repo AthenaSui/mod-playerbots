@@ -41,16 +41,16 @@ bool WhoAction::Execute(Event event)
     {
         if (AreaTableEntry const* areaEntry = sAreaTableStore.LookupEntry(bot->GetAreaId()))
         {
-            out << ", (|cffb04040" << areaEntry->area_name[0] << "|r)";
+            out << "，(|cffb04040" << areaEntry->area_name[0] << "|r)";
         }
     }
 
     if (botAI->GetMaster())
     {
         if (!out.str().empty())
-            out << ", ";
+            out << "，";
 
-        out << "正在与 " << botAI->GetMaster()->GetName() << "一起玩";
+        out << "正在与" << botAI->GetMaster()->GetName() << "一起玩。";
     }
 
     std::string const tell = out.str();
@@ -94,7 +94,7 @@ std::string const WhoAction::QuerySkill(std::string const text)
     ObjectGuid guid = bot->GetGUID();
 
     std::string const data = "0";
-    out << "|cFFFFFF00|H交易：" << spellId << ":" << value << ":" << maxSkill << ":" << std::hex << std::uppercase << guid.GetRawValue()
+    out << "|cFFFFFF00|Htrade:" << spellId << ":" << value << ":" << maxSkill << ":" << std::hex << std::uppercase << guid.GetRawValue()
             << std::nouppercase << std::dec << ":" << data << "|h[" << skillName << "]|h|r" << " |h|cff00ff00" << value << "|h|cffffffff/"
             << "|h|cff00ff00" << maxSkill << "|h|cffffffff ";
 
@@ -107,9 +107,9 @@ std::string const WhoAction::QuerySpec(std::string const text)
 
     uint8 spec = AiFactory::GetPlayerSpecTab(bot);
 
-    out << "|h|cffffffff" << chat->FormatRace(bot->getRace()) << " [" << (bot->getGender() == GENDER_MALE ? "M" : "F") << "] " << chat->FormatClass(bot, spec);
-    out << " (|h|cff00ff00" << (uint32)bot->getLevel() << "|h|cffffffff lvl), ";
-    out << "|h|cff00ff00" << botAI->GetEquipGearScore(bot, false, false) << "|h|cffffffff GS (";
+    out << "|h|cffffffff" << chat->FormatRace(bot->getRace()) << " [" << (bot->getGender() == GENDER_MALE ? "男" : "女") << "] " << chat->FormatClass(bot, spec);
+    out << "(|h|cffffffff等级：|h|cff00ff00" << (uint32)bot->getLevel() << "|r),";
+    out << "|h|cffffffff GS：|h|cff00ff00" << botAI->GetEquipGearScore(bot, false, false) << "|r(";
 
     ItemCountByQuality visitor;
     IterateItems(&visitor, ITERATE_ITEMS_IN_EQUIP);
@@ -117,35 +117,35 @@ std::string const WhoAction::QuerySpec(std::string const text)
     bool needSlash = false;
     if (visitor.count[ITEM_QUALITY_LEGENDARY])
     {
-        out << "|h|cffff00ff" << visitor.count[ITEM_QUALITY_LEGENDARY] << "|h|cffffffff";
+        out << "|h|cffff8000橙装：" << visitor.count[ITEM_QUALITY_LEGENDARY] << "|h|cffffffff";
         needSlash = true;
     }
 
     if (visitor.count[ITEM_QUALITY_EPIC])
     {
-        out << "|h|cffff00ff" << visitor.count[ITEM_QUALITY_EPIC] << "|h|cffffffff";
+        out << "|h|cffa335ee紫装：" << visitor.count[ITEM_QUALITY_EPIC] << "|h|cffffffff";
         needSlash = true;
     }
 
     if (visitor.count[ITEM_QUALITY_RARE])
     {
         if (needSlash)
-            out << "/";
+            out << " / ";
 
-        out << "|h|cff8080ff" << visitor.count[ITEM_QUALITY_RARE] << "|h|cffffffff";
+        out << "|h|cff0070dd蓝装：" << visitor.count[ITEM_QUALITY_RARE] << "|h|cffffffff";
         needSlash = true;
     }
 
     if (visitor.count[ITEM_QUALITY_UNCOMMON])
     {
         if (needSlash)
-            out << "/";
+            out << " / ";
 
-        out << "|h|cff00ff00" << visitor.count[ITEM_QUALITY_UNCOMMON] << "|h|cffffffff";
+        out << "|h|cff1eff00绿装：" << visitor.count[ITEM_QUALITY_UNCOMMON] << "|h|cffffffff";
         needSlash = true;
     }
 
-    out << ")";
+    out << "|r)";
 
     return out.str();
 }

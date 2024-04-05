@@ -192,7 +192,7 @@ std::vector<std::pair<uint32, std::string>> ListSpellsAction::GetSpellList(std::
                     if (reagentsInInventory)
                         materials << "|cffffff00(x" << reagentsInInventory << ")|r ";
                     else if (buyable)
-                        materials << "|cffffff00(buy)|r ";
+                        materials << "|cffffff00(购买)|r ";
                 }
             }
         }

@@ -99,7 +99,6 @@ std::string const QueryItemUsageAction::QueryItem(ItemTemplate const* item, uint
 
     if (!price.empty())
         out << "，" << price;
-        out << "，" << price;
 
     return out.str();
 }
