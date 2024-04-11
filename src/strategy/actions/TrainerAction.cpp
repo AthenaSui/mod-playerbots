@@ -14,7 +14,7 @@ void TrainerAction::Learn(uint32 cost, TrainerSpell const* tSpell, std::ostrings
     {
         if (AI_VALUE2(uint32, "free money for", (uint32)NeedMoneyFor::spells) < cost)
         {
-            msg << " - too expensive";
+            msg << " - 太贵了";
             return;
         }
 
@@ -39,7 +39,7 @@ void TrainerAction::Learn(uint32 cost, TrainerSpell const* tSpell, std::ostrings
     if (!learned)
         bot->learnSpell(tSpell->spell);
 
-    msg << " - learned";
+    msg << " - 已学习";
 }
 
 void TrainerAction::Iterate(Creature* creature, TrainerSpellAction action, SpellIds& spells)
@@ -152,7 +152,7 @@ bool MaintenanceAction::Execute(Event event)
 {
     if (!sPlayerbotAIConfig->maintenanceCommand)
         return false;
-    botAI->TellMaster("maintenance");
+    botAI->TellMaster("正在维护");
     PlayerbotFactory factory(bot, bot->GetLevel());
     factory.InitBags(false);
     factory.InitAmmo();
@@ -165,6 +165,7 @@ bool MaintenanceAction::Execute(Event event)
     factory.InitAvailableSpells();
     factory.InitSkills();
     factory.InitMounts();
+    factory.InitGlyphs(true);
     if (bot->getLevel() >= sPlayerbotAIConfig->minEnchantingBotLevel) {
         factory.ApplyEnchantAndGemsNew();
     }

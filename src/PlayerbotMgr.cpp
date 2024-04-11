@@ -527,6 +527,9 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
         if (ObjectAccessor::FindPlayer(guid))
             return "玩家已登录";
 
+        if (!sPlayerbotAIConfig->allowPlayerBots && !isRandomAccount && !isMasterAccount)
+            return "你不能召唤其他玩家角色作为机器人。";
+
         AddPlayerBot(guid, masterAccountId);
         return "ok";
     }
@@ -552,7 +555,7 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
         return "机器人未找到";
 
     if (!isRandomAccount || isRandomBot) {
-        return "错误：您不能在未召唤的随机机器人上使用此命令。";
+        return "错误：你不能在未召唤的随机机器人上使用此命令。";
     }
 
     if (GET_PLAYERBOT_AI(bot)) {
@@ -797,43 +800,43 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
             return messages;
         }
         uint8 claz;
-        if (!strcmp(charname, "ZS"))
+        if (!strcmp(charname, "warrior"))
         {
             claz = 1;
         }
-        else if (!strcmp(charname, "QS"))
+        else if (!strcmp(charname, "paladin"))
         {
             claz = 2;
         }
-        else if (!strcmp(charname, "LR"))
+        else if (!strcmp(charname, "hunter"))
         {
             claz = 3;
         }
-        else if (!strcmp(charname, "DZ"))
+        else if (!strcmp(charname, "rogue"))
         {
             claz = 4;
         }
-        else if (!strcmp(charname, "MS"))
+        else if (!strcmp(charname, "priest"))
         {
             claz = 5;
         }
-        else if (!strcmp(charname, "SM"))
+        else if (!strcmp(charname, "shaman"))
         {
             claz = 7;
         }
-        else if (!strcmp(charname, "FS"))
+        else if (!strcmp(charname, "mage"))
         {
             claz = 8;
         }
-        else if (!strcmp(charname, "SS"))
+        else if (!strcmp(charname, "warlock"))
         {
             claz = 9;
         }
-        else if (!strcmp(charname, "DLY"))
+        else if (!strcmp(charname, "druid"))
         {
             claz = 11;
         }
-        else if (!strcmp(charname, "DK"))
+        else if (!strcmp(charname, "dk"))
         {
             claz = 6;
         }
@@ -871,7 +874,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
             ObjectGuid guid = ObjectGuid(HighGuid::Player, fields[0].Get<uint32>());
             AddPlayerBot(guid, master->GetSession()->GetAccountId());
 
-            messages.push_back("添加机器人" + std::string(charname) + "成功");
+            messages.push_back("添加" + std::string(charname) + "机器人成功");
             return messages;
         }
         messages.push_back("添加机器人失败。");

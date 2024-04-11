@@ -17,6 +17,10 @@ AiPlayerbot.DeleteRandomBotAccounts = 0
 # 玩家登录时自动登录所有玩家角色（作为机器人）
 AiPlayerbot.BotAutologin = 0
 
+# 允许召唤其他玩家角色登录为机器人
+# 默认: 0 (禁用)
+AiPlayerbot.AllowPlayerBots = 0
+
 # 公会任务系统
 AiPlayerbot.EnableGuildTasks = 0
 
@@ -159,8 +163,8 @@ AiPlayerbot.AutoInitEquipLevelLimitRatio = 1.0
 # 默认：1 (启用)
 AiPlayerbot.AddClassCommand = 1
 
-# Enable/Disable maintenance command, learn all available spells and skills, supplement consumables, repair, etc.
-# default: 1 (enable)
+# 启用/禁用维护命令，学习所有可用法术和技能，补充消耗品，修理等。
+# 默认: 1 (启用)
 AiPlayerbot.MaintenanceCommand = 1
 
 # 自动化
@@ -532,6 +536,7 @@ AiPlayerbot.PremadeSpecLink.6.0.80 = 0355021533003313201020131351-005-005032
 AiPlayerbot.PremadeSpecName.6.1 = 冰霜pve
 AiPlayerbot.PremadeSpecLink.6.1.60 = 
 AiPlayerbot.PremadeSpecLink.6.1.80 = 03-32002350352203012300033101351-230200305
+AiPlayerbot.PremadeSpecGlyph.6.1 = 45805,43673,43547,43544,43672,43543
 AiPlayerbot.PremadeSpecName.6.2 = 邪恶pve
 AiPlayerbot.PremadeSpecLink.6.2.60 = 
 AiPlayerbot.PremadeSpecLink.6.2.80 = 23050202--2302003350032152003150003133151
@@ -572,6 +577,7 @@ AiPlayerbot.PremadeSpecLink.11.0.80 = 5012203125331103213305301231--205003212
 AiPlayerbot.PremadeSpecName.11.1 = 野性战斗pve
 AiPlayerbot.PremadeSpecLink.11.1.60 = 
 AiPlayerbot.PremadeSpecLink.11.1.80 = -501232130322110353120303313511-20350001
+AiPlayerbot.PremadeSpecGlyph.11.1 = 40897,43331,46372,43335,43332
 AiPlayerbot.PremadeSpecName.11.2 = 恢复pve
 AiPlayerbot.PremadeSpecLink.11.2.60 = 
 AiPlayerbot.PremadeSpecLink.11.2.80 = 05320001--230033312031512531153313051

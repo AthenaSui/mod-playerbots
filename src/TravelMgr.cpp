@@ -3435,7 +3435,7 @@ void TravelMgr::LoadQuestTravelTable()
             Field* fields = result->Fetch();
             uint32 accountId = fields[0].Get<uint32>();
 
-            WorldSession* session = new WorldSession(accountId, "" , nullptr, SEC_PLAYER, EXPANSION_WRATH_OF_THE_LICH_KING, time_t(0), LOCALE_zhCN, 0, false, false, 0, true);
+            WorldSession* session = new WorldSession(accountId, "" , nullptr, SEC_PLAYER, EXPANSION_WRATH_OF_THE_LICH_KING, time_t(0), LOCALE_enUS, 0, false, false, 0, true);
 
             std::vector<std::pair<std::pair<uint32, uint32>, uint32>> classSpecLevel;
 
