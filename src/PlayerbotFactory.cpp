@@ -605,7 +605,7 @@ void PlayerbotFactory::InitPetTalents()
         return;
     }
     pet->resetTalents();
-    std::map<uint32, std::vector<TalentEntry const*> > spells;
+    std::unordered_map<uint32, std::vector<TalentEntry const*> > spells;
     for (uint32 i = 0; i < sTalentStore.GetNumRows(); ++i)
     {
         TalentEntry const *talentInfo = sTalentStore.LookupEntry(i);
@@ -625,7 +625,7 @@ void PlayerbotFactory::InitPetTalents()
     uint32 maxTalentPoints = pet->GetMaxTalentPointsForLevel(pet->GetLevel());
     int row = 0;
     // LOG_INFO("playerbots", "{} learning, max talent points: {}, cur: {}", bot->GetName().c_str(), maxTalentPoints, curTalentPoints);
-    for (std::map<uint32, std::vector<TalentEntry const*> >::iterator i = spells.begin(); i != spells.end(); ++i, ++row)
+    for (auto i = spells.begin(); i != spells.end(); ++i, ++row)
     {
         std::vector<TalentEntry const*> &spells_row = i->second;
         if (spells_row.empty())
@@ -893,7 +893,7 @@ void PlayerbotFactory::InitTalentsBySpecNo(Player* bot, int specNo, bool reset)
     uint32 cls = bot->getClass();
     int startLevel = bot->GetLevel();
     uint32 classMask = bot->getClassMask();
-    std::map<uint32, std::vector<TalentEntry const*> > spells_row;
+    std::unordered_map<uint32, std::vector<TalentEntry const*> > spells_row;
     for (uint32 i = 0; i < sTalentStore.GetNumRows(); ++i)
     {
         TalentEntry const *talentInfo = sTalentStore.LookupEntry(i);
@@ -954,7 +954,7 @@ void PlayerbotFactory::InitTalentsByParsedSpecLink(Player* bot, std::vector<std:
         bot->resetTalents(true);
     }
     uint32 classMask = bot->getClassMask();
-    std::map<uint32, std::vector<TalentEntry const*> > spells_row;
+    std::unordered_map<uint32, std::vector<TalentEntry const*> > spells_row;
     for (uint32 i = 0; i < sTalentStore.GetNumRows(); ++i)
     {
         TalentEntry const *talentInfo = sTalentStore.LookupEntry(i);
@@ -2248,7 +2248,7 @@ void PlayerbotFactory::InitSpecialSpells()
 void PlayerbotFactory::InitTalents(uint32 specNo)
 {
     uint32 classMask = bot->getClassMask();
-    std::map<uint32, std::vector<TalentEntry const*> > spells;
+    std::unordered_map<uint32, std::vector<TalentEntry const*> > spells;
     for (uint32 i = 0; i < sTalentStore.GetNumRows(); ++i)
     {
         TalentEntry const *talentInfo = sTalentStore.LookupEntry(i);
@@ -2266,7 +2266,7 @@ void PlayerbotFactory::InitTalents(uint32 specNo)
     }
 
     uint32 freePoints = bot->GetFreeTalentPoints();
-    for (std::map<uint32, std::vector<TalentEntry const*> >::iterator i = spells.begin(); i != spells.end(); ++i)
+    for (auto i = spells.begin(); i != spells.end(); ++i)
     {
         std::vector<TalentEntry const*> &spells_row = i->second;
         if (spells_row.empty())
@@ -2308,7 +2308,7 @@ void PlayerbotFactory::InitTalentsByTemplate(uint32 specTab)
     int startLevel = bot->GetLevel();
     uint32 specIndex = sPlayerbotAIConfig->randomClassSpecIndex[cls][specTab];
     uint32 classMask = bot->getClassMask();
-    std::map<uint32, std::vector<TalentEntry const*> > spells_row;
+    std::unordered_map<uint32, std::vector<TalentEntry const*> > spells_row;
     for (uint32 i = 0; i < sTalentStore.GetNumRows(); ++i)
     {
         TalentEntry const *talentInfo = sTalentStore.LookupEntry(i);
@@ -2648,7 +2648,7 @@ void PlayerbotFactory::InitFood()
     if (sPlayerbotAIConfig->freeFood) {
         return;
     }
-    std::map<uint32, std::vector<uint32> > items;
+    std::unordered_map<uint32, std::vector<uint32> > items;
     ItemTemplateContainer const* itemTemplateContainer = sObjectMgr->GetItemTemplateStore();
     for (ItemTemplateContainer::const_iterator i = itemTemplateContainer->begin(); i != itemTemplateContainer->end(); ++i)
     {
@@ -2881,6 +2881,9 @@ void PlayerbotFactory::InitGlyphs(bool increment)
                 continue;
 
             if ((proto->AllowableClass & bot->getClassMask()) == 0 || (proto->AllowableRace & bot->getRaceMask()) == 0)
+                continue;
+            
+            if (proto->RequiredLevel > bot->GetLevel())
                 continue;
 
             uint32 glyph = 0;
@@ -3666,12 +3669,12 @@ float PlayerbotFactory::CalculateItemScore(uint32 item_id, Player* bot)
                 {
                     case SPELL_AURA_MOD_DAMAGE_DONE:
                     // case SPELL_AURA_MOD_HEALING_DONE: duplicated
-                        spell_power += spellInfo->Effects[i].BasePoints + 1;
+                        spell_power += (spellInfo->Effects[i].BasePoints + 1) * 0.2;
                         break;
                     case SPELL_AURA_MOD_ATTACK_POWER:
-                        attack_power += spellInfo->Effects[i].BasePoints + 1;
+                        attack_power += (spellInfo->Effects[i].BasePoints + 1) * 0.2;
                     case SPELL_AURA_MOD_SHIELD_BLOCKVALUE:
-                        block += spellInfo->Effects[i].BasePoints + 1;
+                        block += (spellInfo->Effects[i].BasePoints + 1) * 0.2;
                     default:
                         break;
                 }
@@ -3747,25 +3750,25 @@ float PlayerbotFactory::CalculateItemScore(uint32 item_id, Player* bot)
             score *= 0.5;
         }
         // spec without double hand
-        // enhancement, rogue, ice dk, shield tank, fury warrior without titan's grip but with duel wield
+        // enhancement, rogue, ice dk, unholy dk, shield tank, fury warrior without titan's grip but with duel wield
         if (isDoubleHand && 
-            ((cls == CLASS_SHAMAN && tab == 1 && bot->HasSpell(674)) ||
+            ((cls == CLASS_SHAMAN && tab == 1 && bot->CanDualWield()) ||
             (cls == CLASS_ROGUE) ||
-            (cls == CLASS_DEATH_KNIGHT && tab == 1) ||
-            (cls == CLASS_WARRIOR && tab == 1 && !bot->HasAura(49152) && bot->HasSpell(674)) ||
+            (cls == CLASS_DEATH_KNIGHT && tab != 0) ||
+            (cls == CLASS_WARRIOR && tab == 1 && !bot->CanTitanGrip() && bot->CanDualWield()) ||
             IsShieldTank(bot))) {
                 score *= 0.1;
         }
         // spec with double hand
         // fury with titan's grip, fury without duel wield, arms, bear, retribution, blood dk
         if (isDoubleHand && 
-            ((cls == CLASS_WARRIOR && tab == WARRIOR_TAB_FURY && bot->HasAura(49152)) ||
-            (cls == CLASS_WARRIOR && tab == WARRIOR_TAB_FURY && !bot->HasSpell(674)) ||
+            ((cls == CLASS_WARRIOR && tab == WARRIOR_TAB_FURY && bot->CanTitanGrip()) ||
+            (cls == CLASS_WARRIOR && tab == WARRIOR_TAB_FURY && !bot->CanDualWield()) ||
             (cls == CLASS_WARRIOR && tab == WARRIOR_TAB_ARMS) ||
             (cls == CLASS_DRUID && tab == 1) ||
             (cls == CLASS_PALADIN && tab == 2) ||
             (cls == CLASS_DEATH_KNIGHT && tab == 0) ||
-            (cls == CLASS_SHAMAN && tab == 1 && !bot->HasSpell(674)))) {
+            (cls == CLASS_SHAMAN && tab == 1 && !bot->CanDualWield()))) {
             score *= 10;
         }
     }
@@ -3776,6 +3779,9 @@ float PlayerbotFactory::CalculateItemScore(uint32 item_id, Player* bot)
         if (cls == CLASS_ROGUE && tab == ROGUE_TAB_ASSASSINATION && proto->SubClass != ITEM_SUBCLASS_WEAPON_DAGGER) {
             score *= 0.1;
         }
+    }
+    if (proto->ItemSet != 0) {
+        score *= 1.1;
     }
     return (0.0001 + score) * itemLevel * (quality + 1);
 }
