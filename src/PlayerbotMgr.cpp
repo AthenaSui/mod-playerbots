@@ -531,10 +531,10 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
             return "你不能召唤其他玩家角色作为机器人。";
 
         if (!sPlayerbotAIConfig->allowPlayerBots && !isRandomAccount && !isMasterAccount)
-            return "You cannot login another player's character as bot.";
+            return "你不能以机器人身份登录其他玩家的角色。";
 
         AddPlayerBot(guid, masterAccountId);
-        return "ok";
+        return "成功";
     }
     else if (cmd == "remove" || cmd == "logout" || cmd == "rm")
     {
@@ -545,7 +545,7 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
             return "不是你的机器人";
 
         LogoutPlayerBot(guid);
-        return "ok";
+        return "成功";
     }
 
     // if (admin)
@@ -572,44 +572,44 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
             {
                 PlayerbotFactory factory(bot, master->getLevel(), ITEM_QUALITY_NORMAL);
                 factory.Randomize(false);
-                return "ok";
+                return "成功";
             }
             else if (cmd == "init=green" || cmd == "init=uncommon")
             {
                 PlayerbotFactory factory(bot, master->getLevel(), ITEM_QUALITY_UNCOMMON);
                 factory.Randomize(false);
-                return "ok";
+                return "成功";
             }
             else if (cmd == "init=blue" || cmd == "init=rare")
             {
                 PlayerbotFactory factory(bot, master->getLevel(), ITEM_QUALITY_RARE);
                 factory.Randomize(false);
-                return "ok";
+                return "成功";
             }
             else if (cmd == "init=epic" || cmd == "init=purple")
             {
                 PlayerbotFactory factory(bot, master->getLevel(), ITEM_QUALITY_EPIC);
                 factory.Randomize(false);
-                return "ok";
+                return "成功";
             }
             else if (cmd == "init=legendary" || cmd == "init=yellow")
             {
                 PlayerbotFactory factory(bot, master->getLevel(), ITEM_QUALITY_LEGENDARY);
                 factory.Randomize(false);
-                return "ok";
+                return "成功";
             }
             else if (cmd == "init=auto")
             {
                 uint32 mixedGearScore = PlayerbotAI::GetMixedGearScore(master, true, false, 12) * sPlayerbotAIConfig->autoInitEquipLevelLimitRatio;
                 PlayerbotFactory factory(bot, master->getLevel(), ITEM_QUALITY_LEGENDARY, mixedGearScore);
                 factory.Randomize(false);
-                return "ok, gear score limit: " + std::to_string(mixedGearScore / (ITEM_QUALITY_EPIC + 1)) + "(for epic)";
+                return "成功，GS限制：" + std::to_string(mixedGearScore / (ITEM_QUALITY_EPIC + 1)) + "(紫装)";
             }
             else if (cmd.starts_with("init=") && sscanf(cmd.c_str(), "init=%d", &gs) != -1)
             {
                 PlayerbotFactory factory(bot, master->getLevel(), ITEM_QUALITY_LEGENDARY, gs);
                 factory.Randomize(false);
-                return "ok, gear score limit: " + std::to_string(gs / (ITEM_QUALITY_EPIC + 1)) + "(for epic)";
+                return "成功，GS限制：" + std::to_string(gs / (ITEM_QUALITY_EPIC + 1)) + "(紫装)";
             }
         }
     }
@@ -618,18 +618,18 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
     {
         PlayerbotFactory factory(bot, bot->getLevel());
         factory.Randomize(true);
-        return "ok";
+        return "成功";
     }
     else if (cmd == "refresh")
     {
         PlayerbotFactory factory(bot, bot->getLevel());
         factory.Refresh();
-        return "ok";
+        return "成功";
     }
     else if (cmd == "random")
     {
         sRandomPlayerbotMgr->Randomize(bot);
-        return "ok";
+        return "成功";
     }
     // }
 

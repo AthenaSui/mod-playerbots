@@ -313,16 +313,16 @@ AiPlayerbot.AlmostFullHealth = 85
 AiPlayerbot.LowMana = 15
 AiPlayerbot.MediumMana = 40
 
-# Enable healer bot save mana
-# Default: 1 (enable)
+# 启用治疗机器人保存法力
+# 默认：1 (启用)
 AiPlayerbot.AutoSaveMana = 1
 
-# Healer bot save mana threshold
-# Default: 60 (60%)
+# 治疗机器人法力值保存阈值
+# 默认：60 (60%)
 AiPlayerbot.SaveManaThreshold = 60
 
-# Enable auto avoid aoe (experimental)
-# Default: 0 (disable)
+# 启用自动躲避AOE (实验)
+# 默认：0 (禁用)
 AiPlayerbot.AutoAvoidAoe = 0
 
 
