@@ -37,6 +37,11 @@ bool TellLosAction::Execute(Event event)
         ListUnits("--- 友方玩家 ---", *context->GetValue<GuidVector>("nearest friendly players"));
     }
 
+    if (param.empty() || param == "triggers")
+    {
+        ListUnits("--- Triggers ---", *context->GetValue<GuidVector>("possible triggers"));
+    }
+
     return true;
 }
 
@@ -46,8 +51,9 @@ void TellLosAction::ListUnits(std::string const title, GuidVector units)
 
     for (ObjectGuid const guid : units)
     {
-        if (Unit* unit = botAI->GetUnit(guid))
+        if (Unit* unit = botAI->GetUnit(guid)) {
             botAI->TellMaster(unit->GetName());
+        }
     }
 
 }
