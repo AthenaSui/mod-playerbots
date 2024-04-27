@@ -325,6 +325,9 @@ AiPlayerbot.SaveManaThreshold = 60
 # 默认：0 (禁用)
 AiPlayerbot.AutoAvoidAoe = 0
 
+# 告知正在躲避的技能 (实验性)
+# Default: 1 (enable)
+AiPlayerbot.TellWhenAvoidAoe = 1
 
 # 随机机器人默认策略 (在默认值之后应用)
 AiPlayerbot.RandomBotCombatStrategies = "+dps,+dps assist,-threat"
