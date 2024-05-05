@@ -232,7 +232,7 @@ void PlayerbotHolder::LogoutPlayerBot(ObjectGuid guid)
             sPlayerbotDbStore->Save(botAI);
         }
 
-        LOG_INFO("playerbots", "机器人 {} 已登出", bot->GetName().c_str());
+        LOG_INFO("playerbots", "机器人<{}>已登出", bot->GetName().c_str());
         bot->SaveToDB(false, false);
 
         WorldSession* botWorldSessionPtr = bot->GetSession();
@@ -331,7 +331,7 @@ void PlayerbotHolder::DisablePlayerBot(ObjectGuid guid)
             sPlayerbotDbStore->Save(botAI);
         }
 
-        LOG_DEBUG("playerbots", "机器人 {} 已登出", bot->GetName().c_str());
+        LOG_DEBUG("playerbots", "机器人<{}>已登出", bot->GetName().c_str());
 
         bot->SaveToDB(false, false);
 
@@ -1255,7 +1255,7 @@ void PlayerbotMgr::OnBotLoginInternal(Player * const bot)
     botAI->SetMaster(master);
     botAI->ResetStrategies();
 
-    LOG_INFO("playerbots", "机器人 {} 已登录", bot->GetName().c_str());
+    LOG_INFO("playerbots", "机器人<{}>已登录", bot->GetName().c_str());
 }
 
 void PlayerbotMgr::OnPlayerLogin(Player* player)

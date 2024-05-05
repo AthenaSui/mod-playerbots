@@ -300,8 +300,8 @@ bool SpiritHealerAction::Execute(Event event)
             Unit* unit = botAI->GetUnit(*i);
             if (unit && unit->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPIRITHEALER))
             {
-                LOG_INFO("playerbots", "机器人 {} {}:{} <{}> 在灵魂医者处复活",
-                    bot->GetGUID().ToString().c_str(), bot->GetTeamId() == TEAM_ALLIANCE ? "A" : "H", bot->getLevel(), bot->GetName());
+                LOG_INFO("playerbots", "机器人<{}> {} {} {}级-在灵魂医者处复活",
+                    bot->GetName(), bot->GetGUID().ToString().c_str(), bot->GetTeamId() == TEAM_ALLIANCE ? "联盟" : "部落", bot->getLevel());
                 PlayerbotChatHandler ch(bot);
                 bot->ResurrectPlayer(0.5f);
                 bot->SpawnCorpseBones();

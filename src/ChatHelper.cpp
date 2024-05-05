@@ -288,15 +288,36 @@ std::string const ChatHelper::FormatQuest(Quest const* quest)
 std::string const ChatHelper::FormatGameobject(GameObject* go)
 {
     std::ostringstream out;
-    out << "|cFFFFFF00|Hfound:" << go->GetGUID().GetRawValue() << ":" << go->GetEntry() << ":" <<  "|h[" << go->GetGOInfo()->name << "]|h|r";
+    int loc_idx = sPlayerbotTextMgr->GetLocalePriority();
+    std::string name = go->GetGOInfo()->name;
+    if (loc_idx >= 0)
+    {
+        GameObjectLocale const* gl = sObjectMgr->GetGameObjectLocale(go->GetEntry());
+        if (gl)
+        {
+            if ((int32)gl->Name.size() > loc_idx && !gl->Name[loc_idx].empty())
+                name = gl->Name[loc_idx];
+        }
+    }
+    out << "|cFFFFFF00|Hfound:" << go->GetGUID().GetRawValue() << ":" << go->GetEntry() << ":" <<  "|h[" << name << "]|h|r";
     return out.str();
 }
 
 std::string const ChatHelper::FormatWorldobject(WorldObject* wo)
 {
     std::ostringstream out;
-    out << "|cFFFFFF00|Hfound:" << wo->GetGUID().GetRawValue() << ":" << wo->GetEntry() << ":" << "|h[";
-    out << (wo->ToGameObject() ? ((GameObject*)wo)->GetGOInfo()->name : wo->GetName()) << "]|h|r";
+    int loc_idx = sPlayerbotTextMgr->GetLocalePriority();
+    std::string name = (wo->ToGameObject() ? ((GameObject*)wo)->GetGOInfo()->name : wo->GetName());
+    if (loc_idx >= 0 && wo->ToGameObject())
+    {
+        GameObjectLocale const* gl = sObjectMgr->GetGameObjectLocale(wo->GetEntry());
+        if (gl)
+        {
+            if ((int32)gl->Name.size() > loc_idx && !gl->Name[loc_idx].empty())
+                name = gl->Name[loc_idx];
+        }
+    }
+    out << "|cFFFFFF00|Hfound:" << wo->GetGUID().GetRawValue() << ":" << wo->GetEntry() << ":" << "|h[" << name << "]|h|r";
     return out.str();
 }
 
@@ -313,12 +334,35 @@ std::string const ChatHelper::FormatWorldEntry(int32 entry)
     std::ostringstream out;
     out << "|cFFFFFF00|Hentry:" << abs(entry) << ":" << "|h[";
 
+    int loc_idx = sPlayerbotTextMgr->GetLocalePriority();
+    std::string name;
     if (entry < 0 && gInfo)
-        out << gInfo->name;
+        name = gInfo->name;
     else if (entry > 0 && cInfo)
-        out << cInfo->Name;
+        name = cInfo->Name;
     else
-        out << "未知";
+        name = "未知";
+
+    if (loc_idx >= 0 && entry < 0)
+    {
+        GameObjectLocale const* gl = sObjectMgr->GetGameObjectLocale(entry);
+        if (gl)
+        {
+            if (gl->Name.size() > loc_idx && !gl->Name[loc_idx].empty())
+                name = gl->Name[loc_idx];
+        }
+    }
+    if (loc_idx >= 0 && entry > 0)
+    {
+        CreatureLocale const* cl = sObjectMgr->GetCreatureLocale(entry);
+        if (cl)
+        {
+            if (cl->Name.size() > loc_idx && !cl->Name[loc_idx].empty())
+                name = cl->Name[loc_idx];
+        }
+    }
+
+    out << name;
 
     out << "]|h|r";
     return out.str();
