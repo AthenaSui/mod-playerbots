@@ -1137,7 +1137,7 @@ void PlayerbotAI::DoNextAction(bool min)
             if (botAI->GetMaster() == botAI->GetGroupMaster())
                 botAI->TellMaster("你好，我正跟随你！");
             else
-                botAI->TellMaster(!urand(0, 2) ? "Hello!" : "Hi!");
+                botAI->TellMaster(!urand(0, 2) ? "你好！" : "嗨！");
         }
     }
 
@@ -3804,7 +3804,7 @@ std::string const PlayerbotAI::HandleRemoteCommand(std::string const command)
         out << bot->GetPositionX() << " " << bot->GetPositionY() << " " << bot->GetPositionZ() << " " << bot->GetMapId() << " " << bot->GetOrientation();
 
         if (AreaTableEntry const* zoneEntry = sAreaTableStore.LookupEntry(bot->GetZoneId()))
-            out << " |" << zoneEntry->area_name[0] << "|";
+            out << " |" << zoneEntry->area_name[4] << "|";
 
         return out.str();
     }

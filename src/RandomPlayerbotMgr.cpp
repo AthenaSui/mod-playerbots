@@ -1071,7 +1071,7 @@ void RandomPlayerbotMgr::RandomTeleport(Player* bot, std::vector<WorldLocation>&
             z = 0.05f + ground;
 
             LOG_INFO("playerbots", "机器人<{}>传送到 {} {},{},{} ({}/{} 位置)",
-                bot->GetName().c_str(), zone->area_name[0], x, y, z, attemtps, tlocs.size());
+                bot->GetName().c_str(), zone->area_name[4], x, y, z, attemtps, tlocs.size());
 
             if (hearth)
             {

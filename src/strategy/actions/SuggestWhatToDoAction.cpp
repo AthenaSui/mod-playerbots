@@ -220,8 +220,8 @@ void SuggestWhatToDoAction::something()
         return;
 
     std::ostringstream out;
-//    out << "|cffb04040" << entry->area_name[0] << "|r";
-    out << entry->area_name[0];
+//    out << "|cffb04040" << entry->area_name[4] << "|r";
+    out << entry->area_name[4];
     placeholders["%zone"] = out.str();
 
     spam(BOT_TEXT2("suggest_something", placeholders), urand(0, 1) ? 0x18 : 0, urand(0, 2), urand(0, 2));

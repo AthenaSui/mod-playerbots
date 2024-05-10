@@ -442,7 +442,7 @@ std::string const WorldPosition::getAreaName(bool fullName, bool zoneName)
     if (!area)
         return "";
 
-    std::string areaName = area->area_name[0];
+    std::string areaName = area->area_name[4];
 
     if (fullName)
     {
@@ -454,7 +454,7 @@ std::string const WorldPosition::getAreaName(bool fullName, bool zoneName)
             if (!parentArea)
                 break;
 
-            std::string const subAreaName = parentArea->area_name[0];
+            std::string const subAreaName = parentArea->area_name[4];
 
             if (zoneName)
                 areaName = subAreaName;
@@ -2268,7 +2268,7 @@ void TravelMgr::LoadQuestTravelTable()
             loc->setMaxVisitors(1000, 0);
             loc->setCooldownDelay(1000);
             loc->setExpireDelay(1000);
-            loc->setTitle(area->area_name[0]);
+            loc->setTitle(area->area_name[4]);
             exploreLocs.insert_or_assign(area->ID, loc);
         }
         else

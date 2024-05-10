@@ -220,7 +220,7 @@ bool RpgTaxiAction::Execute(Event event)
     }
 
     LOG_INFO("playerbots", "Bot {} <{}> is flying from {} to {} ({} location available)",
-        bot->GetGUID().ToString().c_str(), bot->GetName(), nodeFrom->name[0], nodeTo->name[0], nodes.size());
+        bot->GetGUID().ToString().c_str(), bot->GetName(), nodeFrom->name[4], nodeTo->name[4], nodes.size());
 
     bot->SetMoney(money);
 

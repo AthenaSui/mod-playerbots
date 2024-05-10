@@ -381,17 +381,17 @@ bool GuildTaskMgr::SendKillAdvertisement(CharacterDatabaseTransaction& trans, ui
         if (!entry)
             continue;
 
-        location = entry->area_name[0];
+        location = entry->area_name[4];
         break;
     } while (result->NextRow());
 
     std::ostringstream body;
     body << GetHelloText(owner);
-    body << "As you probably know " << proto->Name << " is wanted dead for the crimes it did against our guild. If you should kill it ";
-    body << "we'd really appreciate that.\n\n";
+    body << "正如你所知，" << proto->Name << "因其对我们公会犯下的罪行而被通缉。如果你杀了他";
+    body << "那我们真的很感激。\n\n";
     if (!location.empty())
-        body << proto->Name << "'s the last known location was " << location << ".\n";
-    body << "The task will expire at " << formatDateTime(validIn) << "\n";
+        body << proto->Name << "最后被发现是在" << location << "。\n";
+    body << "任务将于" << formatDateTime(validIn) << "后到期\n";
     body << "\n";
     body << "Best Regards,\n";
     body << guild->GetName() << "\n";

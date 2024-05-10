@@ -1540,7 +1540,7 @@ bool AvoidAoeAction::AvoidAuraWithDynamicObj()
         return false;
     }
     std::ostringstream name;
-    name << "[" << spellInfo->SpellName[0] << "] (aura)";
+    name << "[" << spellInfo->SpellName[4] << "]（光环）";
     if (FleePostion(dynOwner->GetPosition(), radius, name.str())) {
         return true;
     }
@@ -1591,7 +1591,7 @@ bool AvoidAoeAction::AvoidGameObjectWithDamage()
             continue;
         }
         std::ostringstream name;
-        name << "[" << spellInfo->SpellName[0] << "] (object)";
+        name << "[" << spellInfo->SpellName[4] << "]（物品）";
         if (FleePostion(go->GetPosition(), radius, name.str())) {
             return true;
         }
@@ -1633,7 +1633,7 @@ bool AvoidAoeAction::AvoidUnitWithDamageAura()
                             break;
                         }
                         std::ostringstream name;
-                        name << "[" << triggerSpellInfo->SpellName[0] << "] (unit)";
+                        name << "[" << triggerSpellInfo->SpellName[4] << "]（单位）";
                         if (FleePostion(unit->GetPosition(), radius, name.str())) {
                             return true;
                         }

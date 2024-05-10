@@ -81,7 +81,7 @@ bool TalentSpec::CheckTalents(uint32 level, std::ostringstream* out)
         if (entry.rank > entry.maxRank)
         {
             SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry.talentInfo->RankID[0]);
-            *out << "spec is not for this class. " << spellInfo->SpellName[0] << " has " << (entry.rank - entry.maxRank) << " points above max rank.";
+            *out << "spec is not for this class. " << spellInfo->SpellName[4] << " has " << (entry.rank - entry.maxRank) << " points above max rank.";
             return false;
         }
 
@@ -103,7 +103,7 @@ bool TalentSpec::CheckTalents(uint32 level, std::ostringstream* out)
                 if (!found)
                 {
                     SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry.talentInfo->RankID[0]);
-                    *out << "spec is invalid. Talent:" << spellInfo->SpellName[0] << " needs: " << spellInfodep->SpellName[0] << " at rank: " << entry.talentInfo->DependsOnRank;
+                    *out << "专精无效。天赋：" << spellInfo->SpellName[4] << "需满足：" << spellInfodep->SpellName[4] << "达到等级：" << entry.talentInfo->DependsOnRank;
                     return false;
                 }
             }
@@ -120,7 +120,7 @@ bool TalentSpec::CheckTalents(uint32 level, std::ostringstream* out)
             if (entry.rank > 0 && entry.talentInfo->Row * 5 > points)
             {
                 SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry.talentInfo->RankID[0]);
-                *out << "spec is is invalid. Talent " << spellInfo->SpellName[0] << " is selected with only " << points << " in row below it.";
+                *out << "专精无效。天赋：" << spellInfo->SpellName[4] << " is selected with only " << points << " in row below it.";
                 return false;
             }
 

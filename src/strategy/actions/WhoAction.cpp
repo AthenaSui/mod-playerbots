@@ -41,7 +41,7 @@ bool WhoAction::Execute(Event event)
     {
         if (AreaTableEntry const* areaEntry = sAreaTableStore.LookupEntry(bot->GetAreaId()))
         {
-            out << "，(|cffb04040" << areaEntry->area_name[0] << "|r)";
+            out << "，(|cffb04040" << areaEntry->area_name[4] << "|r)";
         }
     }
 

@@ -24,7 +24,7 @@ bool SayAction::Execute(Event event)
 
     // set replace strings
     if (target) placeholders["<target>"] = target->GetName();
-    placeholders["<randomfaction>"] = IsAlliance(bot->getRace()) ? "Alliance" : "Horde";
+    placeholders["<randomfaction>"] = IsAlliance(bot->getRace()) ? "联盟" : "部落";
     if (qualifier == "low ammo" || qualifier == "no ammo")
     {
         if (Item* const pItem = bot->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_RANGED))
@@ -45,7 +45,7 @@ bool SayAction::Execute(Event event)
     if (bot->GetMap())
     {
         if (AreaTableEntry const* area = sAreaTableStore.LookupEntry(bot->GetAreaId()))
-            placeholders["<subzone>"] = area->area_name[0];
+            placeholders["<subzone>"] = area->area_name[4];
     }
 
 

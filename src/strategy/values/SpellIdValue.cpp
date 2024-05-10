@@ -61,7 +61,7 @@ uint32 SpellIdValue::Calculate()
             }
         }
 
-        char const* spellName = spellInfo->SpellName[loc];
+        char const* spellName = spellInfo->SpellName[0];
         if (!useByItem && (tolower(spellName[0]) != firstSymbol || strlen(spellName) != spellLength || !Utf8FitTo(spellName, wnamepart)))
             continue;
 
@@ -84,7 +84,7 @@ uint32 SpellIdValue::Calculate()
             if (spellInfo->Effects[0].Effect == SPELL_EFFECT_LEARN_SPELL)
                 continue;
 
-            char const* spellName = spellInfo->SpellName[loc];
+            char const* spellName = spellInfo->SpellName[0];
             if (tolower(spellName[0]) != firstSymbol || strlen(spellName) != spellLength || !Utf8FitTo(spellName, wnamepart))
                 continue;
 
@@ -202,7 +202,7 @@ uint32 VehicleSpellIdValue::Calculate()
         if (!spellInfo || spellInfo->IsPassive())
             continue;
 
-        char const* spellName = spellInfo->SpellName[loc];
+        char const* spellName = spellInfo->SpellName[0];
         if (tolower(spellName[0]) != firstSymbol || strlen(spellName) != spellLength || !Utf8FitTo(spellName, wnamepart))
             continue;
 

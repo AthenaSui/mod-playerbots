@@ -60,7 +60,7 @@ bool TaxiAction::Execute(Event event)
                     continue;
 
                 std::ostringstream out;
-                out << index++ << "：" << dest->name[0];
+                out << index++ << "：" << dest->name[4];
                 botAI->TellMasterNoFacing(out.str());
             }
 

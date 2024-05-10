@@ -172,8 +172,8 @@ bool LfgJoinAction::JoinLFG()
         _roles = "DPS";
 
     LOG_INFO("playerbots", "Bot {} {}:{} <{}>: queues LFG, Dungeon as {} ({})",
-        bot->GetGUID().ToString().c_str(), bot->GetTeamId() == TEAM_ALLIANCE ? "A" : "H",
-        bot->getLevel(), bot->GetName().c_str(), _roles, many ? "several dungeons" : dungeon->Name[0]);
+        bot->GetGUID().ToString().c_str(), bot->GetTeamId() == TEAM_ALLIANCE ? "联盟" : "部落",
+        bot->getLevel(), bot->GetName().c_str(), _roles, many ? "several dungeons" : dungeon->Name[4]);
 
     /*if (lfgState->IsSingleRole())
     {
