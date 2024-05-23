@@ -151,7 +151,7 @@ void TrainerAction::TellFooter(uint32 totalCost)
 bool MaintenanceAction::Execute(Event event)
 {
     if (!sPlayerbotAIConfig->maintenanceCommand) {
-        botAI->TellMaster("maintenance command is not allowed, please check the configuration.");
+        botAI->TellMaster("不允许使用maintenance命令，请检查配置。");
         return false;
     }
     botAI->TellMaster("正在维护");
@@ -178,10 +178,10 @@ bool MaintenanceAction::Execute(Event event)
 bool AutoGearAction::Execute(Event event)
 {
     if (!sPlayerbotAIConfig->autoGearCommand) {
-        botAI->TellMaster("autogear command is not allowed, please check the configuration.");
+        botAI->TellMaster("不允许使用autoear命令，请检查配置。");
         return false;
     }
-    botAI->TellMaster("I'm auto gearing");
+    botAI->TellMaster("正在升级装备");
     uint32 gs = sPlayerbotAIConfig->autoGearScoreLimit == 0 ? 0 :
         PlayerbotFactory::CalcMixedGearScore(sPlayerbotAIConfig->autoGearScoreLimit, sPlayerbotAIConfig->autoGearQualityLimit);
     PlayerbotFactory factory(bot,

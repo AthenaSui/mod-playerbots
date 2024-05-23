@@ -490,13 +490,13 @@ void PlayerbotHolder::OnBotLogin(Player* const bot)
             Channel* new_channel = nullptr;
             if (isLfg)
             {
-                std::string lfgChannelName = channel->pattern[0];
+                std::string lfgChannelName = channel->pattern[4];
                 new_channel = cMgr->GetJoinChannel("LookingForGroup", channel->ChannelID);
             }
             else
             {
                 char new_channel_name_buf[100];
-                snprintf(new_channel_name_buf, 100, channel->pattern[0], current_zone_name.c_str());
+                snprintf(new_channel_name_buf, 100, channel->pattern[4], current_zone_name.c_str());
                 new_channel = cMgr->GetJoinChannel(new_channel_name_buf, channel->ChannelID);
             }
             if (new_channel && new_channel->GetName().length() > 0)

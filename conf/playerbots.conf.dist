@@ -342,9 +342,9 @@ AiPlayerbot.AutoAvoidAoe = 0
 AiPlayerbot.TellWhenAvoidAoe = 1
 
 # 随机机器人默认策略 (在默认值之后应用)
-AiPlayerbot.RandomBotCombatStrategies = "+dps,+dps assist,-threat"
+AiPlayerbot.RandomBotCombatStrategies = "+dps,+dps assist,-threat,+custom::say"
 # AiPlayerbot.RandomBotNonCombatStrategies = "+grind,+loot,+rpg,+custom::say"
-AiPlayerbot.RandomBotNonCombatStrategies = ""
+AiPlayerbot.RandomBotNonCombatStrategies = "+custom::say"
 AiPlayerbot.CombatStrategies = ""
 AiPlayerbot.NonCombatStrategies = ""
 

@@ -254,12 +254,12 @@ void SuggestWhatToDoAction::spam(std::string msg, uint8 flags, bool worldChat, b
             Channel* chn = nullptr;
             if ((channel->flags & CHANNEL_DBC_FLAG_LFG) != 0)
             {
-                std::string chanName = channel->pattern[0];
+                std::string chanName = channel->pattern[4];
                 chn = cMgr->GetChannel(chanName, bot);
             }
             else
             {
-                snprintf(channelName, 100, channel->pattern[0], current_zone->area_name[0]);
+                snprintf(channelName, 100, channel->pattern[4], current_zone->area_name[4]);
                 chn = cMgr->GetChannel(channelName, bot);
             }
             if (!chn)
