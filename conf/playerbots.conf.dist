@@ -125,7 +125,7 @@ AiPlayerbot.LimitEnchantExpansion = 1
 AiPlayerbot.GearScoreCheck = 0
 
 # 将完成并奖励给所有随机机器人的任务
-AiPlayerbot.RandomBotQuestIds = "7848,3802,5505,6502,7761"
+AiPlayerbot.RandomBotQuestIds = "7848,3802,5505,6502,7761,10277,10285,11492,24499,24511,24710,24712"
 
 # 随机机器人将与附近的机器人组队去做共有任务
 AiPlayerbot.RandomBotGroupNearby = 0
@@ -167,6 +167,18 @@ AiPlayerbot.AddClassCommand = 1
 # 默认: 1 (启用)
 AiPlayerbot.MaintenanceCommand = 1
 
+# 启用/禁用 autogear 命令，自动升级机器人装备，装备品质受AutoGearQualityLimit和AutoGearScoreLimit设置限制
+# 默认：1 (启用)
+AiPlayerbot.AutoGearCommand = 1
+
+# autogear命令装备品质限制（1 = 普通，2 = 优秀，3 = 稀有，4 = 史诗，5 = 传说）
+# 默认: 3 (稀有)
+AiPlayerbot.AutoGearQualityLimit = 3
+
+# autogear命令装备品质限制GS(0 = no limit)
+# 默认: 0 (no limit)
+AiPlayerbot.AutoGearScoreLimit = 0
+
 # 自动化
 
 # 当队伍拾取方式设置为自由拾取时机器人保持拾取战利品
@@ -174,7 +186,7 @@ AiPlayerbot.MaintenanceCommand = 1
 AiPlayerbot.FreeMethodLoot = 0
 
 # 机器人战利品需求设置 (0 = 放弃, 1 = 贪婪, 2 = 需求)
-# Default: 1 (贪婪)
+# 默认: 1 (贪婪)
 AiPlayerbot.LootRollLevel = 1
 
 # 机器人选择任务奖励 (yes = 选择第一个可用物品，no = 列出所有奖励，ask = 选择可用物品并列出如有多个)
