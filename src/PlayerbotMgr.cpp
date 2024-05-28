@@ -464,7 +464,7 @@ void PlayerbotHolder::OnBotLogin(Player* const bot)
         // Make the bot join the world channel for chat
         WorldPacket pkt(CMSG_JOIN_CHANNEL);
         pkt << uint32(0) << uint8(0) << uint8(0);
-        pkt << std::string("World");
+        pkt << std::string("大脚世界频道");
         pkt << ""; // Pass
         bot->GetSession()->HandleJoinChannel(pkt);
     }
@@ -491,7 +491,7 @@ void PlayerbotHolder::OnBotLogin(Player* const bot)
             if (isLfg)
             {
                 std::string lfgChannelName = channel->pattern[4];
-                new_channel = cMgr->GetJoinChannel("LookingForGroup", channel->ChannelID);
+                new_channel = cMgr->GetJoinChannel(channel->pattern[4], channel->ChannelID);
             }
             else
             {

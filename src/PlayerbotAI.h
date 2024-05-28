@@ -9,7 +9,7 @@
 #include "ChatHelper.h"
 #include "ChatFilter.h"
 #include "Common.h"
-#include "Event.h"
+#include "strategy/Event.h"
 #include "Item.h"
 #include "PlayerbotAIBase.h"
 #include "PlayerbotAIConfig.h"

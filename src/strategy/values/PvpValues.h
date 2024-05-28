@@ -5,9 +5,9 @@
 #ifndef _PLAYERBOT_PVPVALUES_H
 #define _PLAYERBOT_PVPVALUES_H
 
-#include "NamedObjectContext.h"
+#include "../NamedObjectContext.h"
 #include "SharedDefines.h"
-#include "Value.h"
+#include "../Value.h"
 
 class PlayerbotAI;
 class Unit;

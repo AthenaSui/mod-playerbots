@@ -17,6 +17,7 @@ std::map<std::string, uint8> SuggestWhatToDoAction::factions;
 
 SuggestWhatToDoAction::SuggestWhatToDoAction(PlayerbotAI* botAI, std::string const name) : InventoryAction(botAI, name)
 {
+    suggestions.push_back(&SuggestWhatToDoAction::instance);
     suggestions.push_back(&SuggestWhatToDoAction::specificQuest);
     suggestions.push_back(&SuggestWhatToDoAction::grindReputation);
     suggestions.push_back(&SuggestWhatToDoAction::something);
@@ -265,7 +266,7 @@ void SuggestWhatToDoAction::spam(std::string msg, uint8 flags, bool worldChat, b
             if (!chn)
                 continue;
             // skip world chat here
-            if (chn->GetName() == "World")
+            if (chn->GetName() == "大脚世界频道")
                 continue;
 
             if (flags != 0 && chn->GetFlags() != flags)
@@ -293,7 +294,7 @@ void SuggestWhatToDoAction::spam(std::string msg, uint8 flags, bool worldChat, b
 
         if (worldChat)
         {
-            if (Channel* worldChannel = cMgr->GetChannel("World", bot))
+            if (Channel* worldChannel = cMgr->GetChannel("大脚世界频道", bot))
                 worldChannel->Say(bot->GetGUID(), msg.c_str(), LANG_UNIVERSAL);
         }
 

@@ -5,7 +5,7 @@
 #ifndef _PLAYERBOT_TALENTSPEC_H
 #define _PLAYERBOT_TALENTSPEC_H
 
-#include "Action.h"
+#include "strategy/Action.h"
 
 struct TalentEntry;
 struct TalentTabEntry;

@@ -6,9 +6,9 @@
 #define _PLAYERBOT_LOOTVALUES_H
 
 #include "LootMgr.h"
-#include "NamedObjectContext.h"
+#include "../NamedObjectContext.h"
 #include "ItemUsageValue.h"
-#include "Value.h"
+#include "../Value.h"
 
 class PlayerbotAI;
 

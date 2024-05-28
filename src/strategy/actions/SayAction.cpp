@@ -583,11 +583,11 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
         if (strlen(c) > 255)
             return;
 
-        if (chanName == "World")
+        if (chanName == "大脚世界频道")
         {
             if (ChannelMgr* cMgr = ChannelMgr::forTeam(bot->GetTeamId()))
             {
-                std::string worldChan = "World";
+                std::string worldChan = "大脚世界频道";
                 if (Channel* chn = cMgr->GetJoinChannel(worldChan.c_str(), 0))
                     if (bot->GetTeamId() == TEAM_ALLIANCE)
                         chn->Say(bot->GetGUID(), c, LANG_COMMON);

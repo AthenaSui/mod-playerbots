@@ -5,8 +5,8 @@
 #ifndef _PLAYERBOT_ITEMUSAGEVALUE_H
 #define _PLAYERBOT_ITEMUSAGEVALUE_H
 
-#include "NamedObjectContext.h"
-#include "Value.h"
+#include "../NamedObjectContext.h"
+#include "../Value.h"
 
 class Item;
 class Player;

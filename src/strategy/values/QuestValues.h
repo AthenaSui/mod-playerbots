@@ -5,9 +5,9 @@
 #ifndef _PLAYERBOT_QUESTVALUES_H
 #define _PLAYERBOT_QUESTVALUES_H
 
-#include "NamedObjectContext.h"
+#include "../NamedObjectContext.h"
 #include "TravelMgr.h"
-#include "Value.h"
+#include "../Value.h"
 
 class Player;
 class PlayerbotAI;

@@ -5,7 +5,7 @@
 #ifndef _PLAYERBOT_TRAVELMGR_H
 #define _PLAYERBOT_TRAVELMGR_H
 
-#include "AiObject.h"
+#include "strategy/AiObject.h"
 #include "CreatureData.h"
 #include "GameObject.h"
 #include "GridDefines.h"
