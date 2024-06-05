@@ -87,7 +87,7 @@ std::string PlayerbotTextMgr::GetBotText(std::string name, std::map<std::string,
 {
     std::string botText = GetBotText(name);
     if (botText.empty())
-        return "";
+        botText = name;
 
     for (std::map<std::string, std::string>::iterator i = placeholders.begin(); i != placeholders.end(); ++i)
         replaceAll(botText, i->first, i->second);

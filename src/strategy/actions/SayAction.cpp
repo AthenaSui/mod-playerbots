@@ -10,6 +10,17 @@
 #include "GuildMgr.h"
 #include <regex>
 
+std::unordered_set<std::string> noReplyMsgs = {
+  "join", "leave", "follow", "attack", "pull", "flee", "reset", "reset ai",
+  "all ?", "talents", "talents list", "talents auto", "talk", "stay", "stats",
+  "who", "items", "leave", "join", "repair", "summon", "nc ?", "co ?", "de ?",
+  "dead ?", "follow", "los", "guard", "do accept invitation", "stats", "react ?",
+  "reset strats", "home",
+};
+std::unordered_set<std::string> noReplyMsgParts = { "+", "-","@" , "follow target", "focus heal", "cast ", "accept [", "e [", "destroy [", "go zone" };
+
+std::unordered_set<std::string> noReplyMsgStarts = { "e ", "accept ", "cast ", "destroy " };
+
 SayAction::SayAction(PlayerbotAI* botAI) : Action(botAI, "say"), Qualified()
 {
 }
@@ -113,7 +124,34 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
 {
     ChatReplyType replyType = REPLY_NOT_UNDERSTAND; // default not understand
     std::string respondsText = "";
+	
+    // if we're just commanding bots around, don't respond...
+    // first one is for exact word matches
+    if (noReplyMsgs.find(msg) != noReplyMsgs.end()) {
+        //ostringstream out;
+        //out << "DEBUG ChatReplyDo decided to ignore exact blocklist match" << msg;
+        //bot->Say(out.str(), LANG_UNIVERSAL);
+        return;
+    }
 
+    // second one is for partial matches like + or - where we change strats
+    if (std::any_of(noReplyMsgParts.begin(), noReplyMsgParts.end(), [&msg](const std::string& part) { return msg.find(part) != std::string::npos; })) {
+        //ostringstream out;
+        //out << "DEBUG ChatReplyDo decided to ignore partial blocklist match" << msg;
+        //bot->Say(out.str(), LANG_UNIVERSAL);
+
+        return;
+    }
+
+    if (std::any_of(noReplyMsgStarts.begin(), noReplyMsgStarts.end(), [&msg](const std::string& start) {
+        return msg.find(start) == 0;  // Check if the start matches the beginning of msg
+        })) {
+        //ostringstream out;
+        //out << "DEBUG ChatReplyDo decided to ignore start blocklist match" << msg;
+        //bot->Say(out.str(), LANG_UNIVERSAL);
+        return;
+    }
+	
     // Chat Logic
     int32 verb_pos = -1;
     int32 verb_type = -1;

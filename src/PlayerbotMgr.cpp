@@ -634,7 +634,7 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
     else if (cmd == "quests"){
         PlayerbotFactory factory(bot, bot->getLevel());
         factory.InitInstanceQuests();
-        return "Initialization quests";
+        return "初始化任务";
     }
     // }
 

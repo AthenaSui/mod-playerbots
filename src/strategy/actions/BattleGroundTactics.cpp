@@ -3320,6 +3320,8 @@ bool BGTactics::selectObjective(bool reset)
 
                         for (auto const& objective : AB_AttackObjectives)
                         {
+ //                           bool isActiveNeutral = arathiBasinBG->GetCapturePointInfo(objective)._state == BG_AB_NODE_STATE_NEUTRAL;
+ //                           bool isOccupied = (bot->GetTeamId() == TEAM_HORDE) ? arathiBasinBG->GetCapturePointInfo(objective)._state == BG_AB_NODE_STATE_ALLY_OCCUPIED : arathiBasinBG->GetCapturePointInfo(objective)._state == BG_AB_NODE_STATE_HORDE_OCCUPIED;
                             if (arathiBasinBG->GetCapturePointInfo(objective)._state == BG_AB_NODE_STATE_NEUTRAL ||
                                 ((!defender || !objectives.size()) && arathiBasinBG->GetCapturePointInfo(objective)._state == BG_AB_NODE_STATE_ALLY_OCCUPIED) ||
                                 ((defender || !objectives.size()) && arathiBasinBG->GetCapturePointInfo(objective)._state == BG_AB_NODE_STATE_ALLY_CONTESTED))

@@ -281,7 +281,13 @@ ItemIds ChatHelper::parseItems(std::string const text)
 std::string const ChatHelper::FormatQuest(Quest const* quest)
 {
     std::ostringstream out;
-    out << "|cFFFFFF00|Hquest:" << quest->GetQuestId() << ':' << quest->GetQuestLevel() << "|h[" << quest->GetLocalizeTitle(LOCALE_zhCN) << "]|h|r";
+    int loc_idx = sPlayerbotTextMgr->GetLocalePriority();
+    std::string title = quest->GetTitle();
+    if (QuestLocale const* questLocale = sObjectMgr->GetQuestLocale(quest->GetQuestId()))
+    {
+        ObjectMgr::GetLocaleString(questLocale->Title, loc_idx, title);
+    }
+    out << "|cFFFFFF00|Hquest:" << quest->GetQuestId() << ':' << quest->GetQuestLevel() << "|h[" << title << "]|h|r";
     return out.str();
 }
 
