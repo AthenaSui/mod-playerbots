@@ -175,7 +175,7 @@ AiPlayerbot.AutoGearCommand = 1
 # 默认: 3 (稀有)
 AiPlayerbot.AutoGearQualityLimit = 3
 
-# autogear命令装备品质限制GS(0 = no limit)
+# autogear命令装备GS限制(0 = no limit)
 # 默认: 0 (no limit)
 AiPlayerbot.AutoGearScoreLimit = 0
 
@@ -450,9 +450,9 @@ AiPlayerbot.BotCheats = "taxi"
 AiPlayerbot.RandomBotRandomPassword = 0
 
 # Diff with/without player in server. The server will tune bot activity to reach the desired server tick speed (in ms).
-# AiPlayerbot.EnablePrototypePerformanceDiff = 0
-# AiPlayerbot.DiffWithPlayer = 100
-# AiPlayerbot.DiffEmpty = 200
+AiPlayerbot.EnablePrototypePerformanceDiff = 0
+AiPlayerbot.DiffWithPlayer = 100
+AiPlayerbot.DiffEmpty = 200
 
 ##################################################################################
 #                                                                                #
