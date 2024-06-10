@@ -178,7 +178,7 @@ void PlayerbotFactory::Randomize(bool incremental)
     // {
     //     return;
     // }
-    LOG_INFO("playerbots", "{} randomizing {} (level {} class = {})...", (incremental ? "Incremental" : "Full"), bot->GetName().c_str(), bot->GetLevel(), bot->getClass());
+    LOG_INFO("playerbots", "{}随机化机器人<{}> （等级：{}，职业：{}）中...", (incremental ? "Incremental" : "Full"), bot->GetName().c_str(), bot->GetLevel(), bot->getClass());
     // LOG_DEBUG("playerbots", "Preparing to {} randomize...", (incremental ? "incremental" : "full"));
     Prepare();
     LOG_DEBUG("playerbots", "Resetting player...");
@@ -390,7 +390,7 @@ void PlayerbotFactory::Randomize(bool incremental)
     bot->SetHealth(bot->GetMaxHealth());
     bot->SetPower(POWER_MANA, bot->GetMaxPower(POWER_MANA));
     bot->SaveToDB(false, false);
-    LOG_INFO("playerbots", "Initialization Done.");
+    LOG_INFO("playerbots", "初始化完成。");
     if (pmo)
         pmo->finish();
 }
@@ -776,7 +776,7 @@ void PlayerbotFactory::ClearEverything()
     bot->SaveToDB(false, false);
     bot->GiveLevel(bot->getClass() == CLASS_DEATH_KNIGHT ? sWorld->getIntConfig(CONFIG_START_HEROIC_PLAYER_LEVEL) : sWorld->getIntConfig(CONFIG_START_PLAYER_LEVEL));
     bot->SetUInt32Value(PLAYER_XP, 0);
-    LOG_INFO("playerbots", "Resetting player...");
+    LOG_INFO("playerbots", "重置玩家中...");
     bot->resetTalents(true);
     bot->SaveToDB(false, false);
     ClearSkills();

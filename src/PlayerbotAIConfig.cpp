@@ -42,12 +42,12 @@ void LoadListString(std::string const value, T& list)
 
 bool PlayerbotAIConfig::Initialize()
 {
-    LOG_INFO("server.loading", "Initializing AI Playerbots by ike3, based on the original Playerbots by blueboy");
+    LOG_INFO("server.loading", "正在初始化ike3 AI玩家机器人，基于blueboy的原始Playerbot");
 
     enabled = sConfigMgr->GetOption<bool>("AiPlayerbot.Enabled", true);
     if (!enabled)
     {
-        LOG_INFO("server.loading", "AI Playerbots is Disabled in aiplayerbot.conf");
+        LOG_INFO("server.loading", "AI玩家机器人在aiplayerbot.conf禁用");
         return false;
     }
 
@@ -332,7 +332,7 @@ bool PlayerbotAIConfig::Initialize()
 
     if (!sPlayerbotAIConfig->autoDoQuests)
     {
-        LOG_INFO("server.loading", "Loading Quest Detail Data...");
+        LOG_INFO("server.loading", "正在加载任务详细数据...");
         sTravelMgr->LoadQuestTravelTable();
     }
 

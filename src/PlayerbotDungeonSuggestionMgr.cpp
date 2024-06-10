@@ -12,7 +12,7 @@ std::vector<DungeonSuggestion> const PlayerbotDungeonSuggestionMgr::GetDungeonSu
 
 void PlayerbotDungeonSuggestionMgr::LoadDungeonSuggestions()
 {
-    LOG_INFO("server.loading", "Loading playerbots dungeon suggestions...");
+    LOG_INFO("server.loading", "正在加载玩家机器人地下城建议...");
     uint32 oldMSTime = getMSTime();
 
     uint32 count = 0;
