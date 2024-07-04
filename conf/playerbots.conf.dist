@@ -49,7 +49,7 @@ AiPlayerbot.RandomBotMinLevel = 1
 AiPlayerbot.RandomBotMaxLevel = 70
 
 # 启用/禁用随机机器人轮换 (从机器人角色库中随机选择一个机器人上线并定期轮换)
-# 改变设置后需重置随机机器人
+# 改变设置后需重置随机机器人 (.playerbot rndbot reset)
 # 默认: 0 (禁用，在线机器人是固定的)
 AiPlayerbot.EnableRotation = 0
 
@@ -97,6 +97,10 @@ AiPlayerbot.SummonWhenGroup = 1
 AiPlayerbot.RandomBotShowHelmet = 1
 AiPlayerbot.RandomBotShowCloak = 1
 
+# 固定机器人等级 (won't level up by grinding)
+# 默认：0 (禁用)
+AiPlayerbot.RandomBotFixedLevel = 0
+
 # 禁用随机机器人随机等级
 # 每一个机器人都从指定的等级开始，并通过杀死怪物升级。
 AiPlayerbot.DisableRandomLevels = 0
@@ -107,6 +111,10 @@ AiPlayerbot.RandombotStartingLevel = 5
 # 设置机器人击杀获得经验倍率 (默认: 1)
 # Server XP Rate * AiPlayerbot.KillXPRate
 AiPlayerbot.KillXPRate = 1
+
+# 禁用死亡骑士作为机器人登录
+# 更改设置后需要重置随机机器人 (.playerbot rndbot reset)
+AiPlayerbot.DisableDeathKnightLogin = 0
 
 # 指定活动机器人的百分比
 # 默认是10。每分钟将有10%的机器人转为活动或非活动状态。
@@ -121,7 +129,7 @@ AiPlayerbot.MinEnchantingBotLevel = 60
 AiPlayerbot.LimitEnchantExpansion = 1
 
 # 随机机器人检查玩家装备GS等级，如果太低则拒绝邀请
-# 默认: 1 (启用)
+# 默认: 0 (禁用)
 AiPlayerbot.GearScoreCheck = 0
 
 # 将完成并奖励给所有随机机器人的任务
@@ -213,8 +221,8 @@ AiPlayerbot.SyncQuestForPlayer = 0
 AiPlayerbot.SyncLevelWithPlayers = 0
 
 # 为随机机器人提供免费食物
-# 默认：1 (启用)
-AiPlayerbot.FreeFood = 1
+# 默认：0 (禁用)
+AiPlayerbot.FreeFood = 0
 
 # 机器人在与训练师对话时自动学习法术 (yes = 只要机器人有钱，就学习所有可用的法术, free = 自动学习免费法术, no = 仅列出法术)
 # 仅用于随机机器人
@@ -334,8 +342,8 @@ AiPlayerbot.AutoSaveMana = 1
 AiPlayerbot.SaveManaThreshold = 60
 
 # 启用自动躲避AOE (实验)
-# 默认：0 (禁用)
-AiPlayerbot.AutoAvoidAoe = 0
+# 默认：1 (启用)
+AiPlayerbot.AutoAvoidAoe = 1
 
 # 告知正在躲避的技能 (实验性)
 # Default: 1 (enable)

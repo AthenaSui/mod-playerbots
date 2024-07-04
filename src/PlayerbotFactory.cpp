@@ -178,7 +178,7 @@ void PlayerbotFactory::Randomize(bool incremental)
     // {
     //     return;
     // }
-    LOG_INFO("playerbots", "{}随机化机器人<{}> （等级：{}，职业：{}）中...", (incremental ? "Incremental" : "Full"), bot->GetName().c_str(), bot->GetLevel(), bot->getClass());
+    LOG_INFO("playerbots", "{}随机化机器人<{}> (等级：{}，职业：{})中...", (incremental ? "Incremental" : "Full"), bot->GetName().c_str(), level, bot->getClass());
     // LOG_DEBUG("playerbots", "Preparing to {} randomize...", (incremental ? "incremental" : "full"));
     Prepare();
     LOG_DEBUG("playerbots", "Resetting player...");
@@ -188,7 +188,7 @@ void PlayerbotFactory::Randomize(bool incremental)
     ClearSkills();
     // bot->SaveToDB(false, false);
     ClearSpells();
-    bot->SaveToDB(false, false);
+    // bot->SaveToDB(false, false);
     if (!incremental)
     {
         ResetQuests();
@@ -196,12 +196,12 @@ void PlayerbotFactory::Randomize(bool incremental)
     if (!sPlayerbotAIConfig->equipmentPersistence || level < sPlayerbotAIConfig->equipmentPersistenceLevel) {
         ClearAllItems();
     }
-    bot->SaveToDB(false, false);
+    // bot->SaveToDB(false, false);
 
     bot->GiveLevel(level);
     bot->InitStatsForLevel();
     CancelAuras();
-    bot->SaveToDB(false, false);
+    // bot->SaveToDB(false, false);
     if (pmo)
         pmo->finish();
 
@@ -260,7 +260,7 @@ void PlayerbotFactory::Randomize(bool incremental)
     pmo = sPerformanceMonitor->start(PERF_MON_RNDBOT, "PlayerbotFactory_Mounts");
     LOG_DEBUG("playerbots", "Initializing mounts...");
     InitMounts();
-    bot->SaveToDB(false, false);
+    // bot->SaveToDB(false, false);
     if (pmo)
         pmo->finish();
 
@@ -349,16 +349,16 @@ void PlayerbotFactory::Randomize(bool incremental)
         pmo->finish();
     
     LOG_DEBUG("playerbots", "Initializing glyphs...");
-    bot->SaveToDB(false, false);
     InitGlyphs();
+    // bot->SaveToDB(false, false);
     
     // pmo = sPerformanceMonitor->start(PERF_MON_RNDBOT, "PlayerbotFactory_Guilds");
     // LOG_INFO("playerbots", "Initializing guilds...");
     // bot->SaveToDB(false, false);
     // InitGuild();
     // bot->SaveToDB(false, false);
-    if (pmo)
-        pmo->finish();
+    //if (pmo)
+    //    pmo->finish();
 
     // if (bot->getLevel() >= 70)
     // {
@@ -372,13 +372,14 @@ void PlayerbotFactory::Randomize(bool incremental)
     if (!incremental) {
         bot->RemovePet(nullptr, PET_SAVE_AS_CURRENT, true);
         bot->RemovePet(nullptr, PET_SAVE_NOT_IN_SLOT, true);
+        // bot->SaveToDB(false, false);
     }
     if (bot->getLevel() >= 10)
     {
         pmo = sPerformanceMonitor->start(PERF_MON_RNDBOT, "PlayerbotFactory_Pet");
         LOG_DEBUG("playerbots", "Initializing pet...");
         InitPet();
-        bot->SaveToDB(false, false);
+        // bot->SaveToDB(false, false);
         InitPetTalents();
         if (pmo)
             pmo->finish();
@@ -1422,9 +1423,21 @@ void PlayerbotFactory::InitEquipment(bool incremental)
     else if (blevel == 80)
         delta = 9;
 
-    for(uint8 slot = 0; slot < EQUIPMENT_SLOT_END; ++slot)
+    for (uint8 slot = 0; slot < EQUIPMENT_SLOT_END; ++slot)
     {
         if (slot == EQUIPMENT_SLOT_TABARD || slot == EQUIPMENT_SLOT_BODY)
+            continue;
+        
+        if (level < 40 && (slot == EQUIPMENT_SLOT_TRINKET1 || slot == EQUIPMENT_SLOT_TRINKET2))
+            continue;
+
+        if (level < 30 && slot == EQUIPMENT_SLOT_NECK)
+            continue;
+        
+        if (level < 25 && slot == EQUIPMENT_SLOT_HEAD)
+            continue;
+        
+        if (level < 20 && (slot == EQUIPMENT_SLOT_FINGER1 || slot == EQUIPMENT_SLOT_FINGER2))
             continue;
 
         uint32 desiredQuality = itemQuality;
@@ -1484,6 +1497,15 @@ void PlayerbotFactory::InitEquipment(bool incremental)
     for (uint8 slot = 0; slot < EQUIPMENT_SLOT_END; ++slot)
     {
         if (slot == EQUIPMENT_SLOT_TABARD || slot == EQUIPMENT_SLOT_BODY)
+            continue;
+        
+        if (level < 40 && (slot == EQUIPMENT_SLOT_TRINKET1 || slot == EQUIPMENT_SLOT_TRINKET2))
+            continue;
+
+        if (level < 25 && slot == EQUIPMENT_SLOT_NECK)
+            continue;
+        
+        if (level < 25 && slot == EQUIPMENT_SLOT_HEAD)
             continue;
 
         std::vector<uint32>& ids = items[slot];
@@ -2480,8 +2502,7 @@ void PlayerbotFactory::InitAmmo()
         case ITEM_SUBCLASS_WEAPON_CROSSBOW:
             subClass = ITEM_SUBCLASS_ARROW;
             break;
-        case ITEM_SUBCLASS_WEAPON_THROWN:
-            subClass = ITEM_SUBCLASS_THROWN;
+        default:
             break;
     }
 
@@ -2490,7 +2511,7 @@ void PlayerbotFactory::InitAmmo()
 
     uint32 entry = sRandomItemMgr->GetAmmo(level, subClass);
     uint32 count = bot->GetItemCount(entry);
-    uint32 maxCount = 5000;
+    uint32 maxCount = 6000;
 
     if (count < maxCount / 2)
     {
@@ -2617,7 +2638,7 @@ void PlayerbotFactory::InitPotions()
         uint32 itemId = sRandomItemMgr->GetRandomPotion(level, effect);
         if (!itemId)
         {
-            LOG_INFO("playerbots", "No potions (type {}) available for bot {} ({} level)", effect, bot->GetName().c_str(), bot->getLevel());
+            // LOG_INFO("playerbots", "No potions (type {}) available for bot {} ({} level)", effect, bot->GetName().c_str(), bot->getLevel());
             continue;
         }
 
@@ -3466,8 +3487,19 @@ void PlayerbotFactory::ApplyEnchantAndGemsNew(bool destoryOld)
             if (!socketColor) {
                 continue;
             }
+            int32 gemId;
+            if (1 == socketColor)//meta
+                gemId = bestGemEnchantId[0];
+            else if (2 == socketColor)//red
+                gemId = bestGemEnchantId[1];
+            else if (4 == socketColor)//yellow
+                gemId = bestGemEnchantId[2];
+            else if (8 == socketColor)//blue
+                gemId = bestGemEnchantId[3];
+            else
+                continue;
             bot->ApplyEnchantment(item, EnchantmentSlot(enchant_slot), false);
-            item->SetEnchantment(EnchantmentSlot(enchant_slot), bestGemEnchantId[socketColor], 0, 0, bot->GetGUID());
+            item->SetEnchantment(EnchantmentSlot(enchant_slot), gemId, 0, 0, bot->GetGUID());
             bot->ApplyEnchantment(item, EnchantmentSlot(enchant_slot), true);
         }
     }
@@ -3846,15 +3878,19 @@ float PlayerbotFactory::CalculateItemScore(uint32 item_id, Player* bot)
                 score *= 0.1;
         }
         // spec with double hand
-        // fury with titan's grip, fury without duel wield, arms, bear, retribution, blood dk
-        if (isDoubleHand && 
-            ((cls == CLASS_WARRIOR && tab == WARRIOR_TAB_FURY && bot->CanTitanGrip()) ||
-            (cls == CLASS_WARRIOR && tab == WARRIOR_TAB_FURY && !bot->CanDualWield()) ||
+        // fury without duel wield, arms, bear, retribution, blood dk
+        if (isDoubleHand &&
+            ((cls == CLASS_WARRIOR && tab == WARRIOR_TAB_FURY && !bot->CanDualWield()) ||
             (cls == CLASS_WARRIOR && tab == WARRIOR_TAB_ARMS) ||
             (cls == CLASS_DRUID && tab == 1) ||
             (cls == CLASS_PALADIN && tab == 2) ||
             (cls == CLASS_DEATH_KNIGHT && tab == 0) ||
             (cls == CLASS_SHAMAN && tab == 1 && !bot->CanDualWield()))) {
+            score *= 10;
+        }
+        // fury with titan's grip
+        if (isDoubleHand && proto->SubClass != ITEM_SUBCLASS_WEAPON_POLEARM && 
+            (cls == CLASS_WARRIOR && tab == WARRIOR_TAB_FURY && bot->CanTitanGrip())) {
             score *= 10;
         }
     }

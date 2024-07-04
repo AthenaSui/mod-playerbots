@@ -23,10 +23,15 @@ bool ChangeTalentsAction::Execute(Event event)
         if (param.find("help") != std::string::npos) {
             out << TalentsHelp();
         } else if (param.find("switch") != std::string::npos) {
-            if (param.find("switch 1")) {
+            if (param.find("switch 1") != std::string::npos) {
                 bot->ActivateSpec(0);
-                out << "主天赋已启用";
-            } else if (param.find("switch 2")) {
+                out << "Active first talent";
+            } else if (param.find("switch 2") != std::string::npos) {
+                if (bot->GetSpecsCount() == 1 && bot->GetLevel() >= sWorld->getIntConfig(CONFIG_MIN_DUALSPEC_LEVEL))
+                {
+                    bot->CastSpell(bot, 63680, true, nullptr, nullptr, bot->GetGUID());
+                    bot->CastSpell(bot, 63624, true, nullptr, nullptr, bot->GetGUID());
+                }
                 bot->ActivateSpec(1);
                 out << "副天赋已启用";
             }

@@ -960,6 +960,8 @@ void PlayerbotAI::ChangeEngine(BotState type)
             case BOT_STATE_DEAD:
                 // LOG_DEBUG("playerbots",  "=== {} DEAD ===", bot->GetName().c_str());
                 break;
+            default:
+                break;
         }
     }
 }
@@ -2172,8 +2174,10 @@ bool PlayerbotAI::CanCastSpell(uint32 spellid, Unit* target, bool checkHasSpell,
     }
 
     if (bot->GetCurrentSpell(CURRENT_CHANNELED_SPELL) != nullptr) {
-        LOG_DEBUG("playerbots", "CanCastSpell() target name: {}, spellid: {}, bot name: {}, failed because has current channeled spell", 
-            target->GetName(), spellid, bot->GetName());
+        if (!sPlayerbotAIConfig->logInGroupOnly || (bot->GetGroup() && HasRealPlayerMaster())) {
+            LOG_DEBUG("playerbots", "CanCastSpell() target name: {}, spellid: {}, bot name: {}, failed because has current channeled spell",
+                target->GetName(), spellid, bot->GetName());
+        }
         return false;
     }
 
@@ -3123,7 +3127,7 @@ bool PlayerbotAI::HasAuraToDispel(Unit* target, uint32 dispelType)
 #ifndef WIN32
 inline int strcmpi(char const* s1, char const* s2)
 {
-    for (; *s1 && *s2 && (toupper(*s1) == toupper(*s2)); ++s1, ++s2);
+    for (; *s1 && *s2 && (toupper(*s1) == toupper(*s2)); ++s1, ++s2) {}
         return *s1 - *s2;
 }
 #endif
@@ -3950,6 +3954,8 @@ std::string const PlayerbotAI::HandleRemoteCommand(std::string const command)
                     break;
                 case NeedMoneyFor::guild:
                     out << "guild";
+                    break;
+                default:
                     break;
             }
 
