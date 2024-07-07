@@ -141,6 +141,9 @@ AiPlayerbot.RandomBotGroupNearby = 0
 # 没有队长的机器人会说他们的状态信息
 AiPlayerbot.RandomBotSayWithoutMaster = 0
 
+# Bots will say information about items when collecting them
+AiPlayerbot.SayWhenCollectingItems = 1
+
 # 将RandomBotMaxLevel机器人设置为RandomBotMinLevel 或不设置
 AiPlayerbot.DowngradeMaxLevelBot = 0
 

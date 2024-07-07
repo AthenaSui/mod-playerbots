@@ -618,6 +618,14 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
                 return "成功，GS限制：" + std::to_string(gs / (ITEM_QUALITY_EPIC + 1)) + "(紫装)";
             }
         }
+
+        if (cmd == "refresh=raid")
+        {   // TODO: This function is not perfect yet. If you are already in a raid, 
+            // after the command is executed, the AI ​​needs to go back online or exit the raid and re-enter.
+            PlayerbotFactory factory(bot, bot->getLevel());
+            factory.UnbindInstance();
+            return "ok";
+        }
     }
 
     if (cmd == "levelup" || cmd == "level")
