@@ -21,19 +21,10 @@ AiPlayerbot.BotAutologin = 0
 # 默认: 0 (禁用)
 AiPlayerbot.AllowPlayerBots = 0
 
-# 公会任务系统
-AiPlayerbot.EnableGuildTasks = 0
-
 # 为随机机器人启用LFG寻求组队
 AiPlayerbot.RandomBotJoinLfg = 1
 
-# 为随机机器人启用地下城建议
-AiPlayerbot.RandomBotSuggestDungeons = 1
-
-# 随机以小写字母启用地下城建议Enable dungeon suggestions in lower case randomly
-AiPlayerbot.SuggestDungeonsInLowerCaseRandomly = 0
-
-# 为机器人启用战场/竞技场
+# 为随机机器人启用战场/竞技场
 AiPlayerbot.RandomBotJoinBG = 1
 
 # 启用自动加入战场 - 如果服务器没有延迟，机器人随机加入战歌峡谷和2v2竞技场
@@ -60,12 +51,6 @@ AiPlayerbot.RotationPoolSize = 500
 AiPlayerbot.RandomBotAccountPrefix = "rndbot"
 AiPlayerbot.RandomBotAccountCount = 1000
 
-# 随机机器人公会数量
-AiPlayerbot.RandomBotGuildCount = 20
-
-# 删除所有随机机器人公会
-AiPlayerbot.DeleteRandomBotGuilds = 0
-
 # 随机机器人竞技场队伍数量
 AiPlayerbot.RandomBotArenaTeamCount = 20
 
@@ -77,18 +62,6 @@ AiPlayerbot.RandomGearLoweringChance = 0
 
 # 第一次随机化时随机机器人拥有最大等级的概率 (默认 0.15)
 AiPlayerbot.RandomBotMaxLevelChance = 0.15
-
-# 机器人选择 RPG (依等级传动到随机营地)而不是grinding的概率
-AiPlayerbot.RandomBotRpgChance = 0.20 #unused now
-
-# 将随机机器人移动速度设置为在任何地方行走
-AiPlayerbot.RandombotsWalkingRPG = 0
-
-# 将随机机器人移动速度设置为仅在建筑物内行走
-AiPlayerbot.RandombotsWalkingRPG.InDoors = 0
-
-# 机器人向玩家致意
-AiPlayerbot.EnableGreet = 0
 
 # 机器人接受邀请时将被传送到玩家身边
 AiPlayerbot.SummonWhenGroup = 1
@@ -115,10 +88,6 @@ AiPlayerbot.KillXPRate = 1
 # 禁用死亡骑士作为机器人登录
 # 更改设置后需要重置随机机器人 (.playerbot rndbot reset)
 AiPlayerbot.DisableDeathKnightLogin = 0
-
-# 指定活动机器人的百分比
-# 默认是10。每分钟将有10%的机器人转为活动或非活动状态。
-AiPlayerbot.BotActiveAlone = 100
 
 # 设置随机机器人获得装备时附魔的最低等级 (Maxlevel + 1 to disable)
 # 默认: 60
@@ -224,8 +193,8 @@ AiPlayerbot.SyncQuestForPlayer = 0
 AiPlayerbot.SyncLevelWithPlayers = 0
 
 # 为随机机器人提供免费食物
-# 默认：0 (禁用)
-AiPlayerbot.FreeFood = 0
+# 默认：1 (启用)
+AiPlayerbot.FreeFood = 1
 
 # 机器人在与训练师对话时自动学习法术 (yes = 只要机器人有钱，就学习所有可用的法术, free = 自动学习免费法术, no = 仅列出法术)
 # 仅用于随机机器人
@@ -279,8 +248,15 @@ AiPlayerbot.GlobalCooldown = 500
 # 移动时的最长等待时间 Max wait time when moving 
 AiPlayerbot.MaxWaitForMove = 5000
 
-# Max search time for movement (higher for better movement on slopes)
-# default: 3
+# 为机器人移动禁用MoveSplinePath，将导致机器人移动更加不稳定，但意味着 昏迷/陷阱/缠绕/等控制效果
+# 对机器人生效 (启用MoveSplinePath时，它们不能可靠地工作，尽管减速效果仍然正常)
+# 默认：0 - 启用 MoveSplinePath
+#       1 - 仅在战场/竞技场禁用 MoveSplinePath
+#       2 - 禁用 MoveSplinePath
+AiPlayerbot.DisableMoveSplinePath = 0
+
+# 最大移动搜索时间（越高在斜坡上的移动越好）
+# 默认：3
 AiPlayerbot.MaxMovementSearchTime = 3
 
 # 操作过期时间 Action expiration time
@@ -296,7 +272,7 @@ AiPlayerbot.ReactDelay = 100
 AiPlayerbot.PassiveDelay = 10000
 
 # 重复操作之间的最小延迟 (聊天信息，表情等)
-AiPlayerbot.RepeatDelay = 5000
+AiPlayerbot.RepeatDelay = 2000
 
 # 延迟计时器
 AiPlayerbot.ErrorDelay = 100
@@ -359,27 +335,6 @@ AiPlayerbot.RandomBotNonCombatStrategies = "+custom::say"
 AiPlayerbot.CombatStrategies = ""
 AiPlayerbot.NonCombatStrategies = ""
 
-# 公会任务更改的频率
-AiPlayerbot.MinGuildTaskChangeTime = 172800
-AiPlayerbot.MaxGuildTaskChangeTime = 432000
-
-# 垃圾邮件间隔
-AiPlayerbot.MinGuildTaskAdvertisementTime = 300
-AiPlayerbot.MaxGuildTaskAdvertisementTime = 28800
-
-# 奖励发送前延迟
-AiPlayerbot.MinGuildTaskRewardTime = 300
-AiPlayerbot.MaxGuildTaskRewardTime = 3600
-
-# 清理公会任务间隔
-AiPlayerbot.GuildTaskAdvertCleanupTime = 300
-
-# 指定创建公会击杀任务时受害者和机器人之间的最大距离
-AiPlayerbot.GuildTaskKillTaskDistance = 200
-
-# 立面计算的距离裕度 Distance margin for facade calculations
-AiPlayerbot.TargetPosRecalcDistance = 0.1
-
 # 机器人可以传送到的地图
 AiPlayerbot.RandomBotMaps = 0,1,530,571
 
@@ -413,12 +368,8 @@ AiPlayerbot.RandomBotCountChangeMaxInterval = 7200
 AiPlayerbot.MinRandomBotInWorldTime = 3600
 AiPlayerbot.MaxRandomBotInWorldTime = 43200
 AiPlayerbot.MinRandomBotRandomizeTime = 302400
-AiPlayerbot.MaxRandomRandomizeTime = 1209600
+AiPlayerbot.MaxRandomBotRandomizeTime = 1209600
 AiPlayerbot.RandomBotsPerInterval = 500
-AiPlayerbot.MinRandomBotsPriceChangeInterval = 7200
-AiPlayerbot.MaxRandomBotsPriceChangeInterval = 172800
-AiPlayerbot.MinRandomBotChangeStrategyTime = 180
-AiPlayerbot.MaxRandomBotChangeStrategyTime = 720
 AiPlayerbot.MinRandomBotReviveTime = 60
 AiPlayerbot.MaxRandomBotReviveTime = 300
 AiPlayerbot.MinRandomBotTeleportInterval = 3600
@@ -439,9 +390,6 @@ AiPlayerbot.CommandServerPort = 8888
 
 # 启用/禁用 性能监视
 AiPlayerbot.PerfMonEnabled = 0
-
-# 允许在旅店老板附近召唤机器人
-AiPlayerbot.SummonAtInnkeepersEnabled = 1
 
 # 允许创建日志文件的自定义配置。
 # 例如：AiPlayerbot.AllowedLogFiles = travelNodes.csv,travelPaths.csv,TravelNodeStore.h,bot_movement.csv,bot_location.csv
@@ -511,7 +459,6 @@ Playerbots.Updates.EnableDatabases = 1
 ##############################################
 #                  预置专精                  #
 ##############################################
-
 # AiPlayerbot.PremadeSpecName.<class>.<specno> = <name>         #天赋专精名字
 # AiPlayerbot.PremadeSpecLink.<class>.<specno>.<level> = <link> #Wowhead样式链接 机器人在达到既定等级时
 # AiPlayerbot.PremadeSpecGlyph.<class>.<specno> = <major 1>,<minor 1>,<major 2>,<minor 2>,<minor 3>,<major 3>   #雕文的ItemId
@@ -744,6 +691,74 @@ AiPlayerbot.RandomClassSpecProb.11.1 = 40
 AiPlayerbot.RandomClassSpecIndex.11.1 = 1
 AiPlayerbot.RandomClassSpecProb.11.2 = 40
 AiPlayerbot.RandomClassSpecIndex.11.2 = 2
+
+##############################################
+#              弃用（临时）                  #
+##############################################
+# 公会任务系统
+AiPlayerbot.EnableGuildTasks = 0
+
+# 为随机机器人启用地下城建议
+AiPlayerbot.RandomBotSuggestDungeons = 1
+
+# 随机以小写字母启用地下城建议Enable dungeon suggestions in lower case randomly
+AiPlayerbot.SuggestDungeonsInLowerCaseRandomly = 0
+
+# 随机机器人公会数量
+AiPlayerbot.RandomBotGuildCount = 20
+
+# 删除所有随机机器人公会
+AiPlayerbot.DeleteRandomBotGuilds = 0
+
+# 机器人选择 RPG (依等级传动到随机营地)而不是grinding的概率
+AiPlayerbot.RandomBotRpgChance = 0.20 #unused now
+
+# 将随机机器人移动速度设置为在任何地方行走
+AiPlayerbot.RandombotsWalkingRPG = 0
+
+#  将随机机器人移动速度设置为仅在建筑物内行走
+AiPlayerbot.RandombotsWalkingRPG.InDoors = 0
+
+# 机器人向玩家致意
+AiPlayerbot.EnableGreet = 0
+
+# 指定活动机器人的百分比
+# 默认是10。每分钟将有10%的机器人转为活动或非活动状态。
+AiPlayerbot.BotActiveAlone = 100
+
+# 要躲避的预置法术（未被发现的施法）
+# spellid-radius, ...
+AiPlayerbot.PremadeAvoidAoe = 62234-4
+
+AiPlayerbot.MinRandomBotsPriceChangeInterval = 7200
+AiPlayerbot.MaxRandomBotsPriceChangeInterval = 172800
+AiPlayerbot.MinRandomBotChangeStrategyTime = 180
+AiPlayerbot.MaxRandomBotChangeStrategyTime = 720
+
+
+# 公会任务更改的频率
+AiPlayerbot.MinGuildTaskChangeTime = 172800
+AiPlayerbot.MaxGuildTaskChangeTime = 432000
+
+# Mail spam interval
+AiPlayerbot.MinGuildTaskAdvertisementTime = 300
+AiPlayerbot.MaxGuildTaskAdvertisementTime = 28800
+
+# 奖励发送前延迟
+AiPlayerbot.MinGuildTaskRewardTime = 300
+AiPlayerbot.MaxGuildTaskRewardTime = 3600
+
+# 清理公会任务间隔
+AiPlayerbot.GuildTaskAdvertCleanupTime = 300
+
+# 指定创建公会击杀任务时受害者和机器人之间的最大距离
+AiPlayerbot.GuildTaskKillTaskDistance = 200
+
+# Distance margin for facade calculations
+AiPlayerbot.TargetPosRecalcDistance = 0.1
+
+# 允许在旅店老板附近召唤机器人
+AiPlayerbot.SummonAtInnkeepersEnabled = 1
 
 ##################################################################################
 #                                                                                #

@@ -82,7 +82,8 @@ bool SummonAction::Execute(Event event)
     }
 
     if (master->GetSession()->GetSecurity() >= SEC_PLAYER) {
-        botAI->GetAiObjectContext()->GetValue<GuidVector>("prioritized targets")->Set({});
+        // botAI->GetAiObjectContext()->GetValue<GuidVector>("prioritized targets")->Set({});
+        SET_AI_VALUE(std::list<FleeInfo>, "recently flee info", {});
         return Teleport(master, bot);
     }
 
@@ -175,8 +176,28 @@ bool SummonAction::Teleport(Player* summoner, Player* player)
 
             if (summoner->IsWithinLOS(x, y, z))
             {
-                bool allowed = sPlayerbotAIConfig->botReviveWhenSummon == 2 || (sPlayerbotAIConfig->botReviveWhenSummon == 1 && !master->IsInCombat() && master->IsAlive());
-                if (allowed && bot->isDead())
+                if (sPlayerbotAIConfig->botReviveWhenSummon < 2)
+                {
+                    if (master->IsInCombat())
+                    {
+                        botAI->TellError("You cannot summon me while you're in combat");
+                        return false;
+                    }
+
+                    if (!master->IsAlive())
+                    {
+                        botAI->TellError("You cannot summon me while you're dead");
+                        return false;
+                    }
+
+                    if (bot->isDead() && !bot->HasPlayerFlag(PLAYER_FLAGS_GHOST))
+                    {
+                        botAI->TellError("You cannot summon me while I'm dead, you need to release my spirit first");
+                        return false;
+                    }
+                }
+
+                if (sPlayerbotAIConfig->botReviveWhenSummon > 0 && bot->isDead())
                 {
                     bot->ResurrectPlayer(1.0f, false);
                     bot->DurabilityRepairAll(false, 1.0f, false);
