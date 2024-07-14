@@ -1,6 +1,77 @@
-##########################################
-#           玩家机器人配置文件           #
-##########################################
+##################################################
+#           玩家机器人配置文件                   #
+##################################################
+
+###################################################################################################
+# SECTION INDEX
+#   GENERAL SETTINGS
+#	PLAYERBOT SETTINGS
+#		GENERAL
+#		SUMMON OPTIONS
+#		GEAR
+#		LOOTING
+#		TIMERS
+#		DISTANCES
+#		THRESHOLDS
+#		QUESTS
+#		COMBAT
+#		CHEATS
+#		SPELLS
+#	PLAYERBOT RNDBOT SPECIFIC SETTINGS
+#		GENERAL
+#		LEVELS
+#		GEAR
+#		QUESTS
+#		SPELLS
+#		STRATEGIES
+#		TELEPORTS
+#		BATTLEGROUND & ARENA & PVP
+#		INTERVALS
+#	PREMADE SPECS
+#		INFORMATION
+#		WARRIOR
+#		PALADIN
+#		HUNTER
+#		ROGUE
+#		PRIEST
+#		DEATHKNIGHT
+#		SHAMAN
+#		MAGE
+#		WARLOCK
+#		DRUID
+#	RANDOM BOT DEFAULT TALENT SPEC 
+#    	WARRIOR
+# 		PALADIN
+#       HUNTER
+#   	ROGUE
+#   	PRIEST
+#   	DEATHKNIGHT
+#	    SHAMAN
+#   	MAGE
+#   	WARLOCK
+#   	DRUID
+#	PLAYERBOT SYSTEM SETTINGS
+#		DATABASE & CONNECTIONS
+#		DEBUG		
+#		CHAT SETTINGS
+#		LOGS
+#	DEPRECIATED （TEMPORARY）
+#
+#
+#
+#
+#
+###################################################################################################
+
+###################################################################################################
+
+###################################
+#                                 #
+#           常规设置              #
+#                                 #
+###################################
+
+####################################################################################################
 
 # 启用或禁用 AI 玩家机器人
 AiPlayerbot.Enabled = 1
@@ -8,239 +79,156 @@ AiPlayerbot.Enabled = 1
 # 启用随机机器人系统
 AiPlayerbot.RandomBotAutologin = 1
 
-# 启动时登录所有随机机器人
-AiPlayerbot.RandomBotLoginAtStartup = 1
+# 随机机器人账号数量
+AiPlayerbot.RandomBotAccountCount = 100
+
+# 随机机器人上线数量
+AiPlayerbot.MinRandomBots = 200
+AiPlayerbot.MaxRandomBots = 500
 
 # 删除所有随机机器人账号（重置随机机器人）
 AiPlayerbot.DeleteRandomBotAccounts = 0
 
-# 玩家登录时自动登录所有玩家角色（作为机器人）
+###################################################################################################
+
+###################################
+#                                 #
+#        玩家机器人设置           #
+#                                 #
+###################################
+
+####################################################################################################
+
+####################################################################################################
+# 常规
+#
+#
+
+# 启用/禁用通过 addclass 命令创建机器人（0 = 仅GM , 1 = 启用）
+# 默认：1（启用）
+AiPlayerbot.AddClassCommand = 1
+
+# 机器人接受队伍邀请权限级别 （0 = 仅GM，1 = 基于等级接受，2 = 总是接受）
+# 默认：1 （基于等级接受）
+AiPlayerbot.GroupInvitationPermission = 1
+
+# 当玩家登录时自动登录所有玩家备用角色
 AiPlayerbot.BotAutologin = 0
 
 # 允许召唤其他玩家角色登录为机器人
-# 默认: 0 (禁用)
+# 默认: 0 （禁用）
 AiPlayerbot.AllowPlayerBots = 0
 
-# 为随机机器人启用LFG寻求组队
-AiPlayerbot.RandomBotJoinLfg = 1
-
-# 为随机机器人启用战场/竞技场
-AiPlayerbot.RandomBotJoinBG = 1
-
-# 启用自动加入战场 - 如果服务器没有延迟，机器人随机加入战歌峡谷和2v2竞技场
-AiPlayerbot.RandomBotAutoJoinBG = 0
-
-# 将任务等级 <= 机器人等级的任务标记为已完成（减慢机器人创建速度）
-AiPlayerbot.PreQuests = 0
-
-# 随机机器人数量、等级
-AiPlayerbot.MinRandomBots = 500
-AiPlayerbot.MaxRandomBots = 500
-AiPlayerbot.RandomBotMinLevel = 1
-AiPlayerbot.RandomBotMaxLevel = 70
-
-# 启用/禁用随机机器人轮换 (从机器人角色库中随机选择一个机器人上线并定期轮换)
-# 改变设置后需重置随机机器人 (.playerbot rndbot reset)
-# 默认: 0 (禁用，在线机器人是固定的)
-AiPlayerbot.EnableRotation = 0
-
-# 用于轮换的机器人库角色数量 (需要少于RandomBotAccountCount * 10)
-AiPlayerbot.RotationPoolSize = 500
-
-# 用于创建随机机器人的账号
-AiPlayerbot.RandomBotAccountPrefix = "rndbot"
-AiPlayerbot.RandomBotAccountCount = 1000
-
-# 随机机器人竞技场队伍数量
-AiPlayerbot.RandomBotArenaTeamCount = 20
-
-# 删除所有随机机器人竞技场队伍
-AiPlayerbot.DeleteRandomBotArenaTeams = 0
-
-# 低装备等级随机机器人概率
-AiPlayerbot.RandomGearLoweringChance = 0
-
-# 第一次随机化时随机机器人拥有最大等级的概率 (默认 0.15)
-AiPlayerbot.RandomBotMaxLevelChance = 0.15
-
-# 机器人接受邀请时将被传送到玩家身边
+# 机器人接受邀请后将被召唤到玩家身边
 AiPlayerbot.SummonWhenGroup = 1
 
-# 在机器人身上显示头盔和披风 (需要重置)
-AiPlayerbot.RandomBotShowHelmet = 1
-AiPlayerbot.RandomBotShowCloak = 1
+# 允许/拒绝来自公会的机器人
+AiPlayerbot.AllowGuildBots = 1
 
-# 固定机器人等级 (won't level up by grinding)
-# 默认：0 (禁用)
-AiPlayerbot.RandomBotFixedLevel = 0
+# 添加了以下配置
+# Selfbot 权限等级（0 = 禁用，1 = 仅GM（默认），2 = 所有玩家，3 = 登录时激活）
+AiPlayerbot.SelfBotLevel = 1
 
-# 禁用随机机器人随机等级
-# 每一个机器人都从指定的等级开始，并通过杀死怪物升级。
-AiPlayerbot.DisableRandomLevels = 0
-
-# 设置随机机器人起始等级，如果 "AiPlayerbot.DisableRandomLevels" 启用
-AiPlayerbot.RandombotStartingLevel = 5
-
-# 设置机器人击杀获得经验倍率 (默认: 1)
-# Server XP Rate * AiPlayerbot.KillXPRate
-AiPlayerbot.KillXPRate = 1
-
-# 禁用死亡骑士作为机器人登录
-# 更改设置后需要重置随机机器人 (.playerbot rndbot reset)
-AiPlayerbot.DisableDeathKnightLogin = 0
-
-# 设置随机机器人获得装备时附魔的最低等级 (Maxlevel + 1 to disable)
-# 默认: 60
-AiPlayerbot.MinEnchantingBotLevel = 60
-
-# Enable expansion limitation
-# Default: 1
-AiPlayerbot.LimitEnchantExpansion = 1
-
-# 随机机器人检查玩家装备GS等级，如果太低则拒绝邀请
-# 默认: 0 (禁用)
-AiPlayerbot.GearScoreCheck = 0
-
-# 将完成并奖励给所有随机机器人的任务
-AiPlayerbot.RandomBotQuestIds = "7848,3802,5505,6502,7761,10277,10285,11492,24499,24511,24710,24712"
-
-# 随机机器人将与附近的机器人组队去做共有任务
-AiPlayerbot.RandomBotGroupNearby = 0
-
-# 没有队长的机器人会说他们的状态信息
-AiPlayerbot.RandomBotSayWithoutMaster = 0
-
-# Bots will say information about items when collecting them
-AiPlayerbot.SayWhenCollectingItems = 1
-
-# 将RandomBotMaxLevel机器人设置为RandomBotMinLevel 或不设置
-AiPlayerbot.DowngradeMaxLevelBot = 0
-
-# 启用/禁用 达到EquipmentPersistenceLevel设置等级后，机器人装备不再随机初始化 
-# 默认：0 (禁用)
-AiPlayerbot.EquipmentPersistence = 0
-
-# 默认：80
-AiPlayerbot.EquipmentPersistenceLevel = 80
-
-# 机器人队伍邀请权限级别 (0 = 只有GM， 1 = 基于等级接受， 2 = 总是接受)
-# 默认：1 (基于等级接受)
-AiPlayerbot.GroupInvitationPermission = 1
-
-# 启用/禁用 机器人被召唤时将复活并修理装备 (0 = 从不，1 = 非战斗且存活时启用, 2 = 总是启用)
-# 默认：1 (非战斗启用)
-AiPlayerbot.BotReviveWhenSummon = 1
+# 为机器人提供免费食物
+# 默认：1 （启用）
+AiPlayerbot.FreeFood = 1
 
 # 非GM玩家只能使用init=auto来初始化机器人 根据他们的等级和装备GS
-# 默认：0 (非GM玩家可以使用任何初始化命令)
+# 默认：0 （非GM玩家可以使用任何初始化命令）
 AiPlayerbot.AutoInitOnly = 0
 
 # init=auto初始化后机器人装备等级上限比例
-# 默认：1.0 (与玩家相同)
+# 默认：1.0 （与玩家相同）
 AiPlayerbot.AutoInitEquipLevelLimitRatio = 1.0
 
-# 启用/禁用 通过addclass命令创建机器人(0 = 只有GM ，1 = 启用)
-# 默认：1 (启用)
-AiPlayerbot.AddClassCommand = 1
+# 机器人在与训练师对话时会自动学习技能 （yes = 只要机器人有钱，就学习所有可用的技能， free = 仅自动学习免费技能，no = 仅列出的技能）
+AiPlayerbot.AutoTrainSpells = yes
 
-# 启用/禁用维护命令，学习所有可用法术和技能，补充消耗品，修理等。
-# 默认: 1 (启用)
-AiPlayerbot.MaintenanceCommand = 1
+#
+#
+#
+####################################################################################################
 
-# 启用/禁用 autogear 命令，自动升级机器人装备，装备品质受AutoGearQualityLimit和AutoGearScoreLimit设置限制
-# 默认：1 (启用)
-AiPlayerbot.AutoGearCommand = 1
+####################################################################################################
+# 召唤
+#
+#
 
-# autogear命令装备品质限制（1 = 普通，2 = 优秀，3 = 稀有，4 = 史诗，5 = 传说）
-# 默认: 3 (稀有)
-AiPlayerbot.AutoGearQualityLimit = 3
+# 启用/禁用 可在战斗中召唤机器人
+# 默认：1 （启用）
+AiPlayerbot.AllowSummonInCombat = 1
 
-# autogear命令装备GS限制(0 = no limit)
-# 默认: 0 (no limit)
-AiPlayerbot.AutoGearScoreLimit = 0
+# 启用/禁用 可在死亡后召唤机器人
+# 默认：1 （启用）
+AiPlayerbot.AllowSummonWhenMasterIsDead = 1
 
-# 自动化
+# 启用/禁用 可召唤死亡的机器人 （0 = 仅在机器人是灵魂状态时，1 = 总是）
+# 默认：1 （总是）
+AiPlayerbot.AllowSummonWhenBotIsDead = 1
 
-# 当队伍拾取方式设置为自由拾取时机器人保持拾取战利品
-# 默认：0 (禁用)
-AiPlayerbot.FreeMethodLoot = 0
+# 启用/禁用 在召唤时复活机器人
+# 默认：1 （启用）
+AiPlayerbot.ReviveBotWhenSummoned = 1
 
-# 机器人战利品需求设置 (0 = 放弃, 1 = 贪婪, 2 = 需求)
-# 默认: 1 (贪婪)
-AiPlayerbot.LootRollLevel = 1
+# 启用/禁用 召唤时修理装备 （0 = 否，1 = 是）
+# 默认：1
+AiPlayerbot.BotRepairWhenSummon = 1
 
-# 机器人选择任务奖励 (yes = 选择第一个可用物品，no = 列出所有奖励，ask = 选择可用物品并列出如有多个)
-AiPlayerbot.AutoPickReward = no
+#
+#
+#
+####################################################################################################
 
-# 机器人装备升级 (机器人将装备任何拾取或任务获取的有提升的物品)
-# 默认：1 (启用)
+####################################################################################################
+# 装备
+#
+#
+
+# 展示随机机器人的头盔和斗篷 （需要重置）
+AiPlayerbot.RandomBotShowHelmet = 1
+AiPlayerbot.RandomBotShowCloak = 1
+
+# 机器人装备升级 （机器人将装备任何拾取或任务获取的有提升的物品）
+# 默认：1 （启用）
 AiPlayerbot.AutoEquipUpgradeLoot = 1
 
 # 自动装备有提升装备的阈值
-# 默认：1.1 (当装备得分比当前高1.1倍时替换装备)
+# 默认：1.1 （当装备得分比当前高1.1倍时替换装备）
 AiPlayerbot.EquipUpgradeThreshold = 1.1
 
-# 与玩家同步任务 (当你提交任务时机器人将自动完成任务。机器人将忽略任务物品需求。)
-# 默认：1 (启用)
-AiPlayerbot.SyncQuestWithPlayer = 1
+#
+#
+#
+####################################################################################################
 
-# 机器人将在玩家提交任务时自动为玩家完成任务
-# 默认：0 (禁用)
-AiPlayerbot.SyncQuestForPlayer = 0
+####################################################################################################
+# 拾取
+#
+#
 
-# 将随机机器人最大等级与在线玩家最大等级同步
-# 默认：0 (禁用)
-AiPlayerbot.SyncLevelWithPlayers = 0
+# 机器人在收集物品时会说有关物品的信息
+AiPlayerbot.SayWhenCollectingItems = 1
 
-# 为随机机器人提供免费食物
-# 默认：1 (启用)
-AiPlayerbot.FreeFood = 1
+# 当队伍拾取方式设置为自由拾取时机器人仍拾取战利品
+# 默认：0 （禁用）
+AiPlayerbot.FreeMethodLoot = 0
 
-# 机器人在与训练师对话时自动学习法术 (yes = 只要机器人有钱，就学习所有可用的法术, free = 自动学习免费法术, no = 仅列出法术)
-# 仅用于随机机器人
-AiPlayerbot.AutoTrainSpells = yes
+# 机器人战利品拾取设置（0 = 放弃，1 = 贪婪，2 = 需求）
+# 默认：1 （贪婪）
+AiPlayerbot.LootRollLevel = 1
 
-# 机器人在升级时自动学习职业任务奖励法术
-# 仅用于随机机器人
-# 默认：0 (禁用)
-AiPlayerbot.AutoLearnQuestSpells = 0
+#
+#
+#
+####################################################################################################
 
-# 机器人在升级时自动学习可用法术
-# 仅用于随机机器人
-# 默认：1 (启用)
-AiPlayerbot.AutoLearnTrainerSpells = 1
-
-# 机器人在升级时自动传送至另一地图以继续升级
-# 仅用于随机机器人
-# 默认：1 (启用)
-AiPlayerbot.AutoTeleportForLevel = 1
-
-# 机器人在升级时自动使用天赋点
-# 仅用于随机机器人
-# 默认：1 (启用)
-AiPlayerbot.AutoPickTalents = 1
-
-# 机器人在升级时自动升级装备
-# 仅用于随机机器人
-# 默认：1 (启用)
-AiPlayerbot.AutoUpgradeEquip = 1
-
-# 随机机器人将自己挑选任务并尝试完成
-# 仅用于随机机器人
-# 默认：1 (启用)
-AiPlayerbot.AutoDoQuests = 1
-
-# 机器人聊天命令的前缀 (例如：follow, stay)
-AiPlayerbot.CommandPrefix = ""
-
-# 机器人聊天命令的分隔符
-AiPlayerbot.CommandSeparator = "\\\\"
+####################################################################################################
+# 计时器
+#
+#
 
 # 每个tick的最大AI迭代次数
 AiPlayerbot.IterationsPerTick = 10
-
-# 允许/拒绝来自你的公会的机器人
-AiPlayerbot.AllowGuildBots = 1
 
 # 两次短期施法之间的延迟
 AiPlayerbot.GlobalCooldown = 500
@@ -249,7 +237,7 @@ AiPlayerbot.GlobalCooldown = 500
 AiPlayerbot.MaxWaitForMove = 5000
 
 # 为机器人移动禁用MoveSplinePath，将导致机器人移动更加不稳定，但意味着 昏迷/陷阱/缠绕/等控制效果
-# 对机器人生效 (启用MoveSplinePath时，它们不能可靠地工作，尽管减速效果仍然正常)
+# 对机器人生效 （启用MoveSplinePath时，它们不能可靠地工作，尽管减速效果仍然正常）
 # 默认：0 - 启用 MoveSplinePath
 #       1 - 仅在战场/竞技场禁用 MoveSplinePath
 #       2 - 禁用 MoveSplinePath
@@ -271,7 +259,7 @@ AiPlayerbot.ReactDelay = 100
 # 不活动延迟 Inactivity delay
 AiPlayerbot.PassiveDelay = 10000
 
-# 重复操作之间的最小延迟 (聊天信息，表情等)
+# 重复操作之间的最小延迟 （聊天信息，表情等）
 AiPlayerbot.RepeatDelay = 2000
 
 # 延迟计时器
@@ -282,7 +270,16 @@ AiPlayerbot.SitDelay = 20000
 AiPlayerbot.ReturnDelay = 2000
 AiPlayerbot.LootDelay = 1000
 
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
 # 距离
+#
+#
+
 AiPlayerbot.FarDistance = 20.0
 AiPlayerbot.SightDistance = 75.0
 AiPlayerbot.SpellDistance = 28.5
@@ -301,8 +298,19 @@ AiPlayerbot.AoeRadius = 10
 AiPlayerbot.RpgDistance = 200
 AiPlayerbot.AggroDistance = 22
 
-# 机器人遇到敌人时可以逃跑
-AiPlayerbot.FleeingEnabled = 1
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# 阈值
+#
+#
+
+# 设置机器人的杀怪经验倍率（默认：1）
+# Server XP Rate * AiPlayerbot.KillXPRate
+AiPlayerbot.KillXPRate = 1
 
 # 生命值/法力值 等级
 AiPlayerbot.CriticalHealth = 25
@@ -312,56 +320,359 @@ AiPlayerbot.AlmostFullHealth = 85
 AiPlayerbot.LowMana = 15
 AiPlayerbot.MediumMana = 40
 
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# 任务
+#
+#
+
+# 机器人选择任务奖励（yes = 选择第一个可用物品，no = 列出所有奖励，ask = 选择可用物品并列出如有多个）
+AiPlayerbot.AutoPickReward = no
+
+# 与玩家同步任务（当你提交任务时机器人将忽略任务物品需求自动完成任务。）
+# 默认：1（启用）
+AiPlayerbot.SyncQuestWithPlayer = 1
+
+# 机器人将在玩家提交任务时自动为玩家完成任务
+# 默认：0（禁用）
+AiPlayerbot.SyncQuestForPlayer = 0
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# 战斗
+#
+#
+
+# 机器人遇到敌人时可以逃跑
+AiPlayerbot.FleeingEnabled = 1
+
+# 启用自动躲避AOE（实验）
+# 默认：1（启用）
+AiPlayerbot.AutoAvoidAoe = 1
+
+# 告知正在躲避的技能（实验性）
+# 默认：1（启用）
+AiPlayerbot.TellWhenAvoidAoe = 1
+
 # 启用治疗机器人保存法力
-# 默认：1 (启用)
+# 默认：1（启用）
 AiPlayerbot.AutoSaveMana = 1
 
 # 治疗机器人法力值保存阈值
-# 默认：60 (60%)
+# 默认：60（60%）
 AiPlayerbot.SaveManaThreshold = 60
 
-# 启用自动躲避AOE (实验)
-# 默认：1 (启用)
-AiPlayerbot.AutoAvoidAoe = 1
+#
+#
+#
+####################################################################################################
 
-# 告知正在躲避的技能 (实验性)
-# Default: 1 (enable)
-AiPlayerbot.TellWhenAvoidAoe = 1
+####################################################################################################
+# CHEATS
+#
+#
 
-# 随机机器人默认策略 (在默认值之后应用)
-AiPlayerbot.RandomBotCombatStrategies = "+dps,+dps assist,-threat,+custom::say"
+# 启用/禁用 maintenance 命令，学习所有可用法术和技能，补充消耗品，修理等。
+# 默认：1 （启用）
+AiPlayerbot.MaintenanceCommand = 1
+
+# 启用/禁用 autogear 命令，自动升级机器人装备，装备品质受AutoGearQualityLimit和AutoGearScoreLimit设置限制
+# 默认：1 （启用）
+AiPlayerbot.AutoGearCommand = 1
+
+#  autogear命令装备品质限制（1 = 普通，2 = 优秀，3 = 稀有，4 = 史诗，5 = 传说）
+# 默认：3 （稀有）
+AiPlayerbot.AutoGearQualityLimit = 3
+
+# autogear命令装备GS限制（0 = 无限制）
+# 默认：0 （无限制）
+AiPlayerbot.AutoGearScoreLimit = 0
+
+# 启用/禁用 bot cheating
+AiPlayerbot.BotCheats = "taxi"
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# 法术
+#
+#
+
+# 打开战利品箱子的法术ID
+AiPlayerbot.OpenGoSpell = 6477
+
+#
+#
+#
+###################################################################################################
+
+#######################################
+#                                     #
+#         随机机器人特定设置          #
+#                                     #
+#######################################
+
+####################################################################################################
+# 常规
+#
+#
+
+# 启用/禁用机器人账号密码
+AiPlayerbot.RandomBotRandomPassword = 0
+
+# 用于创建随机机器人账号的前缀
+AiPlayerbot.RandomBotAccountPrefix = "rndbot"
+
+# 启用/禁用随机机器人轮换（从机器人角色库中随机选择一个机器人上线并定期轮换）
+# 改变设置后需重置随机机器人（.playerbot rndbot reset）
+# 默认：0 （禁用，在线机器人是固定的）
+AiPlayerbot.EnableRotation = 0
+
+# 用于轮换的机器人库角色数量 （需要少于RandomBotAccountCount * 10）
+AiPlayerbot.RotationPoolSize = 500
+
+# 随机机器人等级区间
+AiPlayerbot.RandomBotMinLevel = 1
+AiPlayerbot.RandomBotMaxLevel = 80
+
+# 将随机机器人最大等级与在线玩家最大等级同步
+# 默认：0 （禁用）
+AiPlayerbot.SyncLevelWithPlayers = 0
+
+# 将任务等级 <= 机器人等级的任务标记为已完成（减慢机器人创建速度）
+AiPlayerbot.PreQuests = 0
+
+#  没有队长的机器人会说他们的信息
+AiPlayerbot.RandomBotSayWithoutMaster = 0
+
+# 为随机机器人启用LFG寻求组队
+AiPlayerbot.RandomBotJoinLfg = 1
+
+# 禁用死亡骑士作为机器人登录
+# 更改设置后需要重置随机机器人 （.playerbot rndbot reset）
+AiPlayerbot.DisableDeathKnightLogin = 0
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# 等级
+#
+#
+
+# 禁用随机机器人随机等级
+# 每一个机器人都从指定的等级开始，并通过杀死怪物升级。
+AiPlayerbot.DisableRandomLevels = 0
+
+# 设置随机机器人起始等级，如果 "AiPlayerbot.DisableRandomLevels" 启用
+AiPlayerbot.RandombotStartingLevel = 5
+
+# 第一次随机化时随机机器人拥有最大等级的概率（默认 0.15）
+AiPlayerbot.RandomBotMaxLevelChance = 0.15
+
+# 固定机器人等级（不会通过grinding升级）
+# 默认：0 （禁用）
+AiPlayerbot.RandomBotFixedLevel = 0
+
+# 将RandomBotMaxLevel机器人设置为RandomBotMinLevel 或不设置
+AiPlayerbot.DowngradeMaxLevelBot = 0
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# 装备
+#
+#
+
+# 随机机器人装备品质限制（1 = 普通，2 = 优秀，3 = 稀有，4 = 史诗，5 = 传说）
+# 默认：3 （稀有）
+AiPlayerbot.RandomGearQualityLimit = 3
+
+# 随机机器人装备GS限制（0 = 无限制）
+# 默认：0 （no limit）
+AiPlayerbot.RandomGearScoreLimit = 0
+
+# 设置随机机器人获得装备时附魔的所需的最低等级（Maxlevel + 1 禁用）
+# 默认：60
+AiPlayerbot.MinEnchantingBotLevel = 60
+
+# 启用附魔资料片限制 - 例如：等级 <= 60 机器人仅使用经典旧世可用附魔
+# 等级 <= 70 机器人仅使用TBC版本可用附魔）
+# 默认：0
+AiPlayerbot.LimitEnchantExpansion = 0
+
+# 启用装备资料片限制 - 例如：等级 <= 60 机器人仅使用经典旧世可用装备
+# 等级 <= 70 机器人仅使用TBC版本可用装备）
+# 默认：0
+AiPlayerbot.LimitGearExpansion = 0
+
+# 低装备等级随机机器人概率
+AiPlayerbot.RandomGearLoweringChance = 0
+
+# 随机机器人检查玩家装备GS等级，如果太低则拒绝邀请
+# 默认：0 （禁用）
+AiPlayerbot.GearScoreCheck = 0
+
+# 启用/禁用机器人装备保持（停止随机初始化）达到（EquipmentPersistenceLevel）等级后
+# 默认：0 （禁用）
+AiPlayerbot.EquipmentPersistence = 0
+
+# 默认：80
+AiPlayerbot.EquipmentPersistenceLevel = 80
+
+# 机器人在升级时自动升级装备
+# 默认：1 （启用）
+AiPlayerbot.AutoUpgradeEquip = 1
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# 任务
+#
+#
+
+# 将完成并奖励给所有随机机器人的任务
+AiPlayerbot.RandomBotQuestIds = "7848,3802,5505,6502,7761,10277,10285,11492,24499,24511,24710,24712"
+
+#  随机机器人将与附近的机器人组队去做共有任务
+AiPlayerbot.RandomBotGroupNearby = 0
+
+# 随机机器人将自己挑选任务并尝试完成
+# 默认：1 （启用）
+AiPlayerbot.AutoDoQuests = 1
+
+# 保留的任务物品（不要摧毁）
+AiPlayerbot.RandomBotQuestItems = "6948,5175,5176,5177,5178,16309,12382,13704,11000"
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# 技能
+#
+#
+
+# 机器人在升级时自动学习职业任务奖励法术
+# 默认：0 （禁用）
+AiPlayerbot.AutoLearnQuestSpells = 0
+
+# 机器人在升级时自动学习可用法术
+# 默认：1 （启用）
+AiPlayerbot.AutoLearnTrainerSpells = 1
+
+# 机器人在升级时自动学习可用法术
+# 默认：1 （启用）
+AiPlayerbot.AutoPickTalents = 1
+
+# 随机化时每个机器人将学习的法术 （54197 - 寒冷天气飞行）
+AiPlayerbot.RandomBotSpellIds = "54197"
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# 策略
+#
+#
+
+# 随机机器人默认策略（applied after defaults）
+AiPlayerbot.RandomBotCombatStrategies = "+dps,+dps assist,-threat"
 # AiPlayerbot.RandomBotNonCombatStrategies = "+grind,+loot,+rpg,+custom::say"
 AiPlayerbot.RandomBotNonCombatStrategies = "+custom::say"
 AiPlayerbot.CombatStrategies = ""
 AiPlayerbot.NonCombatStrategies = ""
 
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# 传送
+#
+#
+
 # 机器人可以传送到的地图
 AiPlayerbot.RandomBotMaps = 0,1,530,571
 
-# 机器人传送到银行职员的可能性 (城市)
+# 机器人传送到银行职员的可能性（城市）
 # 默认：0.25
 AiPlayerbot.ProbTeleToBankers = 0.25
 
-# 保留的任务物品 (不要摧毁)
-AiPlayerbot.RandomBotQuestItems = "6948,5175,5176,5177,5178,16309,12382,13704,11000"
-
-# PvP 受限区域 (机器人不能 pvp)
-AiPlayerbot.PvpProhibitedZoneIds = "2255,656,2361,2362,2363,976,35,2268,3425,392,541,1446,3828,3712,3738,3565,3539,3623,4152,3988,4658,4284,4418,4436,4275,4323,4395,3703" # 33(stranglethorn vale),440(tanaris)
-
-# PvP 受限地区 (机器人不能 pvp)
-AiPlayerbot.PvpProhibitedAreaIds = "976,35,392"
-
-# 随机化时每个机器人将学习的法术 (54197 - 寒冷天气飞行)
-AiPlayerbot.RandomBotSpellIds = "54197"
+# 随机机器人死后被传送距离
+AiPlayerbot.RandomBotTeleportDistance = 100
 
 # 随机机器人和附近生物之间的等级差 用于随机传送机器人
 AiPlayerbot.RandomBotTeleLowerLevel = 3
 AiPlayerbot.RandomBotTeleHigherLevel = 1
 
-# 打开战利品箱子的法术ID
-AiPlayerbot.OpenGoSpell = 6477
+# 机器人在升级时自动传送至另一地图以继续升级
+# 仅用于随机机器人
+# 默认：1 （启用）
+AiPlayerbot.AutoTeleportForLevel = 1
 
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# 战场 & 竞技场 & PVP
+#
+#
+
+# 为随机机器人启用战场/竞技场
+AiPlayerbot.RandomBotJoinBG = 1
+
+# 启用自动加入战场 - 如果服务器没有延迟，机器人随机加入战歌峡谷和2v2竞技场
+AiPlayerbot.RandomBotAutoJoinBG = 0
+
+# 随机机器人竞技场队伍数量
+AiPlayerbot.RandomBotArenaTeamCount = 20
+
+# 删除所有随机机器人竞技场队伍
+AiPlayerbot.DeleteRandomBotArenaTeams = 0
+
+# PvP 受限区域（机器人不能 pvp）
+AiPlayerbot.PvpProhibitedZoneIds = "2255,656,2361,2362,2363,976,35,2268,3425,392,541,1446,3828,3712,3738,3565,3539,3623,4152,3988,4658,4284,4418,4436,4275,4323,4395,3703,4298" # 33（stranglethorn vale）,440（tanaris）
+
+# PvP 受限地区（机器人不能 pvp）
+AiPlayerbot.PvpProhibitedAreaIds = "976,35,392"
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
 # 时间间隔
+#
+#
+
+# 单位：秒
 AiPlayerbot.RandomBotUpdateInterval = 20
 AiPlayerbot.RandomBotCountChangeMinInterval = 1800
 AiPlayerbot.RandomBotCountChangeMaxInterval = 7200
@@ -376,96 +687,38 @@ AiPlayerbot.MinRandomBotTeleportInterval = 3600
 AiPlayerbot.MaxRandomBotTeleportInterval = 18000
 AiPlayerbot.RandomBotInWorldWithRotationDisabled = 31104000
 
-# 随机机器人死后被传送距离
-AiPlayerbot.RandomBotTeleportDistance = 100
-
-# Debug switches
-AiPlayerbot.SpellDump = 0
-AiPlayerbot.LogInGroupOnly = 1
-AiPlayerbot.LogValuesPerTick = 0
-AiPlayerbot.RandomChangeMultiplier = 1
-
-# Command server port, 0 - 禁用
-AiPlayerbot.CommandServerPort = 8888
-
-# 启用/禁用 性能监视
-AiPlayerbot.PerfMonEnabled = 0
-
-# 允许创建日志文件的自定义配置。
-# 例如：AiPlayerbot.AllowedLogFiles = travelNodes.csv,travelPaths.csv,TravelNodeStore.h,bot_movement.csv,bot_location.csv
-AiPlayerbot.AllowedLogFiles = ""
-
-# 对所有机器人应用永久buff。
-# WorldBuff.Faction.Class.MinLevel.MaxLevel
-
-# 添加跟随设置
-# Selfbot permission level (0 = disabled, 1 = gm only (default), 2 = all players, 3 = activate on login)
-AiPlayerbot.SelfBotLevel = 1
-
-# 启用/禁用 bot cheating
-AiPlayerbot.BotCheats = "taxi"
-
-# 启用/禁用机器人账号密码
-AiPlayerbot.RandomBotRandomPassword = 0
-
-# Diff with/without player in server. The server will tune bot activity to reach the desired server tick speed (in ms).
-AiPlayerbot.EnablePrototypePerformanceDiff = 0
-AiPlayerbot.DiffWithPlayer = 100
-AiPlayerbot.DiffEmpty = 200
-
-##################################################################################
-#                                                                                #
-#                         数据库内容 Database Stuff 							 #
-#                                                                                #
-##################################################################################
-
 #
-#    PlayerbotsDatabaseInfo
-#        描述：playerbots服务器的数据库连接设置。
-#        例如："hostname;port;username;password;database"
-#              ".;somenumber;username;password;database" - (Use named pipes on Windows
-#                                                           "enable-named-pipe" to [mysqld]
-#                                                            section my.ini)
-#              ".;/path/to/unix_socket;username;password;database" - (use Unix sockets on
-#                                                                           Unix/Linux)
-#        默认："127.0.0.1;3306;acore;acore;acore_playerbots"       - (PlayerbotDatabaseInfo)
-
-PlayerbotsDatabaseInfo = "127.0.0.1;3306;root;root;acore_playerbots"
-
 #
-#    PlayerbotsDatabase.WorkerThreads
-#        描述：The amount of worker threads spawned to handle asynchronous (delayed) MySQL
-#                     statements. Each worker thread is mirrored with its own connection to the
-#                     MySQL server and their own thread on the MySQL server.
-#        默认：1 - (PlayerbotsDatabase.WorkerThreads)
-
-PlayerbotsDatabase.WorkerThreads     = 1
-
 #
-#    PlayerbotsDatabase.SynchThreads
-#        描述：要处理的MySQL连接数。
-#        默认：1 - (PlayerbotDatabase.WorkerThreads)
+####################################################################################################
 
-PlayerbotsDatabase.SynchThreads     = 1
+###################################
+#                                 #
+#          预设天赋               #
+#                                 #
+###################################
 
-#    Playerbot.Updates.EnableDatabases
-#        描述：Determined if updates system work with playerbot database.
+###################################################################################################
+# 信息
 #
-#        默认：     1  - (启用)
-#                   0  - (禁用)
+#
 
-Playerbots.Updates.EnableDatabases = 1
-
-##############################################
-#                  预置专精                  #
-##############################################
 # AiPlayerbot.PremadeSpecName.<class>.<specno> = <name>         #天赋专精名字
 # AiPlayerbot.PremadeSpecLink.<class>.<specno>.<level> = <link> #Wowhead样式链接 机器人在达到既定等级时
 # AiPlayerbot.PremadeSpecGlyph.<class>.<specno> = <major 1>,<minor 1>,<major 2>,<minor 2>,<minor 3>,<major 3>   #雕文的ItemId
 # e.g., formulate the link on https://www.wowhead.com/wotlk/talent-calc/warrior/3022032123335100202012013031251-32505010002
 # 0 <= specno < 20, 1 <= level <= 80
 
-# Warrior
+#
+#
+#
+###################################################################################################
+
+###################################################################################################
+# 战士
+#
+#
+
 AiPlayerbot.PremadeSpecName.1.0 = 武器pve
 AiPlayerbot.PremadeSpecGlyph.1.0 = 43418,43395,43423,43399,49084,43421
 AiPlayerbot.PremadeSpecLink.1.0.60 = 3022032023335100202012013031241
@@ -479,7 +732,16 @@ AiPlayerbot.PremadeSpecGlyph.1.2 = 43424,43395,43425,43399,49084,45793
 AiPlayerbot.PremadeSpecLink.1.2.60 = --053351225000210521030113321
 AiPlayerbot.PremadeSpecLink.1.2.80 = 3500030023-301-053351225000210521030113321
 
-# Paladin
+#
+#
+#
+###################################################################################################
+
+###################################################################################################
+# 圣骑士
+#
+#
+
 AiPlayerbot.PremadeSpecName.2.0 = 神圣pve
 AiPlayerbot.PremadeSpecGlyph.2.0 = 41106,43367,45741,43369,43365,41109
 AiPlayerbot.PremadeSpecLink.2.0.60 = 50350151020013053100515221
@@ -494,7 +756,16 @@ AiPlayerbot.PremadeSpecLink.2.2.60 = --05230051203331302133231131
 AiPlayerbot.PremadeSpecLink.2.2.65 = -05-05230051203331302133231131
 AiPlayerbot.PremadeSpecLink.2.2.80 = 050501-05-05232051203331302133231331
 
-# Hunter
+#
+#
+#
+###################################################################################################
+
+###################################################################################################
+# 猎人
+#
+#
+
 AiPlayerbot.PremadeSpecName.3.0 = 兽王pve
 AiPlayerbot.PremadeSpecGlyph.3.0 = 42912,43350,42902,43351,43338,45732
 AiPlayerbot.PremadeSpecLink.3.0.60 = 51200201505112243100511351
@@ -508,13 +779,22 @@ AiPlayerbot.PremadeSpecGlyph.3.2 = 42912,43350,45731,43351,43338,45732
 AiPlayerbot.PremadeSpecLink.3.2.60 = --5000032500033330502135001331
 AiPlayerbot.PremadeSpecLink.3.2.80 = -005305101-5000032500033330522135301331
 
-# Rogue
+#
+#
+#
+###################################################################################################
+
+###################################################################################################
+# 盗贼
+#
+#
+
 AiPlayerbot.PremadeSpecName.4.0 = 刺杀pve
-AiPlayerbot.PremadeSpecGlyph.4.0 = 45768,43379,45761,43380,43378,45767
+AiPlayerbot.PremadeSpecGlyph.4.0 = 45768,43379,45761,43380,43378,45766
 AiPlayerbot.PremadeSpecLink.4.0.60 = 005323005350100520103331051
 AiPlayerbot.PremadeSpecLink.4.0.80 = 005323005350100520103331051-005005005003-2
 AiPlayerbot.PremadeSpecName.4.1 = 战斗pve
-AiPlayerbot.PremadeSpecGlyph.4.1 = 45762,43379,45767,43380,43378,45766
+AiPlayerbot.PremadeSpecGlyph.4.1 = 42962,43379,45762,43380,43378,42969
 AiPlayerbot.PremadeSpecLink.4.1.60 = -0252051000035015223100501251
 AiPlayerbot.PremadeSpecLink.4.1.80 = 00532000523-0252051000035015223100501251
 AiPlayerbot.PremadeSpecName.4.2 = 敏锐pve
@@ -522,7 +802,16 @@ AiPlayerbot.PremadeSpecGlyph.4.2 = 42967,43379,45764,43380,43378,45767
 AiPlayerbot.PremadeSpecLink.4.2.60 = --5120122030321121050135031241
 AiPlayerbot.PremadeSpecLink.4.2.80 = 0053231-2-5120222030321121050135231251
 
-# Priest
+#
+#
+#
+###################################################################################################
+
+###################################################################################################
+# 牧师
+#
+#
+
 AiPlayerbot.PremadeSpecName.5.0 = 戒律pve
 AiPlayerbot.PremadeSpecGlyph.5.0 = 42408,43371,42400,43374,43342,45756
 AiPlayerbot.PremadeSpecLink.5.0.60 = 0503203130300512301323131051
@@ -536,7 +825,16 @@ AiPlayerbot.PremadeSpecGlyph.5.2 = 42406,43371,42407,43374,43342,42415
 AiPlayerbot.PremadeSpecLink.5.2.60 = --325003041203010323150301351
 AiPlayerbot.PremadeSpecLink.5.2.80 = 0503203--325023051223010323152301351
 
-# DeathKnight
+#
+#
+#
+###################################################################################################
+
+###################################################################################################
+# 死亡骑士
+#
+#
+
 AiPlayerbot.PremadeSpecName.6.0 = 鲜血pve
 AiPlayerbot.PremadeSpecGlyph.6.0 = 45805,43673,43827,43544,43672,43554
 AiPlayerbot.PremadeSpecLink.6.0.60 = 035502150300331320102013111-005
@@ -554,7 +852,16 @@ AiPlayerbot.PremadeSpecGlyph.6.3 = 45805,43673,43827,43544,43672,43554
 AiPlayerbot.PremadeSpecLink.6.3.60 = 005512153330030320102013-305
 AiPlayerbot.PremadeSpecLink.6.3.80 = 005512153330030320102013-3050505002023001-002
 
-# Shaman
+#
+#
+#
+###################################################################################################
+
+###################################################################################################
+# 萨满祭司
+#
+#
+
 AiPlayerbot.PremadeSpecName.7.0 = 元素pve
 AiPlayerbot.PremadeSpecGlyph.7.0 = 41536,43385,41532,43386,44923,45776
 AiPlayerbot.PremadeSpecLink.7.0.60 = 4530001520213351102301351
@@ -565,24 +872,42 @@ AiPlayerbot.PremadeSpecLink.7.1.60 = -30205033005001333031131131051
 AiPlayerbot.PremadeSpecLink.7.1.80 = 053030052-30205033005021333031131131051
 AiPlayerbot.PremadeSpecName.7.2 = 恢复pve
 AiPlayerbot.PremadeSpecGlyph.7.2 = 41517,43385,41527,43386,44923,45775
-AiPlayerbot.PremadeSpecLink.7.2.60 = --50005301335310501002331241
-AiPlayerbot.PremadeSpecLink.7.2.80 = -00505031-50005331335310501022331251
+AiPlayerbot.PremadeSpecLink.7.2.60 = --50005301235310501102321251
+AiPlayerbot.PremadeSpecLink.7.2.80 = -00502033-50005331335310501122331251
 
-# Mage
+#
+#
+#
+###################################################################################################
+
+###################################################################################################
+# 法师
+#
+#
+
 AiPlayerbot.PremadeSpecName.8.0 = 奥术pve
 AiPlayerbot.PremadeSpecGlyph.8.0 = 42735,43339,44955,43364,43361,42751
 AiPlayerbot.PremadeSpecLink.8.0.60 = 23000503110033014032310150532
 AiPlayerbot.PremadeSpecLink.8.0.80 = 23000523310033015032310250532-03-203203001
 AiPlayerbot.PremadeSpecName.8.1 = 火焰pve
 AiPlayerbot.PremadeSpecGlyph.8.1 = 42739,43339,45737,43364,44920,42751
-AiPlayerbot.PremadeSpecLink.8.1.60 = -0055030012303330053120300351
-AiPlayerbot.PremadeSpecLink.8.1.80 = 23000503310003-0055030012303330053120300351
+AiPlayerbot.PremadeSpecLink.8.1.60 = -0055030011302231053120321341
+AiPlayerbot.PremadeSpecLink.8.1.80 = 23000503110003-0055030011302331053120321351
 AiPlayerbot.PremadeSpecName.8.2 = 冰霜pve
 AiPlayerbot.PremadeSpecGlyph.8.2 = 42742,43339,50045,43364,43361,42751
 AiPlayerbot.PremadeSpecLink.8.2.60 = --3533103310203100232102231151
 AiPlayerbot.PremadeSpecLink.8.2.80 = 23002322010203--0533003313203100232112231151
 
-# Warlock
+#
+#
+#
+###################################################################################################
+
+###################################################################################################
+# 术士
+#
+#
+
 AiPlayerbot.PremadeSpecName.9.0 = 痛苦pve
 AiPlayerbot.PremadeSpecGlyph.9.0 = 45785,43390,50077,43394,43393,45779
 AiPlayerbot.PremadeSpecLink.9.0.60 = 2350022001113510053500131151
@@ -598,12 +923,21 @@ AiPlayerbot.PremadeSpecGlyph.9.2 = 45785,43390,50077,43394,43393,42454
 AiPlayerbot.PremadeSpecLink.9.2.60 = --05203205210131051313230341
 AiPlayerbot.PremadeSpecLink.9.2.80 = -03310030003-05203205210331051335230351
 
-# Druid
+#
+#
+#
+###################################################################################################
+
+###################################################################################################
+# 德鲁伊
+#
+#
+
 AiPlayerbot.PremadeSpecName.11.0 = 平衡pve
 AiPlayerbot.PremadeSpecGlyph.11.0 = 40916,43331,40921,43335,44922,40919
 AiPlayerbot.PremadeSpecLink.11.0.60 = 5012203115331003213302301231
 AiPlayerbot.PremadeSpecLink.11.0.80 = 5012203125331103213305301231--205003212
-AiPlayerbot.PremadeSpecName.11.1 = 熊德pve
+AiPlayerbot.PremadeSpecName.11.1 = 熊pve
 AiPlayerbot.PremadeSpecGlyph.11.1 = 40897,43331,46372,43335,43332,40899
 AiPlayerbot.PremadeSpecLink.11.1.60 = -500232130322110353100301310501
 AiPlayerbot.PremadeSpecLink.11.1.80 = -501232130322110353120303313511-20350001
@@ -611,80 +945,193 @@ AiPlayerbot.PremadeSpecName.11.2 = 恢复pve
 AiPlayerbot.PremadeSpecGlyph.11.2 = 40913,43331,40906,43335,44922,45602
 AiPlayerbot.PremadeSpecLink.11.2.60 = --230033312031501531050013051
 AiPlayerbot.PremadeSpecLink.11.2.80 = 05320001--230033312031512531153313051
-AiPlayerbot.PremadeSpecName.11.3 = 猫德pve
+AiPlayerbot.PremadeSpecName.11.3 = 猫pve
 AiPlayerbot.PremadeSpecGlyph.11.3 = 40902,43331,40901,43335,44922,45604
 AiPlayerbot.PremadeSpecLink.11.3.60 = -553202032322010052100030310501
 AiPlayerbot.PremadeSpecLink.11.3.80 = -553202032322010053100030310511-205503012
 
-##############################################
-#           随机机器人默认天赋专精           #
-##############################################
+#
+#
+#
+###################################################################################################
+
+###################################
+#                                 #
+#      随机机器人默认天赋专精     #
+#                                 #
+###################################
+
+####################################################################################################
+# 
+#
+#
+
 # AiPlayerbot.RandomClassSpecProb.<class>.<specno>  # 选择专精的概率
 # AiPlayerbot.RandomClassSpecIndex.<class>.<specno> # 预置专精的专精目录
-# Warrior
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# WARRIOR
+#
+#
+
 AiPlayerbot.RandomClassSpecProb.1.0 = 20
 AiPlayerbot.RandomClassSpecIndex.1.0 = 0
 AiPlayerbot.RandomClassSpecProb.1.1 = 40
 AiPlayerbot.RandomClassSpecIndex.1.1 = 1
 AiPlayerbot.RandomClassSpecProb.1.2 = 40
 AiPlayerbot.RandomClassSpecIndex.1.2 = 2
-# Paladin
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# PALADIN
+#
+#
+
 AiPlayerbot.RandomClassSpecProb.2.0 = 30
 AiPlayerbot.RandomClassSpecIndex.2.0 = 0
 AiPlayerbot.RandomClassSpecProb.2.1 = 40
 AiPlayerbot.RandomClassSpecIndex.2.1 = 1
 AiPlayerbot.RandomClassSpecProb.2.2 = 30
 AiPlayerbot.RandomClassSpecIndex.2.2 = 2
-# Hunter
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# HUNTER
+#
+#
+
 AiPlayerbot.RandomClassSpecProb.3.0 = 33
 AiPlayerbot.RandomClassSpecIndex.3.0 = 0
 AiPlayerbot.RandomClassSpecProb.3.1 = 33
 AiPlayerbot.RandomClassSpecIndex.3.1 = 1
 AiPlayerbot.RandomClassSpecProb.3.2 = 33
 AiPlayerbot.RandomClassSpecIndex.3.2 = 2
-# Rogue
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# ROGUE
+#
+#
+
 AiPlayerbot.RandomClassSpecProb.4.0 = 45
 AiPlayerbot.RandomClassSpecIndex.4.0 = 0
 AiPlayerbot.RandomClassSpecProb.4.1 = 45
 AiPlayerbot.RandomClassSpecIndex.4.1 = 1
 AiPlayerbot.RandomClassSpecProb.4.2 = 10
 AiPlayerbot.RandomClassSpecIndex.4.2 = 2
-# Priest
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# PRIEST
+#
+#
+
 AiPlayerbot.RandomClassSpecProb.5.0 = 40
 AiPlayerbot.RandomClassSpecIndex.5.0 = 0
 AiPlayerbot.RandomClassSpecProb.5.1 = 35
 AiPlayerbot.RandomClassSpecIndex.5.1 = 1
 AiPlayerbot.RandomClassSpecProb.5.2 = 25
 AiPlayerbot.RandomClassSpecIndex.5.2 = 2
-# DeathKnight
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# DEATHKNIGHT
+#
+#
+
 AiPlayerbot.RandomClassSpecProb.6.0 = 30
 AiPlayerbot.RandomClassSpecIndex.6.0 = 0
 AiPlayerbot.RandomClassSpecProb.6.1 = 40
 AiPlayerbot.RandomClassSpecIndex.6.1 = 1
 AiPlayerbot.RandomClassSpecProb.6.2 = 30
 AiPlayerbot.RandomClassSpecIndex.6.2 = 2
-# Shaman
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# SHAMAN
+#
+#
+
 AiPlayerbot.RandomClassSpecProb.7.0 = 33
 AiPlayerbot.RandomClassSpecIndex.7.0 = 0
 AiPlayerbot.RandomClassSpecProb.7.1 = 33
 AiPlayerbot.RandomClassSpecIndex.7.1 = 1
 AiPlayerbot.RandomClassSpecProb.7.2 = 33
 AiPlayerbot.RandomClassSpecIndex.7.2 = 2
-# Mage
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# MAGE
+#
+#
+
 AiPlayerbot.RandomClassSpecProb.8.0 = 30
 AiPlayerbot.RandomClassSpecIndex.8.0 = 0
 AiPlayerbot.RandomClassSpecProb.8.1 = 30
 AiPlayerbot.RandomClassSpecIndex.8.1 = 1
 AiPlayerbot.RandomClassSpecProb.8.2 = 40
 AiPlayerbot.RandomClassSpecIndex.8.2 = 2
-# Warlock
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# WARLOCK
+#
+#
+
 AiPlayerbot.RandomClassSpecProb.9.0 = 40
 AiPlayerbot.RandomClassSpecIndex.9.0 = 0
 AiPlayerbot.RandomClassSpecProb.9.1 = 40
 AiPlayerbot.RandomClassSpecIndex.9.1 = 1
 AiPlayerbot.RandomClassSpecProb.9.2 = 20
 AiPlayerbot.RandomClassSpecIndex.9.2 = 2
-# Druid
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# DRUID
+#
+#
+
 AiPlayerbot.RandomClassSpecProb.11.0 = 20
 AiPlayerbot.RandomClassSpecIndex.11.0 = 0
 AiPlayerbot.RandomClassSpecProb.11.1 = 40
@@ -692,9 +1139,136 @@ AiPlayerbot.RandomClassSpecIndex.11.1 = 1
 AiPlayerbot.RandomClassSpecProb.11.2 = 40
 AiPlayerbot.RandomClassSpecIndex.11.2 = 2
 
+#
+#
+#
+###################################################################################################
+
+
+###################################
+#                                 #
+#       玩家机器人系统设置        #
+#                                 #
+###################################
+
+####################################################################################################
+# 数据库 & 链接
+#
+#
+
+#    PlayerbotsDatabaseInfo
+#        描述：playerbots服务器的数据库连接设置。
+#        例如："hostname;port;username;password;database"
+#              ".;somenumber;username;password;database" - （Use named pipes on Windows
+#                                                           "enable-named-pipe" to [mysqld]
+#                                                            section my.ini）
+#              ".;/path/to/unix_socket;username;password;database" - （use Unix sockets on
+#                                                                           Unix/Linux）
+#        默认："127.0.0.1;3306;acore;acore;acore_playerbots"       - （PlayerbotDatabaseInfo）
+
+PlayerbotsDatabaseInfo = "127.0.0.1;3306;root;root;acore_playerbots"
+
+#
+#    PlayerbotsDatabase.WorkerThreads
+#        描述：The amount of worker threads spawned to handle asynchronous （delayed） MySQL
+#                     statements. Each worker thread is mirrored with its own connection to the
+#                     MySQL server and their own thread on the MySQL server.
+#        默认：1 - （PlayerbotsDatabase.WorkerThreads）
+
+PlayerbotsDatabase.WorkerThreads     = 1
+
+#
+#    PlayerbotsDatabase.SynchThreads
+#        描述：要处理的MySQL连接数。
+#        默认：1 - （PlayerbotDatabase.WorkerThreads）
+
+PlayerbotsDatabase.SynchThreads     = 1
+
+#    Playerbot.Updates.EnableDatabases
+#        描述：Determined if updates system work with playerbot database.
+#
+#        默认：     1  - （启用）
+#                   0  - （禁用）
+
+Playerbots.Updates.EnableDatabases = 1
+
+# Command server port, 0 - disabled
+AiPlayerbot.CommandServerPort = 8888
+
+# Diff with/without player in server. The server will tune bot activity to reach the desired server tick speed （in ms）.# PLAYERBOT SYSTEM SETTINGS       #
+AiPlayerbot.EnablePrototypePerformanceDiff = 0
+AiPlayerbot.DiffWithPlayer = 100
+AiPlayerbot.DiffEmpty = 200
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# 调试开关
+#
+#
+
+AiPlayerbot.SpellDump = 0
+AiPlayerbot.LogInGroupOnly = 1
+AiPlayerbot.LogValuesPerTick = 0
+AiPlayerbot.RandomChangeMultiplier = 1
+
+# 启用/禁用性能监视器
+AiPlayerbot.PerfMonEnabled = 0
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# 聊天设置
+#
+#
+
+# 机器人聊天命令前缀（例如：follow，stay）
+AiPlayerbot.CommandPrefix = ""
+
+# 机器人聊天命令的分隔符
+AiPlayerbot.CommandSeparator = "\\\\"
+
+#
+#
+#
+####################################################################################################
+
+####################################################################################################
+# 日志
+#
+#
+
+# 允许创建日志文件的自定义配置
+# 例如：AiPlayerbot.AllowedLogFiles = travelNodes.csv,travelPaths.csv,TravelNodeStore.h,bot_movement.csv,bot_location.csv
+AiPlayerbot.AllowedLogFiles = ""
+
+Appender.Playerbots=2,5,0,Playerbots.log,w
+Logger.playerbots=5,Console Playerbots
+
+#
+#
+#
+####################################################################################################
+
+###################################################################################################
+###################################################################################################
+###################################################################################################
+###################################################################################################
+###################################################################################################
+
 ##############################################
 #              弃用（临时）                  #
 ##############################################
+
+# 启动时登录所有随机机器人
+AiPlayerbot.RandomBotLoginAtStartup = 0
+
 # 公会任务系统
 AiPlayerbot.EnableGuildTasks = 0
 
@@ -710,7 +1284,7 @@ AiPlayerbot.RandomBotGuildCount = 20
 # 删除所有随机机器人公会
 AiPlayerbot.DeleteRandomBotGuilds = 0
 
-# 机器人选择 RPG (依等级传动到随机营地)而不是grinding的概率
+# 机器人选择 RPG （依等级传动到随机营地）而不是grinding的概率
 AiPlayerbot.RandomBotRpgChance = 0.20 #unused now
 
 # 将随机机器人移动速度设置为在任何地方行走
@@ -735,7 +1309,6 @@ AiPlayerbot.MaxRandomBotsPriceChangeInterval = 172800
 AiPlayerbot.MinRandomBotChangeStrategyTime = 180
 AiPlayerbot.MaxRandomBotChangeStrategyTime = 720
 
-
 # 公会任务更改的频率
 AiPlayerbot.MinGuildTaskChangeTime = 172800
 AiPlayerbot.MaxGuildTaskChangeTime = 432000
@@ -759,12 +1332,3 @@ AiPlayerbot.TargetPosRecalcDistance = 0.1
 
 # 允许在旅店老板附近召唤机器人
 AiPlayerbot.SummonAtInnkeepersEnabled = 1
-
-##################################################################################
-#                                                                                #
-# Logging Stuff 																 #
-#                                                                                #
-##################################################################################
-
-Appender.Playerbots=2,5,0,Playerbots.log,w
-Logger.playerbots=5,Console Playerbots

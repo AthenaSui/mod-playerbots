@@ -4117,7 +4117,8 @@ bool BGTactics::selectObjective(bool reset)
             }
             break;
         }
-
+        default:
+            break;
     }
 
     return false;
@@ -4505,7 +4506,7 @@ bool BGTactics::atFlag(std::vector<BattleBotPath*> const& vPaths, std::vector<ui
         if (f == vFlagIds.end())
             continue;
 
-        if (!go->isSpawned() || !go->GetGoState() == GO_STATE_READY)
+        if (!go->isSpawned() || go->GetGoState() != GO_STATE_READY)
             continue;
 
         if (!bot->CanUseBattlegroundObject(go) && bgType != BATTLEGROUND_WS)
@@ -4646,6 +4647,8 @@ bool BGTactics::atFlag(std::vector<BattleBotPath*> const& vPaths, std::vector<ui
                 }
                 break;
             }
+            default:
+                break;
         }
     }
 
