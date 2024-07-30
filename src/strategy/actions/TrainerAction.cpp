@@ -151,7 +151,7 @@ void TrainerAction::TellFooter(uint32 totalCost)
 bool MaintenanceAction::Execute(Event event)
 {
     if (!sPlayerbotAIConfig->maintenanceCommand) {
-        botAI->TellMaster("不允许使用maintenance命令，请检查配置。");
+        botAI->TellError("不允许使用maintenance命令，请检查配置。");
         return false;
     }
     botAI->TellMaster("正在维护");
@@ -168,10 +168,11 @@ bool MaintenanceAction::Execute(Event event)
     factory.InitSkills();
     factory.InitMounts();
     factory.InitGlyphs(true);
-    if (bot->getLevel() >= sPlayerbotAIConfig->minEnchantingBotLevel) {
+    if (bot->GetLevel() >= sPlayerbotAIConfig->minEnchantingBotLevel) {
         factory.ApplyEnchantAndGemsNew();
     }
     bot->DurabilityRepairAll(false, 1.0f, false);
+    bot->SendTalentsInfoData(false);
     return true;
 }
 
@@ -181,13 +182,14 @@ bool RemoveGlyphAction::Execute(Event event)
     {
         bot->SetGlyph(slotIndex, 0, true);
     }
+    bot->SendTalentsInfoData(false);
     return true;
 }
 
 bool AutoGearAction::Execute(Event event)
 {
     if (!sPlayerbotAIConfig->autoGearCommand) {
-        botAI->TellMaster("不允许使用autoear命令，请检查配置。");
+        botAI->TellError("不允许使用autoear命令，请检查配置。");
         return false;
     }
     botAI->TellMaster("正在升级装备");
@@ -199,7 +201,7 @@ bool AutoGearAction::Execute(Event event)
         gs);
     factory.InitEquipment(true);
     factory.InitAmmo();
-    if (bot->getLevel() >= sPlayerbotAIConfig->minEnchantingBotLevel) {
+    if (bot->GetLevel() >= sPlayerbotAIConfig->minEnchantingBotLevel) {
         factory.ApplyEnchantAndGemsNew();
     }
     bot->DurabilityRepairAll(false, 1.0f, false);

@@ -6,6 +6,8 @@
 #include "CharacterPackets.h"
 #include "Common.h"
 #include "Define.h"
+#include "Group.h"
+#include "GroupMgr.h"
 #include "ObjectAccessor.h"
 #include "ObjectMgr.h"
 #include "PlayerbotAIConfig.h"
@@ -19,6 +21,7 @@
 #include "ChannelMgr.h"
 #include <cstdio>
 #include <cstring>
+#include <istream>
 #include <string>
 
 PlayerbotHolder::PlayerbotHolder() : PlayerbotAIBase(false)
@@ -82,32 +85,50 @@ void PlayerbotHolder::HandlePlayerBotLoginCallback(PlayerbotLoginQueryHolder con
 
     uint32 botAccountId = holder.GetAccountId();
 
-    WorldSession* botSession = new WorldSession(botAccountId, "", nullptr, SEC_PLAYER, EXPANSION_WRATH_OF_THE_LICH_KING, time_t(0), LOCALE_zhCN, 0, false, false, 0, true);
+    // At login DBC locale should be what the server is set to use by default (as spells etc are hardcoded to ENUS this allows channels to work as intended)
+    WorldSession* botSession = new WorldSession(botAccountId, "", nullptr, SEC_PLAYER, EXPANSION_WRATH_OF_THE_LICH_KING, time_t(0), sWorld->GetDefaultDbcLocale(), 0, false, false, 0, true);
 
     botSession->HandlePlayerLoginFromDB(holder); // will delete lqh
 
     Player* bot = botSession->GetPlayer();
     if (!bot)
     {
-        LogoutPlayerBot(holder.GetGuid());
+        botSession->LogoutPlayer(true);
+        delete botSession;
         // LOG_ERROR("playerbots", "Error logging in bot {}, please try to reset all random bots", holder.GetGuid().ToString().c_str());
         return;
     }
 
-    sRandomPlayerbotMgr->OnPlayerLogin(bot);
-
     uint32 masterAccount = holder.GetMasterAccountId();
     WorldSession* masterSession = masterAccount ? sWorld->FindSession(masterAccount) : nullptr;
+    std::ostringstream out;
     bool allowed = false;
-    if (botAccountId == masterAccount)
+    if (botAccountId == masterAccount) {
         allowed = true;
-    else if (masterSession && sPlayerbotAIConfig->allowGuildBots && bot->GetGuildId() != 0 && bot->GetGuildId() == masterSession->GetPlayer()->GetGuildId())
+    } else if (masterSession && sPlayerbotAIConfig->allowGuildBots && bot->GetGuildId() != 0 && bot->GetGuildId() == masterSession->GetPlayer()->GetGuildId()) {
         allowed = true;
-    else if (sPlayerbotAIConfig->IsInRandomAccountList(botAccountId))
+    } else if (sPlayerbotAIConfig->IsInRandomAccountList(botAccountId)) {
         allowed = true;
-
+    } else {
+        allowed = false;
+        out << "错误：你未被允许控制机器人 " << bot->GetName().c_str();
+    }
+    if (allowed && masterSession) {
+        Player* player = masterSession->GetPlayer();
+        PlayerbotMgr *mgr = GET_PLAYERBOT_MGR(player);
+        uint32 count = mgr->GetPlayerbotsCount();
+        uint32 cls_count = mgr->GetPlayerbotsCountByClass(bot->getClass());
+        if (count >= sPlayerbotAIConfig->maxAddedBots) {
+            allowed = false;
+            out << "错误：你添加的机器人太多了";
+        } else if (cls_count >= sPlayerbotAIConfig->maxAddedBotsPerClass) {
+            allowed = false;
+            out << "错误：你添加的该职业机器人太多了";
+        }
+    }
     if (allowed)
     {
+        sRandomPlayerbotMgr->OnPlayerLogin(bot);
         OnBotLogin(bot);
     }
     else
@@ -115,10 +136,12 @@ void PlayerbotHolder::HandlePlayerBotLoginCallback(PlayerbotLoginQueryHolder con
         if (masterSession)
         {
             ChatHandler ch(masterSession);
-            ch.PSendSysMessage("你不允许控制机器人 %s", bot->GetName());
+            ch.SendSysMessage(out.str());
         }
-        OnBotLogin(bot);
-        LogoutPlayerBot(bot->GetGUID());
+        botSession->LogoutPlayer(true);
+        delete botSession;
+        // OnBotLogin(bot);
+        // LogoutPlayerBot(bot->GetGUID());
 
         // LOG_ERROR("playerbots", "Attempt to add not allowed bot {}, please try to reset all random bots", bot->GetName());
     }
@@ -453,7 +476,22 @@ void PlayerbotHolder::OnBotLogin(Player* const bot)
     botAI->TellMaster("你好！", PLAYERBOT_SECURITY_TALK);
 
     if (master && master->GetGroup() && !group) {
-        master->GetGroup()->AddMember(bot);
+        Group* mgroup = master->GetGroup();
+        if (mgroup->GetMembersCount() >= 5) {
+            if (!mgroup->isRaidGroup() && !mgroup->isLFGGroup() && !mgroup->isBGGroup() && !mgroup->isBFGroup()) {
+                mgroup->ConvertToRaid();
+            }
+            if (mgroup->isRaidGroup()) {
+                mgroup->AddMember(bot);
+            }
+        } else {
+            mgroup->AddMember(bot);
+        }
+    } else if (master && !group) {
+        Group* newGroup = new Group();
+        newGroup->Create(master);
+        sGroupMgr->AddGroup(newGroup);
+        newGroup->AddMember(bot);
     }
 
     uint32 accountId = bot->GetSession()->GetAccountId();
@@ -467,15 +505,15 @@ void PlayerbotHolder::OnBotLogin(Player* const bot)
 
     bot->SaveToDB(false, false);
     if (master && isRandomAccount && master->GetLevel() < bot->GetLevel()) {
-        // PlayerbotFactory factory(bot, master->getLevel());
+        // PlayerbotFactory factory(bot, master->GetLevel());
         // factory.Randomize(false);
         uint32 mixedGearScore = PlayerbotAI::GetMixedGearScore(master, true, false, 12) * sPlayerbotAIConfig->autoInitEquipLevelLimitRatio;
-        PlayerbotFactory factory(bot, master->getLevel(), ITEM_QUALITY_LEGENDARY, mixedGearScore);
+        PlayerbotFactory factory(bot, master->GetLevel(), ITEM_QUALITY_LEGENDARY, mixedGearScore);
         factory.Randomize(false);
     }
 
     // bots join World chat if not solo oriented
-    if (bot->getLevel() >= 10 && sRandomPlayerbotMgr->IsRandomBot(bot) && GET_PLAYERBOT_AI(bot) && GET_PLAYERBOT_AI(bot)->GetGrouperType() != GrouperType::SOLO)
+    if (bot->GetLevel() >= 10 && sRandomPlayerbotMgr->IsRandomBot(bot) && GET_PLAYERBOT_AI(bot) && GET_PLAYERBOT_AI(bot)->GetGrouperType() != GrouperType::SOLO)
     {
         // TODO make action/config
         // Make the bot join the world channel for chat
@@ -488,7 +526,7 @@ void PlayerbotHolder::OnBotLogin(Player* const bot)
     // join standard channels
     AreaTableEntry const* current_zone = sAreaTableStore.LookupEntry(bot->GetAreaId());
     ChannelMgr* cMgr = ChannelMgr::forTeam(bot->GetTeamId());
-    std::string current_zone_name = current_zone ? current_zone->area_name[4] : "";
+    std::string current_zone_name = current_zone ? current_zone->area_name[sWorld->GetDefaultDbcLocale()] : "";
 
     if (current_zone && cMgr)
     {
@@ -507,13 +545,13 @@ void PlayerbotHolder::OnBotLogin(Player* const bot)
             Channel* new_channel = nullptr;
             if (isLfg)
             {
-                std::string lfgChannelName = channel->pattern[4];
+                std::string lfgChannelName = channel->pattern[sWorld->GetDefaultDbcLocale()];
                 new_channel = cMgr->GetJoinChannel(channel->pattern[4], channel->ChannelID);
             }
             else
             {
                 char new_channel_name_buf[100];
-                snprintf(new_channel_name_buf, 100, channel->pattern[4], current_zone_name.c_str());
+                snprintf(new_channel_name_buf, 100, channel->pattern[sWorld->GetDefaultDbcLocale()], current_zone_name.c_str());
                 new_channel = cMgr->GetJoinChannel(new_channel_name_buf, channel->ChannelID);
             }
             if (new_channel && new_channel->GetName().length() > 0)
@@ -594,44 +632,44 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
             int gs;
             if (cmd == "init=white" || cmd == "init=common")
             {
-                PlayerbotFactory factory(bot, master->getLevel(), ITEM_QUALITY_NORMAL);
+                PlayerbotFactory factory(bot, master->GetLevel(), ITEM_QUALITY_NORMAL);
                 factory.Randomize(false);
                 return "成功";
             }
             else if (cmd == "init=green" || cmd == "init=uncommon")
             {
-                PlayerbotFactory factory(bot, master->getLevel(), ITEM_QUALITY_UNCOMMON);
+                PlayerbotFactory factory(bot, master->GetLevel(), ITEM_QUALITY_UNCOMMON);
                 factory.Randomize(false);
                 return "成功";
             }
             else if (cmd == "init=blue" || cmd == "init=rare")
             {
-                PlayerbotFactory factory(bot, master->getLevel(), ITEM_QUALITY_RARE);
+                PlayerbotFactory factory(bot, master->GetLevel(), ITEM_QUALITY_RARE);
                 factory.Randomize(false);
                 return "成功";
             }
             else if (cmd == "init=epic" || cmd == "init=purple")
             {
-                PlayerbotFactory factory(bot, master->getLevel(), ITEM_QUALITY_EPIC);
+                PlayerbotFactory factory(bot, master->GetLevel(), ITEM_QUALITY_EPIC);
                 factory.Randomize(false);
                 return "成功";
             }
             else if (cmd == "init=legendary" || cmd == "init=yellow")
             {
-                PlayerbotFactory factory(bot, master->getLevel(), ITEM_QUALITY_LEGENDARY);
+                PlayerbotFactory factory(bot, master->GetLevel(), ITEM_QUALITY_LEGENDARY);
                 factory.Randomize(false);
                 return "成功";
             }
             else if (cmd == "init=auto")
             {
                 uint32 mixedGearScore = PlayerbotAI::GetMixedGearScore(master, true, false, 12) * sPlayerbotAIConfig->autoInitEquipLevelLimitRatio;
-                PlayerbotFactory factory(bot, master->getLevel(), ITEM_QUALITY_LEGENDARY, mixedGearScore);
+                PlayerbotFactory factory(bot, master->GetLevel(), ITEM_QUALITY_LEGENDARY, mixedGearScore);
                 factory.Randomize(false);
                 return "成功，GS限制：" + std::to_string(mixedGearScore / (ITEM_QUALITY_EPIC + 1)) + "(紫装)";
             }
             else if (cmd.starts_with("init=") && sscanf(cmd.c_str(), "init=%d", &gs) != -1)
             {
-                PlayerbotFactory factory(bot, master->getLevel(), ITEM_QUALITY_LEGENDARY, gs);
+                PlayerbotFactory factory(bot, master->GetLevel(), ITEM_QUALITY_LEGENDARY, gs);
                 factory.Randomize(false);
                 return "成功，GS限制：" + std::to_string(gs / (ITEM_QUALITY_EPIC + 1)) + "(紫装)";
             }
@@ -640,7 +678,7 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
         if (cmd == "refresh=raid")
         {   // TODO: This function is not perfect yet. If you are already in a raid, 
             // after the command is executed, the AI ​​needs to go back online or exit the raid and re-enter.
-            PlayerbotFactory factory(bot, bot->getLevel());
+            PlayerbotFactory factory(bot, bot->GetLevel());
             factory.UnbindInstance();
             return "ok";
         }
@@ -648,13 +686,13 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
 
     if (cmd == "levelup" || cmd == "level")
     {
-        PlayerbotFactory factory(bot, bot->getLevel());
+        PlayerbotFactory factory(bot, bot->GetLevel());
         factory.Randomize(true);
         return "成功";
     }
     else if (cmd == "refresh")
     {
-        PlayerbotFactory factory(bot, bot->getLevel());
+        PlayerbotFactory factory(bot, bot->GetLevel());
         factory.Refresh();
         return "成功";
     }
@@ -664,7 +702,7 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
         return "成功";
     }
     else if (cmd == "quests"){
-        PlayerbotFactory factory(bot, bot->getLevel());
+        PlayerbotFactory factory(bot, bot->GetLevel());
         factory.InitInstanceQuests();
         return "初始化任务";
     }
@@ -702,7 +740,7 @@ bool PlayerbotMgr::HandlePlayerbotMgrCommand(ChatHandler* handler, char const* a
 
     for (std::vector<std::string>::iterator i = messages.begin(); i != messages.end(); ++i)
     {
-        handler->PSendSysMessage("%s", i->c_str());
+        handler->PSendSysMessage("{}", i->c_str());
     }
 
     return true;
@@ -714,8 +752,8 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
 
     if (!*args)
     {
-        messages.push_back("用法：list/reload/tweak/self 或 add/init/remove 角色名字");
-        messages.push_back("         或 addclass 职业名字");
+        messages.push_back("用法：list/reload/tweak/self 或 add/init/remove 角色名字\n");
+        messages.push_back("用法：addclass 职业名字");
         return messages;
     }
 
@@ -730,7 +768,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
     if (!strcmp(cmd, "initself")) {
         if (master->GetSession()->GetSecurity() >= SEC_GAMEMASTER) {
             // OnBotLogin(master);
-            PlayerbotFactory factory(master, master->getLevel(), ITEM_QUALITY_EPIC);
+            PlayerbotFactory factory(master, master->GetLevel(), ITEM_QUALITY_EPIC);
             factory.Randomize(false);
             messages.push_back("初始化自身正常");
             return messages;
@@ -744,7 +782,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
         if (!strcmp(cmd, "initself=rare")) {
             if (master->GetSession()->GetSecurity() >= SEC_GAMEMASTER) {
                 // OnBotLogin(master);
-                PlayerbotFactory factory(master, master->getLevel(), ITEM_QUALITY_RARE);
+                PlayerbotFactory factory(master, master->GetLevel(), ITEM_QUALITY_RARE);
                 factory.Randomize(false);
                 messages.push_back("初始化自身正常");
                 return messages;
@@ -756,7 +794,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
         if (!strcmp(cmd, "initself=epic")) {
             if (master->GetSession()->GetSecurity() >= SEC_GAMEMASTER) {
                 // OnBotLogin(master);
-                PlayerbotFactory factory(master, master->getLevel(), ITEM_QUALITY_EPIC);
+                PlayerbotFactory factory(master, master->GetLevel(), ITEM_QUALITY_EPIC);
                 factory.Randomize(false);
                 messages.push_back("初始化自身正常");
                 return messages;
@@ -769,7 +807,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
         if (sscanf(cmd, "initself=%d", &gs) != -1) {
             if (master->GetSession()->GetSecurity() >= SEC_GAMEMASTER) {
                 // OnBotLogin(master);
-                PlayerbotFactory factory(master, master->getLevel(), ITEM_QUALITY_LEGENDARY, gs);
+                PlayerbotFactory factory(master, master->GetLevel(), ITEM_QUALITY_LEGENDARY, gs);
                 factory.Randomize(false);
                 messages.push_back("初始化自身正常，gs = " + std::to_string(gs));
                 return messages;
@@ -808,7 +846,7 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
         if (GET_PLAYERBOT_AI(master))
         {
             messages.push_back("禁用玩家机器人AI");
-            DisablePlayerBot(master->GetGUID());
+            delete GET_PLAYERBOT_AI(master);
         }
         else if (sPlayerbotAIConfig->selfBotLevel == 0)
             messages.push_back("Self-bot已禁用");
@@ -817,7 +855,8 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
         else
         {
             messages.push_back("启用玩家机器人AI");
-            OnBotLogin(master);
+            sPlayerbotsMgr->AddPlayerbotData(master, true);
+            GET_PLAYERBOT_AI(master)->SetMaster(master);
         }
 
         return messages;
@@ -904,10 +943,12 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
                 race_limit = "2, 5, 6, 8, 10";
                 break;
         }
+        uint32 maxAccountId = sPlayerbotAIConfig->randomBotAccounts.back();
         // find a bot fit conditions and not in any guild
         QueryResult results = CharacterDatabase.Query("SELECT guid FROM characters "
             "WHERE name IN (SELECT name FROM playerbots_names) AND class = '{}' AND online = 0 AND race IN ({}) AND guid NOT IN ( SELECT guid FROM guild_member ) "
-            "ORDER BY account DESC LIMIT 1", claz, race_limit);
+            "AND account <= {} "
+            "ORDER BY account DESC LIMIT 1", claz, race_limit, maxAccountId);
         if (results)
         {
             Field* fields = results->Fetch();
@@ -1160,6 +1201,19 @@ std::string const PlayerbotHolder::LookupBots(Player* master)
     return ret_msg;
 }
 
+uint32 PlayerbotHolder::GetPlayerbotsCountByClass(uint32 cls)
+{
+    uint32 count = 0;
+    for (PlayerBotMap::const_iterator it = GetPlayerBotsBegin(); it != GetPlayerBotsEnd(); ++it)
+    {
+        Player* const bot = it->second;
+        if (bot->getClass() == cls) {
+            count++;
+        }
+    }
+    return count;
+}
+
 PlayerbotMgr::PlayerbotMgr(Player* const master) : PlayerbotHolder(),  master(master), lastErrorTell(0)
 {
 }
@@ -1167,7 +1221,7 @@ PlayerbotMgr::PlayerbotMgr(Player* const master) : PlayerbotHolder(),  master(ma
 PlayerbotMgr::~PlayerbotMgr()
 {
     if (master)
-        sPlayerbotsMgr->RemovePlayerBotData(master->GetGUID());
+        sPlayerbotsMgr->RemovePlayerBotData(master->GetGUID(), false);
 }
 
 void PlayerbotMgr::UpdateAIInternal(uint32 elapsed, bool /*minimal*/)
@@ -1380,31 +1434,45 @@ void PlayerbotsMgr::AddPlayerbotData(Player* player, bool isBotAI)
         return;
     }
     // If the guid already exists in the map, remove it
-    std::unordered_map<ObjectGuid, PlayerbotAIBase*>::iterator itr = _playerbotsMap.find(player->GetGUID());
-    if (itr != _playerbotsMap.end())
-    {
-        _playerbotsMap.erase(itr);
-    }
+    
     if (!isBotAI)
     {
+        std::unordered_map<ObjectGuid, PlayerbotAIBase*>::iterator itr = _playerbotsMgrMap.find(player->GetGUID());
+        if (itr != _playerbotsMgrMap.end())
+        {
+            _playerbotsMgrMap.erase(itr);
+        }
         PlayerbotMgr* playerbotMgr = new PlayerbotMgr(player);
-        ASSERT(_playerbotsMap.emplace(player->GetGUID(), playerbotMgr).second);
+        ASSERT(_playerbotsMgrMap.emplace(player->GetGUID(), playerbotMgr).second);
 
         playerbotMgr->OnPlayerLogin(player);
     }
     else
     {
+        std::unordered_map<ObjectGuid, PlayerbotAIBase*>::iterator itr = _playerbotsAIMap.find(player->GetGUID());
+        if (itr != _playerbotsAIMap.end())
+        {
+            _playerbotsAIMap.erase(itr);
+        }
         PlayerbotAI* botAI = new PlayerbotAI(player);
-        ASSERT(_playerbotsMap.emplace(player->GetGUID(), botAI).second);
+        ASSERT(_playerbotsAIMap.emplace(player->GetGUID(), botAI).second);
     }
 }
 
-void PlayerbotsMgr::RemovePlayerBotData(ObjectGuid const& guid)
+void PlayerbotsMgr::RemovePlayerBotData(ObjectGuid const& guid, bool is_AI)
 {
-    std::unordered_map<ObjectGuid, PlayerbotAIBase*>::iterator itr = _playerbotsMap.find(guid);
-    if (itr != _playerbotsMap.end())
-    {
-        _playerbotsMap.erase(itr);
+    if (is_AI) {
+        std::unordered_map<ObjectGuid, PlayerbotAIBase*>::iterator itr = _playerbotsAIMap.find(guid);
+        if (itr != _playerbotsAIMap.end())
+        {
+            _playerbotsAIMap.erase(itr);
+        }
+    } else {
+        std::unordered_map<ObjectGuid, PlayerbotAIBase*>::iterator itr = _playerbotsMgrMap.find(guid);
+        if (itr != _playerbotsMgrMap.end())
+        {
+            _playerbotsMgrMap.erase(itr);
+        }
     }
 }
 
@@ -1417,8 +1485,8 @@ PlayerbotAI* PlayerbotsMgr::GetPlayerbotAI(Player* player)
     // if (player->GetSession()->isLogingOut() || player->IsDuringRemoveFromWorld()) {
     //     return nullptr;
     // }
-    auto itr = _playerbotsMap.find(player->GetGUID());
-    if (itr != _playerbotsMap.end())
+    auto itr = _playerbotsAIMap.find(player->GetGUID());
+    if (itr != _playerbotsAIMap.end())
     {
         if (itr->second->IsBotAI())
             return reinterpret_cast<PlayerbotAI*>(itr->second);
@@ -1433,8 +1501,8 @@ PlayerbotMgr* PlayerbotsMgr::GetPlayerbotMgr(Player* player)
     {
         return nullptr;
     }
-    auto itr = _playerbotsMap.find(player->GetGUID());
-    if (itr != _playerbotsMap.end())
+    auto itr = _playerbotsMgrMap.find(player->GetGUID());
+    if (itr != _playerbotsMgrMap.end())
     {
         if (!itr->second->IsBotAI())
             return reinterpret_cast<PlayerbotMgr*>(itr->second);

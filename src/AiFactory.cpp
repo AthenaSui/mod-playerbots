@@ -14,6 +14,8 @@
 #include "PriestAiObjectContext.h"
 #include "MageAiObjectContext.h"
 #include "SharedDefines.h"
+#include "SpellInfo.h"
+#include "SpellMgr.h"
 #include "WarlockAiObjectContext.h"
 #include "WarriorAiObjectContext.h"
 #include "ShamanAiObjectContext.h"
@@ -55,7 +57,7 @@ uint8 AiFactory::GetPlayerSpecTab(Player* bot)
 {
     std::map<uint8, uint32> tabs = GetPlayerSpecTabs(bot);
 
-    if (bot->getLevel() >= 10 && ((tabs[0] + tabs[1] + tabs[2]) > 0))
+    if (bot->GetLevel() >= 10 && ((tabs[0] + tabs[1] + tabs[2]) > 0))
     {
         int8 tab = -1;
         uint32 max = 0;
@@ -109,9 +111,15 @@ std::map<uint8, uint32> AiFactory::GetPlayerSpecTabs(Player* bot)
             continue;
 
         uint32 const* talentTabIds = GetTalentTabPages(bot->getClass());
-        if (talentInfo->TalentTab == talentTabIds[0]) tabs[0]++;
-        if (talentInfo->TalentTab == talentTabIds[1]) tabs[1]++;
-        if (talentInfo->TalentTab == talentTabIds[2]) tabs[2]++;
+
+        const SpellInfo* spellInfo = sSpellMgr->GetSpellInfo(spellId);
+        int rank = spellInfo ? spellInfo->GetRank() : 1;
+        if (talentInfo->TalentTab == talentTabIds[0])
+            tabs[0] += rank;
+        if (talentInfo->TalentTab == talentTabIds[1])
+            tabs[1] += rank;
+        if (talentInfo->TalentTab == talentTabIds[2])
+            tabs[2] += rank;
     }
     return tabs;
 }
@@ -264,7 +272,7 @@ void AiFactory::AddDefaultCombatStrategies(Player* player, PlayerbotAI* const fa
 
     if (!player->InBattleground())
     {
-        engine->addStrategies("racials", "chat", "default", "cast time", "duel", "boost", nullptr);
+        engine->addStrategies("racials", "chat", "default", "cast time", "duel", "boost", "emote", nullptr);
     }
     if (sPlayerbotAIConfig->autoSaveMana) 
     {
@@ -301,7 +309,7 @@ void AiFactory::AddDefaultCombatStrategies(Player* player, PlayerbotAI* const fa
         case CLASS_WARRIOR:
             if (tab == 2)
                 engine->addStrategies("tank", "tank assist", "aoe", "mark rti", nullptr);
-            else if (player->getLevel() < 36 || tab == 0)
+            else if (player->GetLevel() < 36 || tab == 0)
                 engine->addStrategies("arms", "aoe", "dps assist",/*"behind",*/ nullptr);
             else
                 engine->addStrategies("fury", "aoe", "dps assist",/*"behind",*/ nullptr);
@@ -548,12 +556,12 @@ void AiFactory::AddDefaultNonCombatStrategies(Player* player, PlayerbotAI* const
     if (!player->InBattleground())
     {
         nonCombatEngine->addStrategies("nc", "food", "chat", "follow",
-            "default", "quest", "loot", "gather", "duel", "buff", "mount", nullptr);
+            "default", "quest", "loot", "gather", "duel", "buff", "mount", "emote", nullptr);
     }
     if (sPlayerbotAIConfig->autoSaveMana) {
         nonCombatEngine->addStrategy("auto save mana");
     }
-    if ((facade->IsRealPlayer() || sRandomPlayerbotMgr->IsRandomBot(player)) && !player->InBattleground())
+    if ((sRandomPlayerbotMgr->IsRandomBot(player)) && !player->InBattleground())
     {
         Player* master = facade->GetMaster();
 
@@ -636,7 +644,7 @@ void AiFactory::AddDefaultNonCombatStrategies(Player* player, PlayerbotAI* const
     // Battleground switch
     if (player->InBattleground() && player->GetBattleground())
     {
-        nonCombatEngine->addStrategies("nc", "chat", "default", "buff", "food", "mount", "pvp", "dps assist", "attack tagged", nullptr);
+        nonCombatEngine->addStrategies("nc", "chat", "default", "buff", "food", "mount", "pvp", "dps assist", "attack tagged", "emote", nullptr);
         nonCombatEngine->removeStrategy("custom::say");
         nonCombatEngine->removeStrategy("travel");
         nonCombatEngine->removeStrategy("rpg");

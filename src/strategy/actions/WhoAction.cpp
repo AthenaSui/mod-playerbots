@@ -108,7 +108,7 @@ std::string const WhoAction::QuerySpec(std::string const text)
     uint8 spec = AiFactory::GetPlayerSpecTab(bot);
 
     out << "|h|cffffffff" << chat->FormatRace(bot->getRace()) << " [" << (bot->getGender() == GENDER_MALE ? "男" : "女") << "] " << chat->FormatClass(bot, spec);
-    out << "(|h|cffffffff等级：|h|cff00ff00" << (uint32)bot->getLevel() << "|r),";
+    out << "(|h|cffffffff等级：|h|cff00ff00" << (uint32)bot->GetLevel() << "|r),";
     out << "|h|cffffffff GS：|h|cff00ff00" << botAI->GetEquipGearScore(bot, false, false) << "|r(";
 
     ItemCountByQuality visitor;

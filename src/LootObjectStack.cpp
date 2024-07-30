@@ -71,7 +71,7 @@ void LootObject::Refresh(Player* bot, ObjectGuid lootGUID)
         if (creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SKINNABLE))
         {
             skillId = creature->GetCreatureTemplate()->GetRequiredLootSkill();
-            uint32 targetLevel = creature->getLevel();
+            uint32 targetLevel = creature->GetLevel();
             reqSkillValue = targetLevel < 10 ? 1 : targetLevel < 20 ? (targetLevel - 10) * 10 : targetLevel * 5;
             if (botAI->HasSkill((SkillType) skillId) && bot->GetSkillValue(skillId) >= reqSkillValue)
                 guid = lootGUID;
@@ -96,7 +96,7 @@ void LootObject::Refresh(Player* bot, ObjectGuid lootGUID)
 
             if (IsNeededForQuest(bot, itemId))
             {
-                this->guid = guid;
+                this->guid = lootGUID;
                 return;
             }
             isQuestItemOnly |= itemId > 0;
@@ -125,7 +125,7 @@ void LootObject::Refresh(Player* bot, ObjectGuid lootGUID)
                 case LOCK_KEY_SKILL:
                     if (goId == 13891 || goId == 19535) // Serpentbloom
                     {
-                        this->guid = guid;
+                        this->guid = lootGUID;
                     }
                     else if (SkillByLockType(LockType(lockInfo->Index[i])) > 0)
                     {

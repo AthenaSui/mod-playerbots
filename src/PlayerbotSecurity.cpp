@@ -69,7 +69,7 @@ PlayerbotSecurityLevel PlayerbotSecurity::LevelFor(Player* from, DenyReason* rea
             return PLAYERBOT_SECURITY_TALK;
         }
 
-        if (sPlayerbotAIConfig->groupInvitationPermission <= 1 && (int32)bot->getLevel() - (int8)from->getLevel() > 5)
+        if (sPlayerbotAIConfig->groupInvitationPermission <= 1 && (int32)bot->GetLevel() - (int8)from->GetLevel() > 5)
         {
             if (!bot->GetGuildId() || bot->GetGuildId() != from->GetGuildId())
             {
@@ -84,8 +84,8 @@ PlayerbotSecurityLevel PlayerbotSecurity::LevelFor(Player* from, DenyReason* rea
         int32 fromGS = (int32)botAI->GetEquipGearScore(from, false, false);
         if (sPlayerbotAIConfig->gearscorecheck)
         {
-            if (botGS && bot->getLevel() > 15 && botGS > fromGS &&
-                static_cast<float>(100 * (botGS - fromGS) / botGS) >= static_cast<float>(12 * sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL) / from->getLevel()))
+            if (botGS && bot->GetLevel() > 15 && botGS > fromGS &&
+                static_cast<float>(100 * (botGS - fromGS) / botGS) >= static_cast<float>(12 * sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL) / from->GetLevel()))
             {
                 if (reason) *reason = PLAYERBOT_DENY_GEARSCORE;
                 return PLAYERBOT_SECURITY_TALK;
@@ -199,15 +199,15 @@ bool PlayerbotSecurity::CheckLevelFor(PlayerbotSecurityLevel level, bool silent,
                 out << "我稍后再做";
                 break;
             case PLAYERBOT_DENY_LOW_LEVEL:
-                out << "你等级太低了：|cffff0000" << (uint32)from->getLevel() << "|cffffffff/|cff00ff00" << (uint32)bot->getLevel();
+                out << "你等级太低了：|cffff0000" << (uint32)from->GetLevel() << "|cffffffff/|cff00ff00" << (uint32)bot->GetLevel();
                 break;
             case PLAYERBOT_DENY_GEARSCORE:
                 {
                     int botGS = (int)botAI->GetEquipGearScore(bot, false, false);
                     int fromGS = (int)botAI->GetEquipGearScore(from, false, false);
                     int diff = (100 * (botGS - fromGS) / botGS);
-                    int req = 12 * sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL) / from->getLevel();
-                    out << "你的装备等级太低了：|cffff0000" << fromGS << "|cffffffff/|cff00ff00" << botGS << " |cffff0000" << diff << "%|cffffffff/|cff00ff00" << req << "%";
+                    int req = 12 * sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL) / from->GetLevel();
+                    out << "你的GS太低了：|cffff0000" << fromGS << "|cffffffff/|cff00ff00" << botGS << " |cffff0000" << diff << "%|cffffffff/|cff00ff00" << req << "%";
                 }
                 break;
             case PLAYERBOT_DENY_NOT_YOURS:

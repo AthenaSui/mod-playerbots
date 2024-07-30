@@ -104,6 +104,12 @@ AiPlayerbot.DeleteRandomBotAccounts = 0
 #
 #
 
+# 每个账号可添加的最大机器人数量
+AiPlayerbot.MaxAddedBots = 40
+
+# 每个账号可添加的单职业最大机器人数量
+AiPlayerbot.MaxAddedBotsPerClass = 10
+
 # 启用/禁用通过 addclass 命令创建机器人（0 = 仅GM , 1 = 启用）
 # 默认：1（启用）
 AiPlayerbot.AddClassCommand = 1
@@ -119,14 +125,14 @@ AiPlayerbot.BotAutologin = 0
 # 默认: 0 （禁用）
 AiPlayerbot.AllowPlayerBots = 0
 
-# 机器人接受邀请后将被召唤到玩家身边
-AiPlayerbot.SummonWhenGroup = 1
-
 # 允许/拒绝来自公会的机器人
 AiPlayerbot.AllowGuildBots = 1
 
-# 添加了以下配置
-# Selfbot 权限等级（0 = 禁用，1 = 仅GM（默认），2 = 所有玩家，3 = 登录时激活）
+# 机器人接受队伍邀请后将被召唤到玩家身边
+AiPlayerbot.SummonWhenGroup = 1
+
+# Added following config
+# Selfbot permission level (0 = disabled, 1 = gm only (default), 2 = all players, 3 = activate on login)
 AiPlayerbot.SelfBotLevel = 1
 
 # 为机器人提供免费食物
@@ -166,8 +172,8 @@ AiPlayerbot.AllowSummonWhenMasterIsDead = 1
 # 默认：1 （总是）
 AiPlayerbot.AllowSummonWhenBotIsDead = 1
 
-# 启用/禁用 在召唤时复活机器人
-# 默认：1 （启用）
+# 启用/禁用 在召唤时复活机器人 (0 = 禁用, 1 = 战斗中禁用, 2 = 启用)
+# 默认：1 （战斗中禁用）
 AiPlayerbot.ReviveBotWhenSummoned = 1
 
 # 启用/禁用 召唤时修理装备 （0 = 否，1 = 是）
@@ -330,8 +336,8 @@ AiPlayerbot.MediumMana = 40
 #
 #
 
-# 机器人选择任务奖励（yes = 选择第一个可用物品，no = 列出所有奖励，ask = 选择可用物品并列出如有多个）
-AiPlayerbot.AutoPickReward = no
+# 机器人选择任务奖励（yes = 选择第一个可用物品，no = 列出所有奖励，ask = 选择可用物品，如有多个则列出）
+AiPlayerbot.AutoPickReward = yes
 
 # 与玩家同步任务（当你提交任务时机器人将忽略任务物品需求自动完成任务。）
 # 默认：1（启用）
@@ -536,7 +542,7 @@ AiPlayerbot.EquipmentPersistence = 0
 # 默认：80
 AiPlayerbot.EquipmentPersistenceLevel = 80
 
-# 机器人在升级时自动升级装备
+# 随机机器人在升级时自动升级装备
 # 默认：1 （启用）
 AiPlayerbot.AutoUpgradeEquip = 1
 
@@ -573,15 +579,15 @@ AiPlayerbot.RandomBotQuestItems = "6948,5175,5176,5177,5178,16309,12382,13704,11
 #
 #
 
-# 机器人在升级时自动学习职业任务奖励法术
+# 随机机器人在升级时自动学习职业任务奖励法术
 # 默认：0 （禁用）
 AiPlayerbot.AutoLearnQuestSpells = 0
 
-# 机器人在升级时自动学习可用法术
+# 随机机器人在升级时自动学习可用法术
 # 默认：1 （启用）
 AiPlayerbot.AutoLearnTrainerSpells = 1
 
-# 机器人在升级时自动学习可用法术
+# 随机机器人在升级时自动使用天赋点
 # 默认：1 （启用）
 AiPlayerbot.AutoPickTalents = 1
 
@@ -630,7 +636,6 @@ AiPlayerbot.RandomBotTeleLowerLevel = 3
 AiPlayerbot.RandomBotTeleHigherLevel = 1
 
 # 机器人在升级时自动传送至另一地图以继续升级
-# 仅用于随机机器人
 # 默认：1 （启用）
 AiPlayerbot.AutoTeleportForLevel = 1
 
@@ -650,14 +655,39 @@ AiPlayerbot.RandomBotJoinBG = 1
 # 启用自动加入战场 - 如果服务器没有延迟，机器人随机加入战歌峡谷和2v2竞技场
 AiPlayerbot.RandomBotAutoJoinBG = 0
 
-# 随机机器人竞技场队伍数量
-AiPlayerbot.RandomBotArenaTeamCount = 20
+# Required for RandomBotAutoJoinBG
+# Currently you can select 1 bracket (level range) for bots to auto join.
+# Brackets for warsong 0:10-19, 1:20-29, 2:30-39, 3:40-49 etc. Default: 7 (level 80)
+# Brackets for rated arena: 0:10-14, 1:15-19 etc. Default: 14 (80-84)
+# For lower level ranges to work in Rated Arena, custom code changes need to be made.
+# Count = amount of games Bots auto fill. (Count 1 for WSG = 20 bots).
+AiPlayerbot.RandomBotAutoJoinWarsongBracket = 7
+AiPlayerbot.RandomBotAutoJoinArenaBracket = 14
+AiPlayerbot.RandomBotAutoJoinBGWarsongCount = 0
+AiPlayerbot.RandomBotAutoJoinBGRatedArena2v2Count = 0
+AiPlayerbot.RandomBotAutoJoinBGRatedArena3v3Count = 0
+AiPlayerbot.RandomBotAutoJoinBGRatedArena5v5Count = 0
+
+# Random bot arena team count
+# Teams are created when bots are initialized on server restart.
+# You may need to first delete all arena teams, then reinitialize bots.
+# Warning: Reinitializing bots completely resets them (command in game: .playerbots rndbot init)
+# Bots only join one arena team to avoid queueing issues. Take that into account when increasing count.
+# Default: 2v2: 10 (20 Bots), 3v3: 10 (30 bots), 5v5: 5 (25 bots).
+AiPlayerbot.RandomBotArenaTeam2v2Count = 10
+AiPlayerbot.RandomBotArenaTeam3v3Count = 10
+AiPlayerbot.RandomBotArenaTeam5v5Count = 5
+
+# Arena rating is randomized on team creation.
+# Default: Max: 2000, Min: 1000.
+AiPlayerbot.RandomBotArenaTeamMaxRating = 2000
+AiPlayerbot.RandomBotArenaTeamMinRating = 1000
 
 # 删除所有随机机器人竞技场队伍
 AiPlayerbot.DeleteRandomBotArenaTeams = 0
 
 # PvP 受限区域（机器人不能 pvp）
-AiPlayerbot.PvpProhibitedZoneIds = "2255,656,2361,2362,2363,976,35,2268,3425,392,541,1446,3828,3712,3738,3565,3539,3623,4152,3988,4658,4284,4418,4436,4275,4323,4395,3703,4298" # 33（stranglethorn vale）,440（tanaris）
+AiPlayerbot.PvpProhibitedZoneIds = "2255,656,2361,2362,2363,976,35,2268,3425,392,541,1446,3828,3712,3738,3565,3539,3623,4152,3988,4658,4284,4418,4436,4275,4323,4395,3703,4298"
 
 # PvP 受限地区（机器人不能 pvp）
 AiPlayerbot.PvpProhibitedAreaIds = "976,35,392"
@@ -895,8 +925,8 @@ AiPlayerbot.PremadeSpecLink.8.1.60 = -0055030011302231053120321341
 AiPlayerbot.PremadeSpecLink.8.1.80 = 23000503110003-0055030011302331053120321351
 AiPlayerbot.PremadeSpecName.8.2 = 冰霜pve
 AiPlayerbot.PremadeSpecGlyph.8.2 = 42742,43339,50045,43364,43361,42751
-AiPlayerbot.PremadeSpecLink.8.2.60 = --3533103310203100232102231151
-AiPlayerbot.PremadeSpecLink.8.2.80 = 23002322010203--0533003313203100232112231151
+AiPlayerbot.PremadeSpecLink.8.2.60 = --0533030313203100030152231151
+AiPlayerbot.PremadeSpecLink.8.2.80 = 23002303110003--0533030313203100030152231351
 
 #
 #
@@ -1234,6 +1264,19 @@ AiPlayerbot.CommandPrefix = ""
 # 机器人聊天命令的分隔符
 AiPlayerbot.CommandSeparator = "\\\\"
 
+# Enable playerbot talk (say / yell / general chatting / lfg)
+AiPlayerbot.RandomBotTalk = 0
+
+# Enable playerbot emote
+AiPlayerbot.RandomBotEmote = 0
+
+# Enable dungeon suggestions for random bots
+AiPlayerbot.RandomBotSuggestDungeons = 1
+
+# Bots greet to the players
+AiPlayerbot.EnableGreet = 0
+
+
 #
 #
 #
@@ -1272,9 +1315,6 @@ AiPlayerbot.RandomBotLoginAtStartup = 0
 # 公会任务系统
 AiPlayerbot.EnableGuildTasks = 0
 
-# 为随机机器人启用地下城建议
-AiPlayerbot.RandomBotSuggestDungeons = 1
-
 # 随机以小写字母启用地下城建议Enable dungeon suggestions in lower case randomly
 AiPlayerbot.SuggestDungeonsInLowerCaseRandomly = 0
 
@@ -1285,16 +1325,13 @@ AiPlayerbot.RandomBotGuildCount = 20
 AiPlayerbot.DeleteRandomBotGuilds = 0
 
 # 机器人选择 RPG （依等级传动到随机营地）而不是grinding的概率
-AiPlayerbot.RandomBotRpgChance = 0.20 #unused now
+AiPlayerbot.RandomBotRpgChance = 0.20
 
 # 将随机机器人移动速度设置为在任何地方行走
 AiPlayerbot.RandombotsWalkingRPG = 0
 
 #  将随机机器人移动速度设置为仅在建筑物内行走
 AiPlayerbot.RandombotsWalkingRPG.InDoors = 0
-
-# 机器人向玩家致意
-AiPlayerbot.EnableGreet = 0
 
 # 指定活动机器人的百分比
 # 默认是10。每分钟将有10%的机器人转为活动或非活动状态。

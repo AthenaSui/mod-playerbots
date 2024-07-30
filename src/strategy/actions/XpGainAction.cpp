@@ -6,6 +6,7 @@
 #include "Event.h"
 #include "PlayerbotAIConfig.h"
 #include "Playerbots.h"
+#include "GuildMgr.h"
 
 bool XpGainAction::Execute(Event event)
 {
@@ -32,6 +33,26 @@ bool XpGainAction::Execute(Event event)
         p >> groupBonus;   // 8 group bonus
     }
 
+    if (sPlayerbotAIConfig->randomBotGuildTalk && bot->GetGuildId() && urand(0, 10))
+    {
+        Creature* creature = botAI->GetCreature(guid);
+        if (creature && (creature->isElite() || creature->isWorldBoss() || creature->GetLevel() > 61 || creature->GetLevel() > bot->GetLevel() + 4))
+        {
+            Guild* guild = sGuildMgr->GetGuildById(bot->GetGuildId());
+            if (guild)
+            {
+                std::string toSay = "";
+
+                if (urand(0, 3))
+                    toSay = "Wow I just killed " + creature->GetName() + " !";
+                else
+                    toSay = "Awesome that " + creature->GetName() + " went down quickly !";
+
+                guild->BroadcastToGuild(bot->GetSession(), false, toSay, LANG_UNIVERSAL);
+            }
+        }
+    }
+
     Unit* victim = nullptr;
     if (guid)
         victim = botAI->GetUnit(guid);
@@ -54,7 +75,7 @@ void XpGainAction::GiveXP(uint32 xp, Unit* victim)
         return;
     }
 
-    uint32 level = bot->getLevel();
+    uint32 level = bot->GetLevel();
 
     // XP to money conversion processed in Player::RewardQuest
     if (level >= sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
@@ -80,7 +101,7 @@ void XpGainAction::GiveXP(uint32 xp, Unit* victim)
             bot->GiveLevel(level + 1);
         }
 
-        level = bot->getLevel();
+        level = bot->GetLevel();
         nextLvlXP = bot->GetUInt32Value(PLAYER_NEXT_LEVEL_XP);
     }
 

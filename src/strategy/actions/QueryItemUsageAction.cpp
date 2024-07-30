@@ -137,6 +137,8 @@ std::string const QueryItemUsageAction::QueryItemUsage(ItemTemplate const* item)
             return "拍卖行";
         case ITEM_USAGE_AMMO:
             return "弹药";
+        default:
+            break;
 	}
 
     return "";
