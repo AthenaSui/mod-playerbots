@@ -1264,6 +1264,9 @@ AiPlayerbot.CommandPrefix = ""
 # 机器人聊天命令的分隔符
 AiPlayerbot.CommandSeparator = "\\\\"
 
+# Enable playerbot to talk in guild
+AiPlayerbot.RandomBotGuildTalk = 1
+
 # Enable playerbot talk (say / yell / general chatting / lfg)
 AiPlayerbot.RandomBotTalk = 0
 
