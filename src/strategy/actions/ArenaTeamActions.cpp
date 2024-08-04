@@ -1,8 +1,10 @@
 /*
- * Copyright (C) 2016+ AzerothCore <www.azerothcore.org>, released under GNU GPL v2 license, you may redistribute it and/or modify it under version 2 of the License, or (at your option), any later version.
+ * Copyright (C) 2016+ AzerothCore <www.azerothcore.org>, released under GNU GPL v2 license, you may redistribute it
+ * and/or modify it under version 2 of the License, or (at your option), any later version.
  */
 
 #include "ArenaTeamActions.h"
+
 #include "ArenaTeamMgr.h"
 #include "Playerbots.h"
 
@@ -37,15 +39,17 @@ bool ArenaTeamAcceptAction::Execute(Event event)
     {
         WorldPacket data(CMSG_ARENA_TEAM_ACCEPT);
         bot->GetSession()->HandleArenaTeamAcceptOpcode(data);
-        bot->Say("谢谢邀请！", LANG_UNIVERSAL);
-        LOG_INFO("playerbots", "机器人 {} <{}> 接受竞技场队伍邀请", bot->GetGUID().ToString().c_str(), bot->GetName().c_str());
+        bot->Say("谢谢邀请", LANG_UNIVERSAL);
+        LOG_INFO("playerbots", "机器人 {} <{}> 接受竞技场队伍邀请", bot->GetGUID().ToString().c_str(),
+                 bot->GetName().c_str());
         return true;
     }
     else
     {
         WorldPacket data(CMSG_ARENA_TEAM_DECLINE);
         bot->GetSession()->HandleArenaTeamDeclineOpcode(data);
-        LOG_INFO("playerbots", "机器人 {} <{}> 拒绝竞技场队伍邀请", bot->GetGUID().ToString().c_str(), bot->GetName().c_str());
+        LOG_INFO("playerbots", "机器人 {} <{}> 拒绝竞技场队伍邀请", bot->GetGUID().ToString().c_str(),
+                 bot->GetName().c_str());
         return false;
     }
 
