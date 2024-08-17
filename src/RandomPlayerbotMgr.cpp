@@ -29,6 +29,7 @@
 #include "LFGMgr.h"
 #include "MapMgr.h"
 #include "PerformanceMonitor.h"
+#include "PlayerbotAI.h"
 #include "PlayerbotAIConfig.h"
 #include "PlayerbotCommandServer.h"
 #include "PlayerbotFactory.h"
@@ -153,7 +154,7 @@ double botPIDImpl::calculate(double setpoint, double pv)
 
 botPIDImpl::~botPIDImpl() {}
 
-RandomPlayerbotMgr::RandomPlayerbotMgr() : PlayerbotHolder(), processTicks(0), totalPmo(nullptr)
+RandomPlayerbotMgr::RandomPlayerbotMgr() : PlayerbotHolder(), processTicks(0)
 {
     playersLevel = sPlayerbotAIConfig->randombotStartingLevel;
 
@@ -577,18 +578,10 @@ void RandomPlayerbotMgr::CheckBgQueue()
     if (!BgCheckTimer)
         BgCheckTimer = time(nullptr);
 
-    uint32 count = 0;
-    uint32 visual_count = 0;
-
-    uint32 check_time = count > 0 ? 120 : 30;
-    if (time(nullptr) < (BgCheckTimer + check_time))
-    {
+    if (time(nullptr) < BgCheckTimer + 30)
         return;
-    }
-    else
-    {
-        BgCheckTimer = time(nullptr);
-    }
+
+    BgCheckTimer = time(nullptr);
 
     LOG_INFO("playerbots", "检查战场队列中...");
 
@@ -599,7 +592,8 @@ void RandomPlayerbotMgr::CheckBgQueue()
         if (!player->InBattlegroundQueue())
             continue;
 
-        if (player->InBattleground() && player->GetBattleground()->GetStatus() == STATUS_WAIT_LEAVE)
+        Battleground* bg = player->GetBattleground();
+        if (bg && bg->GetStatus() == STATUS_WAIT_LEAVE)
             continue;
 
         TeamId teamId = player->GetTeamId();
@@ -610,7 +604,7 @@ void RandomPlayerbotMgr::CheckBgQueue()
                 continue;
 
             BattlegroundTypeId bgTypeId = sBattlegroundMgr->BGTemplateId(queueTypeId);
-            Battleground* bg = sBattlegroundMgr->GetBattlegroundTemplate(bgTypeId);
+            bg = sBattlegroundMgr->GetBattlegroundTemplate(bgTypeId);
             uint32 mapId = bg->GetMapId();
             PvPDifficultyEntry const* pvpDiff = GetBattlegroundBracketByLevel(mapId, player->GetLevel());
             if (!pvpDiff)
@@ -689,7 +683,8 @@ void RandomPlayerbotMgr::CheckBgQueue()
         if (!IsRandomBot(bot))
             continue;
 
-        if (bot->InBattleground() && bot->GetBattleground()->GetStatus() == STATUS_WAIT_LEAVE)
+        Battleground* bg = bot->GetBattleground();
+        if (bg && bg->GetStatus() == STATUS_WAIT_LEAVE)
             continue;
 
         TeamId teamId = bot->GetTeamId();
@@ -701,7 +696,7 @@ void RandomPlayerbotMgr::CheckBgQueue()
                 continue;
 
             BattlegroundTypeId bgTypeId = sBattlegroundMgr->BGTemplateId(queueTypeId);
-            Battleground* bg = sBattlegroundMgr->GetBattlegroundTemplate(bgTypeId);
+            bg = sBattlegroundMgr->GetBattlegroundTemplate(bgTypeId);
             uint32 mapId = bg->GetMapId();
             PvPDifficultyEntry const* pvpDiff = GetBattlegroundBracketByLevel(mapId, bot->GetLevel());
             if (!pvpDiff)
@@ -1215,9 +1210,6 @@ void RandomPlayerbotMgr::Revive(Player* player)
 
 void RandomPlayerbotMgr::RandomTeleport(Player* bot, std::vector<WorldLocation>& locs, bool hearth)
 {
-    if (bot->IsBeingTeleported())
-        return;
-
     if (bot->InBattleground())
         return;
 
@@ -2335,6 +2327,11 @@ void RandomPlayerbotMgr::PrintStats()
     uint32 taxi = 0;
     uint32 moving = 0;
     uint32 mounted = 0;
+    uint32 inBg = 0;
+    uint32 rest = 0;
+    uint32 engine_noncombat = 0;
+    uint32 engine_combat = 0;
+    uint32 engine_dead = 0;
     uint32 stateCount[MAX_TRAVEL_STATE + 1] = {0};
     std::vector<std::pair<Quest const*, int32>> questCount;
     for (PlayerBotMap::iterator i = playerBots.begin(); i != playerBots.end(); ++i)
@@ -2371,7 +2368,33 @@ void RandomPlayerbotMgr::PrintStats()
             // if (!GetEventValue(botId, "dead"))
             //++revive;
         }
-
+        if (bot->IsInCombat())
+        {
+            ++combat;
+        }
+        if (bot->isMoving())
+        {
+            ++moving;
+        }
+        if (bot->IsMounted())
+        {
+            ++mounted;
+        }
+        if (bot->InBattleground() || bot->InArena())
+        {
+            ++inBg;
+        }
+        if (bot->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_RESTING))
+        {
+            ++rest;
+        }
+        if (botAI->GetState() == BOT_STATE_NON_COMBAT)
+            ++engine_noncombat;
+        else if (botAI->GetState() == BOT_STATE_COMBAT)
+            ++engine_combat;
+        else
+            ++engine_dead;
+        
         uint8 spec = AiFactory::GetPlayerSpecTab(bot);
         switch (bot->getClass())
         {
@@ -2492,7 +2515,14 @@ void RandomPlayerbotMgr::PrintStats()
     LOG_INFO("playerbots", "    On taxi: {}", taxi);
     LOG_INFO("playerbots", "    On mount: {}", mounted);
     LOG_INFO("playerbots", "    In combat: {}", combat);
+    LOG_INFO("playerbots", "    In BG: {}", inBg);
+    LOG_INFO("playerbots", "    In Rest: {}", rest);
     LOG_INFO("playerbots", "    Dead: {}", dead);
+
+    LOG_INFO("playerbots", "Bots engine:", dead);
+    LOG_INFO("playerbots", "    Non-combat: {}", engine_noncombat);
+    LOG_INFO("playerbots", "    Combat: {}", engine_combat);
+    LOG_INFO("playerbots", "    Dead: {}", engine_dead);
 
     LOG_INFO("playerbots", "Bots questing:");
     LOG_INFO("playerbots", "    Picking quests: {}",
@@ -2748,3 +2778,4 @@ ObjectGuid const RandomPlayerbotMgr::GetBattleMasterGUID(Player* bot, Battlegrou
 
     return battleMasterGUID;
 }
+

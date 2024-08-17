@@ -3,10 +3,9 @@
  * and/or modify it under version 2 of the License, or (at your option), any later version.
  */
 
-#include "ChooseRpgTargetAction.h"
-
 #include <random>
 
+#include "ChooseRpgTargetAction.h"
 #include "BattlegroundMgr.h"
 #include "BudgetValues.h"
 #include "ChatHelper.h"
@@ -14,6 +13,9 @@
 #include "Formations.h"
 #include "GuildCreateActions.h"
 #include "Playerbots.h"
+#include "RpgSubActions.h"
+#include "Util.h"
+#include "ServerFacade.h"
 #include "PossibleRpgTargetsValue.h"
 
 bool ChooseRpgTargetAction::HasSameTarget(ObjectGuid guid, uint32 max, GuidVector const& nearGuids)
@@ -53,15 +55,17 @@ float ChooseRpgTargetAction::getMaxRelevance(GuidPosition guidP)
     SET_AI_VALUE(GuidPosition, "rpg target", guidP);
 
     Strategy* rpgStrategy = botAI->GetAiObjectContext()->GetStrategy("rpg");
+    if (!rpgStrategy) return 0.0f;
 
     std::vector<TriggerNode*> triggerNodes;
     rpgStrategy->InitTriggers(triggerNodes);
 
     float maxRelevance = 0.0f;
 
-    for (auto& triggerNode : triggerNodes)
+    for (auto triggerNode : triggerNodes)
     {
         Trigger* trigger = context->GetTrigger(triggerNode->getName());
+
         if (trigger)
         {
             triggerNode->setTrigger(trigger);
@@ -69,35 +73,63 @@ float ChooseRpgTargetAction::getMaxRelevance(GuidPosition guidP)
             if (triggerNode->getFirstRelevance() < maxRelevance || triggerNode->getFirstRelevance() > 2.0f)
                 continue;
 
-            trigger = triggerNode->getTrigger();
+            Trigger* trigger = triggerNode->getTrigger();
+
             if (!trigger->IsActive())
                 continue;
 
-            maxRelevance = triggerNode->getFirstRelevance();
+            NextAction** nextActions = triggerNode->getHandlers();
+
+            bool isRpg = false;
+
+            for (int32 i = 0; i < NextAction::size(nextActions); i++)
+            {
+                NextAction* nextAction = nextActions[i];
+
+                Action* action = botAI->GetAiObjectContext()->GetAction(nextAction->getName());
+
+                if (dynamic_cast<RpgEnabled*>(action))
+                    isRpg = true;
+            }
+            NextAction::destroy(nextActions);
+
+            if (isRpg)
+            {
+                maxRelevance = triggerNode->getFirstRelevance();
+                rgpActionReason[guidP] = triggerNode->getName();
+            }
         }
     }
 
-    SET_AI_VALUE(GuidPosition, "rpg target", currentRpgTarget);
-
-    for (std::vector<TriggerNode*>::iterator i = triggerNodes.begin(); i != triggerNodes.end(); i++)
+    for (auto trigger : triggerNodes)
     {
-        TriggerNode* trigger = *i;
         delete trigger;
     }
-
     triggerNodes.clear();
 
-    return (maxRelevance - 1.0) * 1000.0f;
+    SET_AI_VALUE(GuidPosition, "rpg target", currentRpgTarget);
+
+    if (!maxRelevance)
+        return 0.0;
+
+    return floor((maxRelevance - 1.0) * 1000.0f);
 }
 
 bool ChooseRpgTargetAction::Execute(Event event)
 {
     TravelTarget* travelTarget = AI_VALUE(TravelTarget*, "travel target");
-
-    uint32 num = 0;
+    Player* master = botAI->GetMaster();
+    GuidPosition masterRpgTarget;
+    if (master && master != bot && GET_PLAYERBOT_AI(master) && master->GetMapId() == bot->GetMapId() && !master->IsBeingTeleported())
+    {
+        Player* player = botAI->GetMaster();
+        GuidPosition masterRpgTarget = PAI_VALUE(GuidPosition, "rpg target");
+    }
+    else
+        master = nullptr;
 
     std::unordered_map<ObjectGuid, uint32> targets;
-
+    uint32 num = 0;
     GuidVector possibleTargets = AI_VALUE(GuidVector, "possible rpg targets");
     GuidVector possibleObjects = AI_VALUE(GuidVector, "nearest game objects no los");
     GuidVector possiblePlayers = AI_VALUE(GuidVector, "nearest friendly players");
@@ -180,18 +212,22 @@ bool ChooseRpgTargetAction::Execute(Event event)
 
     for (auto it = begin(targets); it != end(targets);)
     {
-        if (it->second == 0 || (hasGoodRelevance && it->second <= 1.0))
-        {
+        //Remove empty targets.
+        if (it->second == 0)
             it = targets.erase(it);
-        }
+        //Remove useless targets if there's any good ones
+        else if (hasGoodRelevance && it->second <= 1.0)
+            it = targets.erase(it);
+        //Remove useless targets if it's not masters target.
+        else if (!hasGoodRelevance && master && (!masterRpgTarget || it->first != masterRpgTarget))
+            it = targets.erase(it);
         else
             ++it;
     }
 
     if (targets.empty())
     {
-        LOG_DEBUG("playerbots", "{} can't choose RPG target: all {} are not available", bot->GetName().c_str(),
-                  possibleTargets.size());
+        LOG_DEBUG("playerbots", "{} can't choose RPG target: all {} targets are not available", bot->GetName().c_str(), possibleTargets.size());
         RESET_AI_VALUE(GuidSet&, "ignore rpg target");
         RESET_AI_VALUE(GuidPosition, "rpg target");
         return false;
@@ -244,17 +280,20 @@ bool ChooseRpgTargetAction::isUseful()
     if (!botAI->AllowActivity(RPG_ACTIVITY))
         return false;
 
-    if (AI_VALUE(GuidPosition, "rpg target"))
+    GuidPosition guidP = AI_VALUE(GuidPosition, "rpg target");
+
+    if (guidP && guidP.distance(bot) < sPlayerbotAIConfig->reactDistance * 2)
         return false;
 
     TravelTarget* travelTarget = AI_VALUE(TravelTarget*, "travel target");
 
-    if (travelTarget->isTraveling() && isFollowValid(bot, *travelTarget->getPosition()))
-        return false;
+    //if (travelTarget->isTraveling() && AI_VALUE2(bool, "can free move to", *travelTarget->getPosition()))
+        //return false;
 
     if (AI_VALUE(GuidVector, "possible rpg targets").empty())
         return false;
 
+    //Not stay, not guard, not combat, not trading and group ready.
     if (!AI_VALUE(bool, "can move around"))
         return false;
 
@@ -294,7 +333,7 @@ bool ChooseRpgTargetAction::isFollowValid(Player* bot, WorldPosition pos)
     if (!botAI->HasStrategy("follow", BOT_STATE_NON_COMBAT))
         return true;
 
-    if (sqrt(bot->GetDistance(master)) > sPlayerbotAIConfig->rpgDistance * 2)
+    if (bot->GetDistance(master) > sPlayerbotAIConfig->rpgDistance * 2)
         return false;
 
     Formation* formation = AI_VALUE(Formation*, "formation");

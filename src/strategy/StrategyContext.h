@@ -60,7 +60,7 @@ public:
         creators["emote"] = &StrategyContext::emote;
         creators["passive"] = &StrategyContext::passive;
         // creators["conserve mana"] = &StrategyContext::conserve_mana;
-        creators["auto save mana"] = &StrategyContext::auto_save_mana;
+        creators["smana"] = &StrategyContext::auto_save_mana;
         creators["food"] = &StrategyContext::food;
         creators["chat"] = &StrategyContext::chat;
         creators["default"] = &StrategyContext::world_packet;
@@ -107,13 +107,14 @@ public:
         creators["debug move"] = &StrategyContext::debug_move;
         creators["debug rpg"] = &StrategyContext::debug_rpg;
         creators["debug spell"] = &StrategyContext::debug_spell;
+        creators["debug quest"] = &StrategyContext::debug_quest;
         creators["maintenance"] = &StrategyContext::maintenance;
         creators["group"] = &StrategyContext::group;
         creators["guild"] = &StrategyContext::guild;
         creators["grind"] = &StrategyContext::grind;
-        creators["avoid aoe"] = &StrategyContext::avoid_aoe;
+        creators["aaoe"] = &StrategyContext::avoid_aoe;
         creators["move random"] = &StrategyContext::move_random;
-        creators["combat formation"] = &StrategyContext::combat_formation;
+        creators["formation"] = &StrategyContext::combat_formation;
     }
 
 private:
@@ -170,9 +171,10 @@ private:
     static Strategy* debug_move(PlayerbotAI* botAI) { return new DebugMoveStrategy(botAI); }
     static Strategy* debug_rpg(PlayerbotAI* botAI) { return new DebugRpgStrategy(botAI); }
     static Strategy* debug_spell(PlayerbotAI* botAI) { return new DebugSpellStrategy(botAI); }
+    static Strategy* debug_quest(PlayerbotAI* botAI) { return new DebugQuestStrategy(botAI); }
     static Strategy* maintenance(PlayerbotAI* botAI) { return new MaintenanceStrategy(botAI); }
     static Strategy* group(PlayerbotAI* botAI) { return new GroupStrategy(botAI); }
-    static Strategy* guild(PlayerbotAI* botAI) { return new GuildStrategy(botAI); }
+    static Strategy* guild (PlayerbotAI* botAI) { return new GuildStrategy(botAI); }
     static Strategy* grind(PlayerbotAI* botAI) { return new GrindingStrategy(botAI); }
     static Strategy* avoid_aoe(PlayerbotAI* botAI) { return new AvoidAoeStrategy(botAI); }
     static Strategy* move_random(PlayerbotAI* ai) { return new MoveRandomStrategy(ai); }

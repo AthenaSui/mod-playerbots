@@ -34,7 +34,7 @@ bool ReachAreaTriggerAction::Execute(Event event)
         return true;
     }
 
-    if (bot->GetMapId() != at->map || sqrt(bot->GetDistance(at->x, at->y, at->z)) > sPlayerbotAIConfig->sightDistance)
+    if (bot->GetMapId() != at->map)
     {
         botAI->TellError("我就不过去了，太远了");
         return true;
@@ -42,7 +42,7 @@ bool ReachAreaTriggerAction::Execute(Event event)
 
     bot->GetMotionMaster()->MovePoint(at->map, at->x, at->y, at->z);
 
-    float distance = sqrt(bot->GetDistance(at->x, at->y, at->z));
+    float distance = bot->GetDistance(at->x, at->y, at->z);
     float delay = 1000.0f * distance / bot->GetSpeed(MOVE_RUN) + sPlayerbotAIConfig->reactDelay;
     botAI->TellError("等等我");
     botAI->SetNextCheckDelay(delay);
