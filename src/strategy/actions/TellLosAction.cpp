@@ -48,7 +48,7 @@ bool TellLosAction::Execute(Event event)
 
     if (param.empty() || param == "triggers")
     {
-        ListUnits("--- Triggers ---", *context->GetValue<GuidVector>("possible triggers"));
+        ListUnits("--- 触发器 ---", *context->GetValue<GuidVector>("possible triggers"));
     }
 
     return true;
@@ -149,7 +149,7 @@ bool TellCalculateItemAction::Execute(Event event)
             continue;
         float score = calculator.CalculateItem(id);
         std::ostringstream out;
-        out << "Calculated score of " << chat->FormatItem(proto) << " : " << score;
+        out << chat->FormatItem(proto) << "计算得分：" << score;
         botAI->TellMasterNoFacing(out.str());
     }
     return true;

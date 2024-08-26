@@ -78,7 +78,7 @@ void ChooseTravelTargetAction::getNewTarget(TravelTarget* newTarget, TravelTarge
                 target->setTarget(dest, points.front());
                 target->setForced(true);
 
-                std::ostringstream out; out << "Traveling to " << dest->getTitle();
+                std::ostringstream out; out << "准备去" << dest->getTitle();
                 botAI->TellMasterNoFacing(out.str());
                 foundTarget = true;
             }

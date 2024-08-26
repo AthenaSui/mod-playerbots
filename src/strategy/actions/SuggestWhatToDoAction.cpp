@@ -151,40 +151,40 @@ void SuggestWhatToDoAction::grindReputation()
 {
     if (factions.empty())
     {
-        factions["Argent Dawn"] = 60;
-        factions["Bloodsail Buccaneers"] = 40;
-        factions["Brood of Nozdormu"] = 60;
-        factions["Cenarion Circle"] = 55;
-        factions["Darkmoon Faire"] = 20;
-        factions["Hydraxian Waterlords"] = 60;
-        factions["Ravenholdt"] = 20;
-        factions["Thorium Brotherhood"] = 40;
-        factions["Timbermaw Hold"] = 50;
-        factions["Wintersaber Trainers"] = 50;
-        factions["Booty Bay"] = 30;
-        factions["Everlook"] = 40;
-        factions["Gadgetzan"] = 50;
-        factions["Ratchet"] = 20;
+        factions["银色黎明"] = 60;
+        factions["血帆海盗"] = 40;
+        factions["诺兹多姆的子嗣"] = 60;
+        factions["塞纳里奥议会"] = 55;
+        factions["暗月马戏团"] = 20;
+        factions["海达希亚水元素"] = 60;
+        factions["拉文霍德"] = 20;
+        factions["瑟银兄弟会"] = 40;
+        factions["木喉要塞"] = 50;
+        factions["冬刃豹训练师"] = 50;
+        factions["藏宝海湾"] = 30;
+        factions["永望镇"] = 40;
+        factions["加基森"] = 50;
+        factions["棘齿城"] = 20;
 
-        factions["Ashtongue Deathsworn"] = 70;
-        factions["Cenarion Expedition"] = 62;
-        factions["The Consortium"] = 65;
-        factions["Honor Hold"] = 66;
-        factions["Keepers of Time"] = 68;
-        factions["Netherwing"] = 65;
-        factions["Ogri'la"] = 65;
-        factions["The Scale of the Sands"] = 65;
-        factions["Sporeggar"] = 65;
-        factions["Tranquillien"] = 10;
-        factions["The Violet Eye"] = 70;
+        factions["灰舌死誓者"] = 70;
+        factions["塞纳里奥远征队"] = 62;
+        factions["星界财团"] = 65;
+        factions["荣耀堡"] = 66;
+        factions["时光守护者"] = 68;
+        factions["灵翼之龙"] = 65;
+        factions["奥格瑞拉"] = 65;
+        factions["流沙之鳞"] = 65;
+        factions["孢子村"] = 65;
+        factions["塔奎林"] = 10;
+        factions["紫罗兰之眼"] = 70;
 
-        factions["Argent Crusade"] = 75;
-        factions["Ashen Verdict"] = 75;
-        factions["The Kalu'ak"] = 72;
-        factions["Kirin Tor"] = 75;
-        factions["Knights of the Ebon Blade"] = 77;
-        factions["The Sons of Hodir"] = 78;
-        factions["The Wyrmrest Accord"] = 77;
+        factions["银色北伐军"] = 75;
+        factions["灰烬审判军"] = 75;
+        factions["卡鲁亚克"] = 72;
+        factions["肯瑞托"] = 75;
+        factions["黑锋骑士团"] = 77;
+        factions["霍迪尔之子"] = 78;
+        factions["龙眠联军"] = 77;
     }
 
     std::vector<std::string> levels;
@@ -266,48 +266,48 @@ bool SuggestDungeonAction::Execute(Event event)
 
     if (instances.empty())
     {
-        instances["Ragefire Chasm"] = 15;
-        instances["Deadmines"] = 18;
-        instances["Wailing Caverns"] = 18;
-        instances["Shadowfang Keep"] = 25;
-        instances["Blackfathom Deeps"] = 20;
-        instances["Stockade"] = 20;
-        instances["Gnomeregan"] = 35;
-        instances["Razorfen Kraul"] = 35;
-        instances["Maraudon"] = 50;
-        instances["Scarlet Monestery"] = 40;
-        instances["Uldaman"] = 45;
-        instances["Dire Maul"] = 58;
-        instances["Scholomance"] = 59;
-        instances["Razorfen Downs"] = 40;
-        instances["Strathholme"] = 59;
-        instances["Zul'Farrak"] = 45;
-        instances["Blackrock Depths"] = 55;
-        instances["Temple of Atal'Hakkar"] = 55;
-        instances["Lower Blackrock Spire"] = 57;
+        instances["怒焰裂谷"] = 15;
+        instances["死亡矿井"] = 18;
+        instances["哀嚎洞穴"] = 18;
+        instances["影牙城堡"] = 25;
+        instances["黑暗深渊"] = 20;
+        instances["暴风城监狱"] = 20;
+        instances["诺莫瑞根"] = 35;
+        instances["剃刀沼泽"] = 35;
+        instances["玛拉顿"] = 50;
+        instances["血色修道院"] = 40;
+        instances["奥达曼"] = 45;
+        instances["厄运之槌"] = 58;
+        instances["通灵学院"] = 59;
+        instances["剃刀高地"] = 40;
+        instances["斯坦索姆"] = 59;
+        instances["祖尔法拉克"] = 45;
+        instances["黑石深渊"] = 55;
+        instances["阿塔哈卡神庙"] = 55;
+        instances["黑下"] = 57;
 
-        instances["Hellfire Citidel"] = 65;
-        instances["Coilfang Reservoir"] = 65;
-        instances["Auchindoun"] = 65;
-        instances["Cavens of Time"] = 68;
-        instances["Tempest Keep"] = 69;
-        instances["Magister's Terrace"] = 70;
+        instances["地狱火堡垒"] = 65;
+        instances["盘牙湖泊"] = 65;
+        instances["奥金顿"] = 65;
+        instances["时光之穴"] = 68;
+        instances["风暴要塞"] = 69;
+        instances["魔导师平台"] = 70;
 
-        instances["Utgarde Keep"] = 75;
-        instances["The Nexus"] = 75;
-        instances["Ahn'kahet: The Old Kingdom"] = 75;
-        instances["Azjol-Nerub"] = 75;
-        instances["Drak'Tharon Keep"] = 75;
-        instances["Violet Hold"] = 80;
-        instances["Gundrak"] = 77;
-        instances["Halls of Stone"] = 77;
-        instances["Halls of Lightning"] = 77;
-        instances["Oculus"] = 77;
-        instances["Utgarde Pinnacle"] = 77;
-        instances["Trial of the Champion"] = 80;
-        instances["Forge of Souls"] = 80;
-        instances["Pit of Saron"] = 80;
-        instances["Halls of Reflection"] = 80;
+        instances["乌特加德城堡"] = 75;
+        instances["魔枢"] = 75;
+        instances["安卡赫特：古代王国"] = 75;
+        instances["艾卓-尼鲁布"] = 75;
+        instances["达克萨隆要塞"] = 75;
+        instances["紫罗兰监狱"] = 80;
+        instances["古达克"] = 77;
+        instances["岩石大厅"] = 77;
+        instances["闪电大厅"] = 77;
+        instances["魔环"] = 77;
+        instances["乌特加德之巅"] = 77;
+        instances["冠军的试炼"] = 80;
+        instances["灵魂洪炉"] = 80;
+        instances["萨隆深渊"] = 80;
+        instances["映像大厅"] = 80;
     }
 
     std::vector<std::string> allowedInstances;

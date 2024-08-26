@@ -53,10 +53,10 @@ void AutoMaintenanceOnLevelupAction::AutoLearnSpell()
     {
         std::string const temp = out.str();
         out.seekp(0);
-        out << "Learned spells: ";
+        out << "已学法术：";
         out << temp;
         out.seekp(-2, out.cur);
-        out << ".";
+        out << "。";
         botAI->TellMaster(out);
     }
     return;
@@ -114,9 +114,9 @@ std::string const AutoMaintenanceOnLevelupAction::FormatSpell(SpellInfo const* s
     std::string const rank = sInfo->Rank[0];
 
     if (rank.empty())
-        out << "|cffffffff|Hspell:" << sInfo->Id << "|h[" << sInfo->SpellName[LOCALE_enUS] << "]|h|r";
+        out << "|cffffffff|Hspell:" << sInfo->Id << "|h[" << sInfo->SpellName[LOCALE_zhCN] << "]|h|r";
     else
-        out << "|cffffffff|Hspell:" << sInfo->Id << "|h[" << sInfo->SpellName[LOCALE_enUS] << " " << rank << "]|h|r";
+        out << "|cffffffff|Hspell:" << sInfo->Id << "|h[" << sInfo->SpellName[LOCALE_zhCN] << " " << rank << "]|h|r";
 
     return out.str();
 }
