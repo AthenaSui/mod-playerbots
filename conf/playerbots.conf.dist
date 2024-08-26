@@ -369,8 +369,8 @@ AiPlayerbot.SyncQuestForPlayer = 0
 #
 #
 
-# 机器人遇到敌人时可以逃跑
-AiPlayerbot.FleeingEnabled = 1
+# 自动添加可用 副本/团本 策略当进入副本时
+AiPlayerbot.ApplyInstanceStrategies = 1
 
 # 启用自动躲避AOE（实验）
 # 默认：1（启用）
@@ -387,6 +387,9 @@ AiPlayerbot.AutoSaveMana = 1
 # 治疗机器人法力值保存阈值
 # 默认：60（60%）
 AiPlayerbot.SaveManaThreshold = 60
+
+# 机器人遇到敌人时可以逃跑
+AiPlayerbot.FleeingEnabled = 1
 
 #
 #
@@ -791,7 +794,7 @@ AiPlayerbot.PremadeSpecLink.2.0.80 = 50350152220013053100515221-503201312
 AiPlayerbot.PremadeSpecName.2.1 = 防护pve
 AiPlayerbot.PremadeSpecGlyph.2.1 = 41100,43367,43869,43369,43365,45745
 AiPlayerbot.PremadeSpecLink.2.1.60 = -05005135203102311333112321
-AiPlayerbot.PremadeSpecLink.2.1.80 = -05005135203132311333312321-5023005
+AiPlayerbot.PremadeSpecLink.2.1.80 = -05005135203102311333312321-502302012003
 AiPlayerbot.PremadeSpecName.2.2 = 惩戒pve
 AiPlayerbot.PremadeSpecGlyph.2.2 = 41092,43367,41099,43369,43365,43869
 AiPlayerbot.PremadeSpecLink.2.2.60 = --05230051203331302133231131
