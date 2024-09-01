@@ -79,8 +79,9 @@ AiPlayerbot.Enabled = 1
 # 启用随机机器人系统
 AiPlayerbot.RandomBotAutologin = 1
 
-# 随机机器人账号数量
-AiPlayerbot.RandomBotAccountCount = 100
+# 随机机器人账号
+# 请确保 RandomBotAccountCount 大于（MaxRandomBots / 10 + AddClassAccountPoolSize)
+AiPlayerbot.RandomBotAccountCount = 200
 
 # 随机机器人上线数量
 AiPlayerbot.MinRandomBots = 200
@@ -108,11 +109,15 @@ AiPlayerbot.DeleteRandomBotAccounts = 0
 AiPlayerbot.MaxAddedBots = 40
 
 # 每个账号可添加的单职业最大机器人数量
-AiPlayerbot.MaxAddedBotsPerClass = 10
+AiPlayerbot.MaxAddedBotsPerClass = 40
 
 # 启用/禁用通过 addclass 命令创建机器人（0 = 仅GM , 1 = 启用）
 # 默认：1（启用）
 AiPlayerbot.AddClassCommand = 1
+
+# 设定 addclass 命令账号数量
+# Addclass command uses a subset of accounts from RandomBotAccountCount
+AiPlayerbot.AddClassAccountPoolSize = 50
 
 # 机器人接受队伍邀请权限级别 （0 = 仅GM，1 = 基于等级接受，2 = 总是接受）
 # 默认：1 （基于等级接受）
