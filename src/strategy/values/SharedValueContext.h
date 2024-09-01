@@ -7,7 +7,7 @@
 #define _PLAYERBOT_SHAREDVALUECONTEXT_H
 
 #include "LootValues.h"
-#include "NamedObjectContext.h"
+#include "../NamedObjectContext.h"
 #include "Playerbots.h"
 #include "PvpValues.h"
 #include "QuestValues.h"

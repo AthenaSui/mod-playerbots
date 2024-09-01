@@ -9,7 +9,7 @@
 #include <boost/functional/hash.hpp>
 #include <random>
 
-#include "AiObject.h"
+#include "strategy/AiObject.h"
 #include "CreatureData.h"
 #include "GameObject.h"
 #include "GridDefines.h"

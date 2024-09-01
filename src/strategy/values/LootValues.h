@@ -8,8 +8,8 @@
 
 #include "ItemUsageValue.h"
 #include "LootMgr.h"
-#include "NamedObjectContext.h"
-#include "Value.h"
+#include "../NamedObjectContext.h"
+#include "../Value.h"
 
 class PlayerbotAI;
 
