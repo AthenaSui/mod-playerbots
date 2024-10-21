@@ -165,19 +165,13 @@ bool SummonAction::SummonUsingNpcs(Player* summoner, Player* player)
 
 bool SummonAction::Teleport(Player* summoner, Player* player)
 {
-    Player* master = GetMaster();
-    // if (master->GetMap() && master->GetMap()->IsDungeon()) {
-    //     InstanceMap* map = master->GetMap()->ToInstanceMap();
-    //     if (map) {
-    //         if (map->CannotEnter(player, true) == Map::CANNOT_ENTER_MAX_PLAYERS) {
-    //             botAI->TellError("I can not enter this dungeon");
-    //                 return false;
-    //         }
-    //     }
-    // }
+    // Player* master = GetMaster();
+    if (!summoner)
+        return false;
+    
     if (player->GetVehicle())
     {
-        botAI->TellError("You cannot summon me while I'm on a vehicle");
+        botAI->TellError("我正在载具上，等等");
         return false;
     }
 
@@ -197,13 +191,13 @@ bool SummonAction::Teleport(Player* summoner, Player* player)
                         ->botRepairWhenSummon)  // .conf option to repair bot gear when summoned 0 = off, 1 = on
                     bot->DurabilityRepairAll(false, 1.0f, false);
 
-                if (master->IsInCombat() && !sPlayerbotAIConfig->allowSummonInCombat)
+                if (summoner->IsInCombat() && !sPlayerbotAIConfig->allowSummonInCombat)
                 {
                     botAI->TellError("你在战斗中不能召唤我");
                     return false;
                 }
 
-                if (!master->IsAlive() && !sPlayerbotAIConfig->allowSummonWhenMasterIsDead)
+                if (!summoner->IsAlive() && !sPlayerbotAIConfig->allowSummonWhenMasterIsDead)
                 {
                     botAI->TellError("你死后不能召唤我");
                     return false;
@@ -218,13 +212,13 @@ bool SummonAction::Teleport(Player* summoner, Player* player)
 
                 bool revive =
                     sPlayerbotAIConfig->reviveBotWhenSummoned == 2 ||
-                    (sPlayerbotAIConfig->reviveBotWhenSummoned == 1 && !master->IsInCombat() && master->IsAlive());
+                    (sPlayerbotAIConfig->reviveBotWhenSummoned == 1 && !summoner->IsInCombat() && summoner->IsAlive());
 
                 if (bot->isDead() && revive)
                 {
                     bot->ResurrectPlayer(1.0f, false);
                     botAI->TellMasterNoFacing("我又活过来了！");
-                    botAI->GetAiObjectContext()->GetValue<GuidVector>("prioritized targets")->Set({});
+                    botAI->GetAiObjectContext()->GetValue<GuidVector>("prioritized targets")->Reset();
                 }
 
                 player->GetMotionMaster()->Clear();

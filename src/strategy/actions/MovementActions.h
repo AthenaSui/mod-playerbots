@@ -18,6 +18,9 @@ class Unit;
 class WorldObject;
 class Position;
 
+#define ANGLE_45_DEG (static_cast<float>(M_PI) / 4.f)
+#define ANGLE_90_DEG M_PI_2
+#define ANGLE_120_DEG (2.f * static_cast<float>(M_PI) / 3.f)
 
 class MovementAction : public Action
 {
@@ -30,7 +33,7 @@ protected:
     bool MoveToLOS(WorldObject* target, bool ranged = false);
     bool MoveTo(uint32 mapId, float x, float y, float z, bool idle = false, bool react = false,
                 bool normal_only = false, bool exact_waypoint = false, MovementPriority priority = MovementPriority::MOVEMENT_NORMAL);
-    bool MoveTo(Unit* target, float distance = 0.0f, MovementPriority priority = MovementPriority::MOVEMENT_NORMAL);
+    bool MoveTo(WorldObject* target, float distance = 0.0f, MovementPriority priority = MovementPriority::MOVEMENT_NORMAL);
     bool MoveNear(WorldObject* target, float distance = sPlayerbotAIConfig->contactDistance, MovementPriority priority = MovementPriority::MOVEMENT_NORMAL);
     float GetFollowAngle();
     bool Follow(Unit* target, float distance = sPlayerbotAIConfig->followDistance);
@@ -39,7 +42,8 @@ protected:
     bool ReachCombatTo(Unit* target, float distance = 0.0f);
     float MoveDelay(float distance);
     void WaitForReach(float distance);
-    bool IsMovingAllowed(Unit* target);
+    void SetNextMovementDelay(float delayMillis);
+    bool IsMovingAllowed(WorldObject* target);
     bool IsMovingAllowed(uint32 mapId, float x, float y, float z);
     bool IsDuplicateMove(uint32 mapId, float x, float y, float z);
     bool IsWaitingForLastMove(MovementPriority priority);
@@ -98,7 +102,7 @@ class AvoidAoeAction : public MovementAction
 {
 public:
     AvoidAoeAction(PlayerbotAI* botAI, int moveInterval = 1000)
-        : MovementAction(botAI, "aaoe"), moveInterval(moveInterval)
+        : MovementAction(botAI, "avoid aoe"), moveInterval(moveInterval)
     {
     }
 
@@ -114,11 +118,12 @@ protected:
     int moveInterval;
 };
 
+
 class CombatFormationMoveAction : public MovementAction
 {
 public:
-    CombatFormationMoveAction(PlayerbotAI* botAI, int moveInterval = 1000)
-        : MovementAction(botAI, "combat formation move"), moveInterval(moveInterval)
+    CombatFormationMoveAction(PlayerbotAI* botAI, std::string name = "combat formation move", int moveInterval = 1000)
+        : MovementAction(botAI, name), moveInterval(moveInterval)
     {
     }
 
@@ -126,10 +131,41 @@ public:
     bool Execute(Event event) override;
 
 protected:
-    Position AverageGroupPos(float dis = sPlayerbotAIConfig->sightDistance);
+    Position AverageGroupPos(float dis = sPlayerbotAIConfig->sightDistance, bool ranged = false, bool self = false);
     Player* NearestGroupMember(float dis = sPlayerbotAIConfig->sightDistance);
+    float AverageGroupAngle(Unit* from, bool ranged = false, bool self = false);
+    Position GetNearestPosition(const std::vector<Position>& positions);
     int lastMoveTimer = 0;
     int moveInterval;
+};
+
+class TankFaceAction : public CombatFormationMoveAction
+{
+public:
+    TankFaceAction(PlayerbotAI* botAI) : CombatFormationMoveAction(botAI, "tank face") {}
+
+    bool Execute(Event event) override;
+};
+
+class RearFlankAction : public MovementAction
+{
+// 90 degree minimum angle prevents any frontal cleaves/breaths and avoids parry-hasting the boss.
+// 120 degree maximum angle leaves a 120 degree symmetrical cone at the tail end which is usually enough to avoid tail swipes.
+// Some dragons or mobs may have different danger zone angles, override if needed.
+public:
+    RearFlankAction(PlayerbotAI* botAI, float distance = 0.0f, float minAngle = ANGLE_90_DEG, float maxAngle = ANGLE_120_DEG)
+        : MovementAction(botAI, "rear flank")
+        {
+            this->distance = distance;
+            this->minAngle = minAngle;
+            this->maxAngle = maxAngle;
+        }
+
+    bool Execute(Event event) override;
+    bool isUseful() override;
+
+protected:
+    float distance, minAngle, maxAngle;
 };
 
 class DisperseSetAction : public Action
@@ -177,14 +213,12 @@ public:
     bool isPossible() override;
 };
 
-class SetBehindTargetAction : public MovementAction
+class SetBehindTargetAction : public CombatFormationMoveAction
 {
 public:
-    SetBehindTargetAction(PlayerbotAI* botAI) : MovementAction(botAI, "set behind") {}
+    SetBehindTargetAction(PlayerbotAI* botAI) : CombatFormationMoveAction(botAI, "set behind") {}
 
     bool Execute(Event event) override;
-    bool isUseful() override;
-    bool isPossible() override;
 };
 
 class MoveOutOfCollisionAction : public MovementAction
@@ -258,4 +292,5 @@ public:
 
     bool Execute(Event event) override;
 };
+
 #endif

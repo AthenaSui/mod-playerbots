@@ -49,8 +49,8 @@ void HealShamanStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
     triggers.push_back(new TriggerNode("main hand weapon no imbue",
                                        NextAction::array(0, new NextAction("earthliving weapon", 22.0f), nullptr)));
     triggers.push_back(new TriggerNode(
-        "group heal occasion",
-        NextAction::array(0, new NextAction("riptide on party", 23.0f), new NextAction("chain heal", 22.0f), NULL)));
+        "group heal setting",
+        NextAction::array(0, new NextAction("riptide on party", 23.0f), new NextAction("chain heal on party", 22.0f), NULL)));
 
     triggers.push_back(new TriggerNode(
         "party member critical health",
@@ -104,6 +104,11 @@ void HealShamanStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
     triggers.push_back(
         new TriggerNode("medium mana", NextAction::array(0, new NextAction("mana tide totem", ACTION_HIGH + 5), NULL)));
 
+    triggers.push_back(
+        new TriggerNode("no fire totem", NextAction::array(0, new NextAction("flametongue totem", 7.0f),
+                                                           new NextAction("searing totem", 6.0f), nullptr)));
+    triggers.push_back(new TriggerNode("fire elemental totem",
+                                       NextAction::array(0, new NextAction("fire elemental totem", 32.0f), nullptr)));                                                       
     triggers.push_back(new TriggerNode(
         "party member to heal out of spell range",
         NextAction::array(0, new NextAction("reach party member to heal", ACTION_CRITICAL_HEAL + 1), nullptr)));

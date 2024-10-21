@@ -37,7 +37,7 @@ void GenericPaladinStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
         "protect party member",
         NextAction::array(0, new NextAction("blessing of protection on party", ACTION_EMERGENCY + 2), nullptr)));
     triggers.push_back(
-        new TriggerNode("medium mana", NextAction::array(0, new NextAction("divine plea", ACTION_HIGH), NULL)));
+        new TriggerNode("high mana", NextAction::array(0, new NextAction("divine plea", ACTION_HIGH), NULL)));
 }
 
 void PaladinCureStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
@@ -61,8 +61,7 @@ void PaladinCureStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
 
 void PaladinBoostStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
 {
-    triggers.push_back(new TriggerNode(
-        "avenging wrath", NextAction::array(0, new NextAction("avenging wrath", ACTION_HIGH + 2), nullptr)));
+    
     // triggers.push_back(new TriggerNode("divine favor", NextAction::array(0, new NextAction("divine favor",
     // ACTION_HIGH + 1), nullptr)));
 }
@@ -71,4 +70,18 @@ void PaladinCcStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
 {
     triggers.push_back(
         new TriggerNode("turn undead", NextAction::array(0, new NextAction("turn undead", ACTION_HIGH + 1), nullptr)));
+}
+
+void PaladinHealerDpsStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
+{
+    triggers.push_back(
+        new TriggerNode("healer should attack",
+                        NextAction::array(0,
+                            new NextAction("hammer of wrath", ACTION_DEFAULT + 0.6f),
+                            new NextAction("holy shock", ACTION_DEFAULT + 0.5f),
+                            new NextAction("shield of righteousness", ACTION_DEFAULT + 0.4f),
+                            new NextAction("judgement of light", ACTION_DEFAULT + 0.3f),
+                            new NextAction("consecration", ACTION_DEFAULT + 0.2f),
+                            new NextAction("exorcism", ACTION_DEFAULT+ 0.1f),
+                            nullptr)));
 }

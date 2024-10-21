@@ -29,7 +29,8 @@ bool ChangeTalentsAction::Execute(Event event)
             if (param.find("switch 1") != std::string::npos)
             {
                 bot->ActivateSpec(0);
-                out << "Active first talent";
+                out << "主天赋已启用";
+                botAI->ResetStrategies();
             }
             else if (param.find("switch 2") != std::string::npos)
             {
@@ -40,6 +41,7 @@ bool ChangeTalentsAction::Execute(Event event)
                 }
                 bot->ActivateSpec(1);
                 out << "副天赋已启用";
+                botAI->ResetStrategies();
             }
         }
         else if (param.find("autopick") != std::string::npos)
@@ -47,6 +49,7 @@ bool ChangeTalentsAction::Execute(Event event)
             PlayerbotFactory factory(bot, bot->GetLevel());
             factory.InitTalentsTree(true);
             out << "自动使用天赋点";
+            botAI->ResetStrategies();
         }
         else if (param.find("spec list") != std::string::npos)
         {

@@ -216,6 +216,9 @@ AiPlayerbot.AutoEquipUpgradeLoot = 1
 # 默认：1.1 （当装备得分比当前高1.1倍时替换装备）
 AiPlayerbot.EquipUpgradeThreshold = 1.1
 
+# Two rounds of equipment initialization to create more suitable gear
+AiPlayerbot.TwoRoundsGearInit = 0
+
 #
 #
 #
@@ -342,6 +345,7 @@ AiPlayerbot.MediumHealth = 65
 AiPlayerbot.AlmostFullHealth = 85
 AiPlayerbot.LowMana = 15
 AiPlayerbot.MediumMana = 40
+AiPlayerbot.HighMana = 65
 
 #
 #
@@ -353,7 +357,7 @@ AiPlayerbot.MediumMana = 40
 #
 #
 
-# 机器人选择任务奖励（yes = 选择第一个可用物品，no = 列出所有奖励，ask = 选择可用物品，如有多个则列出）
+# 机器人选择任务奖励（yes = 选择最有用的物品，no = 列出所有奖励，ask = 选择可用物品，如有多个则列出）
 AiPlayerbot.AutoPickReward = yes
 
 # 与玩家同步任务（当你提交任务时机器人将忽略任务物品需求自动完成任务。）
@@ -381,9 +385,11 @@ AiPlayerbot.ApplyInstanceStrategies = 1
 # 默认：1（启用）
 AiPlayerbot.AutoAvoidAoe = 1
 
-# 告知正在躲避的技能（实验性）
-# 默认：1（启用）
-AiPlayerbot.TellWhenAvoidAoe = 1
+# 仅躲避半径小于此值的aoe法术
+AiPlayerbot.MaxAoeAvoidRadius = 15.0
+
+# 不应躲避的AOE法术ID白名单
+AiPlayerbot.AoeAvoidSpellWhitelist = 50759,57491,13810
 
 # 启用治疗机器人保存法力
 # 默认：1（启用）
@@ -727,10 +733,10 @@ AiPlayerbot.RandomBotUpdateInterval = 20
 AiPlayerbot.RandomBotCountChangeMinInterval = 1800
 AiPlayerbot.RandomBotCountChangeMaxInterval = 7200
 AiPlayerbot.MinRandomBotInWorldTime = 3600
-AiPlayerbot.MaxRandomBotInWorldTime = 43200
-AiPlayerbot.MinRandomBotRandomizeTime = 302400
+AiPlayerbot.MaxRandomBotInWorldTime = 1209600
+AiPlayerbot.MinRandomBotRandomizeTime = 7200
 AiPlayerbot.MaxRandomBotRandomizeTime = 1209600
-AiPlayerbot.RandomBotsPerInterval = 500
+AiPlayerbot.RandomBotsPerInterval = 60
 AiPlayerbot.MinRandomBotReviveTime = 60
 AiPlayerbot.MaxRandomBotReviveTime = 300
 AiPlayerbot.MinRandomBotTeleportInterval = 3600
@@ -771,12 +777,12 @@ AiPlayerbot.RandomBotInWorldWithRotationDisabled = 31104000
 
 AiPlayerbot.PremadeSpecName.1.0 = 武器pve
 AiPlayerbot.PremadeSpecGlyph.1.0 = 43418,43395,43423,43399,49084,43421
-AiPlayerbot.PremadeSpecLink.1.0.60 = 3022032023335100202012013031241
-AiPlayerbot.PremadeSpecLink.1.0.80 = 3022032123335100202012013031251-32505010002
+AiPlayerbot.PremadeSpecLink.1.0.60 = 3022032023335100002012211231241
+AiPlayerbot.PremadeSpecLink.1.0.80 = 3022032023335100102012213231251-305-2033
 AiPlayerbot.PremadeSpecName.1.1 = 狂暴pve
 AiPlayerbot.PremadeSpecGlyph.1.1 = 43418,43395,43414,43399,49084,43432
 AiPlayerbot.PremadeSpecLink.1.1.60 = -305053000500310053120501351
-AiPlayerbot.PremadeSpecLink.1.1.80 = 30202300233-305053000500310153120511351
+AiPlayerbot.PremadeSpecLink.1.1.80 = 32002300233-305053000500310153120511351
 AiPlayerbot.PremadeSpecName.1.2 = 防护pve
 AiPlayerbot.PremadeSpecGlyph.1.2 = 43424,43395,43425,43399,49084,45793
 AiPlayerbot.PremadeSpecLink.1.2.60 = --053351225000210521030113321
@@ -797,7 +803,7 @@ AiPlayerbot.PremadeSpecGlyph.2.0 = 41106,43367,45741,43369,43365,41109
 AiPlayerbot.PremadeSpecLink.2.0.60 = 50350151020013053100515221
 AiPlayerbot.PremadeSpecLink.2.0.80 = 50350152220013053100515221-503201312
 AiPlayerbot.PremadeSpecName.2.1 = 防护pve
-AiPlayerbot.PremadeSpecGlyph.2.1 = 41100,43367,43869,43369,43365,45745
+AiPlayerbot.PremadeSpecGlyph.2.1 = 41099,43367,43869,43369,43365,45745
 AiPlayerbot.PremadeSpecLink.2.1.60 = -05005135203102311333112321
 AiPlayerbot.PremadeSpecLink.2.1.80 = -05005135203102311333312321-502302012003
 AiPlayerbot.PremadeSpecName.2.2 = 惩戒pve
@@ -821,13 +827,25 @@ AiPlayerbot.PremadeSpecGlyph.3.0 = 42912,43350,42902,43351,43338,45732
 AiPlayerbot.PremadeSpecLink.3.0.60 = 51200201505112243100511351
 AiPlayerbot.PremadeSpecLink.3.0.80 = 51200201505112253100531351-015305021
 AiPlayerbot.PremadeSpecName.3.1 = 射击pve
-AiPlayerbot.PremadeSpecGlyph.3.1 = 42912,43350,42915,43351,43338,45732
-AiPlayerbot.PremadeSpecLink.3.1.60 = -015305101230013233135030051
-AiPlayerbot.PremadeSpecLink.3.1.80 = 502-035305101230013233135031351-5000002
+AiPlayerbot.PremadeSpecGlyph.3.1 = 42912,43350,42914,43351,43338,45732
+AiPlayerbot.PremadeSpecLink.3.1.60 = -025315101030013233125031051
+AiPlayerbot.PremadeSpecLink.3.1.80 = 502-025335101030013233135031351-5000002
 AiPlayerbot.PremadeSpecName.3.2 = 生存pve
 AiPlayerbot.PremadeSpecGlyph.3.2 = 42912,43350,45731,43351,43338,45732
-AiPlayerbot.PremadeSpecLink.3.2.60 = --5000032500033330502135001331
-AiPlayerbot.PremadeSpecLink.3.2.80 = -005305101-5000032500033330522135301331
+AiPlayerbot.PremadeSpecLink.3.2.60 = --5000032500033330502135201311
+AiPlayerbot.PremadeSpecLink.3.2.80 = -005305101-5000032500033330532135301321
+
+# HUNTER PET
+#
+# Ferocity
+AiPlayerbot.PremadeHunterPetLink.0.16 = 2100003030103010101
+AiPlayerbot.PremadeHunterPetLink.0.20 = 2100013030103010122
+# Tenacity
+AiPlayerbot.PremadeHunterPetLink.1.16 = 21103000300120101001
+AiPlayerbot.PremadeHunterPetLink.1.20 = 21303010300120101002
+# Cunning
+AiPlayerbot.PremadeHunterPetLink.2.16 = 2100020330000211001
+AiPlayerbot.PremadeHunterPetLink.2.20 = 21000203300002110221
 
 #
 #
@@ -895,8 +913,8 @@ AiPlayerbot.PremadeSpecLink.6.1.60 = -32003350332203012300023101351
 AiPlayerbot.PremadeSpecLink.6.1.80 = -32002350352203012300033101351-230200305003
 AiPlayerbot.PremadeSpecName.6.2 = 邪恶pve
 AiPlayerbot.PremadeSpecGlyph.6.2 = 43542,43673,45804,43544,43672,43549
-AiPlayerbot.PremadeSpecLink.6.2.60 = --2300303050032152000150213130051
-AiPlayerbot.PremadeSpecLink.6.2.80 = -320053500002-2300303050032152000150213130051
+AiPlayerbot.PremadeSpecLink.6.2.60 = --2301303050032151000150013131151
+AiPlayerbot.PremadeSpecLink.6.2.80 = -320033500002-2301303050032151000150013133151
 AiPlayerbot.PremadeSpecName.6.3 = 血冰pve
 AiPlayerbot.PremadeSpecGlyph.6.3 = 45805,43673,43827,43544,43672,43554
 AiPlayerbot.PremadeSpecLink.6.3.60 = 005512153330030320102013-305
@@ -917,7 +935,7 @@ AiPlayerbot.PremadeSpecGlyph.7.0 = 41536,43385,41532,43386,44923,45776
 AiPlayerbot.PremadeSpecLink.7.0.60 = 4530001520213351102301351
 AiPlayerbot.PremadeSpecLink.7.0.80 = 3530001523213351322301351-005050031
 AiPlayerbot.PremadeSpecName.7.1 = 增强pve
-AiPlayerbot.PremadeSpecGlyph.7.1 = 41530,43385,41539,43386,44923,41540
+AiPlayerbot.PremadeSpecGlyph.7.1 = 41542,43385,41539,43386,44923,45771
 AiPlayerbot.PremadeSpecLink.7.1.60 = -30205033005001333031131131051
 AiPlayerbot.PremadeSpecLink.7.1.80 = 053030052-30205033005021333031131131051
 AiPlayerbot.PremadeSpecName.7.2 = 恢复pve
@@ -965,7 +983,7 @@ AiPlayerbot.PremadeSpecLink.9.0.70 = 2350022001113510053500131151--55
 AiPlayerbot.PremadeSpecLink.9.0.80 = 2350022001113510253500331151--5500000501
 AiPlayerbot.PremadeSpecName.9.1 = 恶魔pve
 AiPlayerbot.PremadeSpecGlyph.9.1 = 45785,43390,50077,43394,43393,42459
-AiPlayerbot.PremadeSpecLink.9.1.60 = -003203301135112530131201-55
+AiPlayerbot.PremadeSpecLink.9.1.60 = -003203301135112530135201051
 AiPlayerbot.PremadeSpecLink.9.1.70 = -003203301135112530135201051-55
 AiPlayerbot.PremadeSpecLink.9.1.80 = -003203301135112530135221351-55000005
 AiPlayerbot.PremadeSpecName.9.2 = 毁灭pve
@@ -985,19 +1003,19 @@ AiPlayerbot.PremadeSpecLink.9.2.80 = -03310030003-05203205210331051335230351
 
 AiPlayerbot.PremadeSpecName.11.0 = 平衡pve
 AiPlayerbot.PremadeSpecGlyph.11.0 = 40916,43331,40921,43335,44922,40919
-AiPlayerbot.PremadeSpecLink.11.0.60 = 5012203115331003213302301231
-AiPlayerbot.PremadeSpecLink.11.0.80 = 5012203125331103213305301231--205003212
+AiPlayerbot.PremadeSpecLink.11.0.60 = 5022203105331003213005301231
+AiPlayerbot.PremadeSpecLink.11.0.80 = 5032203105331303213305301231--205003012
 AiPlayerbot.PremadeSpecName.11.1 = 熊pve
 AiPlayerbot.PremadeSpecGlyph.11.1 = 40897,43331,46372,43335,43332,40899
 AiPlayerbot.PremadeSpecLink.11.1.60 = -500232130322110353100301310501
 AiPlayerbot.PremadeSpecLink.11.1.80 = -501232130322110353120303313511-20350001
 AiPlayerbot.PremadeSpecName.11.2 = 恢复pve
 AiPlayerbot.PremadeSpecGlyph.11.2 = 40913,43331,40906,43335,44922,45602
-AiPlayerbot.PremadeSpecLink.11.2.60 = --230033312031501531050013051
-AiPlayerbot.PremadeSpecLink.11.2.80 = 05320001--230033312031512531153313051
+AiPlayerbot.PremadeSpecLink.11.2.60 = --230033312031500531050113051
+AiPlayerbot.PremadeSpecLink.11.2.80 = 05320031--230033312031501531053313051
 AiPlayerbot.PremadeSpecName.11.3 = 猫pve
 AiPlayerbot.PremadeSpecGlyph.11.3 = 40902,43331,40901,43335,44922,45604
-AiPlayerbot.PremadeSpecLink.11.3.60 = -553202032322010052100030310501
+AiPlayerbot.PremadeSpecLink.11.3.60 = -552202032322010053100030310501
 AiPlayerbot.PremadeSpecLink.11.3.80 = -553202032322010053100030310511-205503012
 
 #
@@ -1165,11 +1183,11 @@ AiPlayerbot.RandomClassSpecIndex.8.2 = 2
 #
 #
 
-AiPlayerbot.RandomClassSpecProb.9.0 = 40
+AiPlayerbot.RandomClassSpecProb.9.0 = 45
 AiPlayerbot.RandomClassSpecIndex.9.0 = 0
-AiPlayerbot.RandomClassSpecProb.9.1 = 40
+AiPlayerbot.RandomClassSpecProb.9.1 = 45
 AiPlayerbot.RandomClassSpecIndex.9.1 = 1
-AiPlayerbot.RandomClassSpecProb.9.2 = 20
+AiPlayerbot.RandomClassSpecProb.9.2 = 10
 AiPlayerbot.RandomClassSpecIndex.9.2 = 2
 
 #
@@ -1184,11 +1202,12 @@ AiPlayerbot.RandomClassSpecIndex.9.2 = 2
 
 AiPlayerbot.RandomClassSpecProb.11.0 = 20
 AiPlayerbot.RandomClassSpecIndex.11.0 = 0
-AiPlayerbot.RandomClassSpecProb.11.1 = 40
+AiPlayerbot.RandomClassSpecProb.11.1 = 25
 AiPlayerbot.RandomClassSpecIndex.11.1 = 1
-AiPlayerbot.RandomClassSpecProb.11.2 = 40
+AiPlayerbot.RandomClassSpecProb.11.2 = 35
 AiPlayerbot.RandomClassSpecIndex.11.2 = 2
-
+AiPlayerbot.RandomClassSpecProb.11.3 = 20
+AiPlayerbot.RandomClassSpecIndex.11.3 = 3
 #
 #
 #
@@ -1245,11 +1264,6 @@ Playerbots.Updates.EnableDatabases = 1
 # Command server port, 0 - disabled
 AiPlayerbot.CommandServerPort = 8888
 
-# Diff with/without player in server. The server will tune bot activity to reach the desired server tick speed （in ms）.# PLAYERBOT SYSTEM SETTINGS       #
-AiPlayerbot.EnablePrototypePerformanceDiff = 0
-AiPlayerbot.DiffWithPlayer = 100
-AiPlayerbot.DiffEmpty = 200
-
 #
 #
 #
@@ -1264,6 +1278,10 @@ AiPlayerbot.SpellDump = 0
 AiPlayerbot.LogInGroupOnly = 1
 AiPlayerbot.LogValuesPerTick = 0
 AiPlayerbot.RandomChangeMultiplier = 1
+
+# 告知要躲避的法术（实验性）
+# 默认：0（禁用）
+AiPlayerbot.TellWhenAvoidAoe = 0
 
 # 启用/禁用性能监视器
 AiPlayerbot.PerfMonEnabled = 0
@@ -1440,8 +1458,21 @@ AiPlayerbot.RandombotsWalkingRPG.InDoors = 0
 # 默认是10。每分钟将有10%的机器人转为活动或非活动状态。
 AiPlayerbot.BotActiveAlone = 100
 
-# 要躲避的预置法术（未被发现的施法）
-# spellid-radius, ...
+# 指定是否启用智能缩放。
+# 默认值为1。启用（智能缩放）时，可缩放“BotActiveAlone”值。
+AiPlayerbot.botActiveAloneSmartScale = 1
+
+# 仅当机器人等级介于WhenMinLevel和WhenMaxLevel之间时。
+AiPlayerbot.botActiveAloneSmartScaleWhenMinLevel = 1
+AiPlayerbot.botActiveAloneSmartScaleWhenMaxLevel = 80
+
+# 服务器将调整机器人活动以达到所需的服务器tick速度（以毫秒为单位）
+# 机器人只有在没有延迟差异的情况下才会加入战场bots will only join battleground when there is no lag based on latency diffs below
+AiPlayerbot.botActiveAloneSmartScaleDiffWithPlayer = 100
+AiPlayerbot.botActiveAloneSmartScaleDiffEmpty = 200
+
+# 要躲避的预置法术（未被发现的法术）
+# 法术ID-半径， ...
 AiPlayerbot.PremadeAvoidAoe = 62234-4
 
 AiPlayerbot.MinRandomBotsPriceChangeInterval = 7200

@@ -7,6 +7,7 @@
 #define _PLAYERBOT_SHAMANACTIONS_H
 
 #include "GenericSpellActions.h"
+#include "Playerbots.h"
 #include "SharedDefines.h"
 
 class PlayerbotAI;
@@ -41,11 +42,11 @@ public:
     }
 };
 
-class CastChainHealAction : public CastAoeHealSpellAction
+class CastChainHealAction : public HealPartyMemberAction
 {
 public:
     CastChainHealAction(PlayerbotAI* botAI)
-        : CastAoeHealSpellAction(botAI, "chain heal", 15.0f, HealingManaEfficiency::HIGH)
+        : HealPartyMemberAction(botAI, "chain heal", 15.0f, HealingManaEfficiency::HIGH)
     {
     }
 };
@@ -334,7 +335,7 @@ public:
 class CastFlameShockAction : public CastDebuffSpellAction
 {
 public:
-    CastFlameShockAction(PlayerbotAI* botAI) : CastDebuffSpellAction(botAI, "flame shock", true) {}
+    CastFlameShockAction(PlayerbotAI* botAI) : CastDebuffSpellAction(botAI, "flame shock", true, 6.0f) {}
 };
 
 class CastEarthShockAction : public CastSpellAction
@@ -424,6 +425,20 @@ public:
     CastFireElementalTotemAction(PlayerbotAI* ai) : CastTotemAction(ai, "fire elemental totem", "", 0.0f) {}
     virtual std::string const GetTargetName() override { return "self target"; }
     virtual bool isUseful() override { return CastTotemAction::isUseful(); }
+};
+
+class CastFireElementalTotemMeleeAction : public CastTotemAction
+{
+public:
+    CastFireElementalTotemMeleeAction(PlayerbotAI* ai) : CastTotemAction(ai, "fire elemental totem", "", 0.0f) {}
+    virtual std::string const GetTargetName() override { return "self target"; }
+    virtual bool isUseful() override
+    {
+        Unit* target = AI_VALUE(Unit*, "current target");
+        if (!target || !bot->IsWithinMeleeRange(target))
+            return false;
+        return CastTotemAction::isUseful();
+    }
 };
 
 class CastWrathOfAirTotemAction : public CastTotemAction

@@ -130,9 +130,9 @@ bool TellAuraAction::Execute(Event event)
     return true;
 }
 
-bool TellExpectedDpsAction::Execute(Event event)
+bool TellEstimatedDpsAction::Execute(Event event)
 {
-    float dps = AI_VALUE(float, "expected group dps");
+    float dps = AI_VALUE(float, "estimated group dps");
     botAI->TellMaster("预期队伍DPS：" + std::to_string(dps));
     return true;
 }

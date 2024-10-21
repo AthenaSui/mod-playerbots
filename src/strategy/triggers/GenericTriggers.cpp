@@ -9,10 +9,14 @@
 
 #include "BattlegroundWS.h"
 #include "CreatureAI.h"
+#include "GameTime.h"
+#include "LastSpellCastValue.h"
 #include "ObjectGuid.h"
+#include "PlayerbotAIConfig.h"
 #include "Playerbots.h"
 #include "SharedDefines.h"
 #include "TemporarySummon.h"
+#include "ThreatMgr.h"
 #include "Timer.h"
 
 bool LowManaTrigger::IsActive()
@@ -64,7 +68,7 @@ bool PetAttackTrigger::IsActive()
 
 bool HighManaTrigger::IsActive()
 {
-    return AI_VALUE2(bool, "has mana", "self target") && AI_VALUE2(uint8, "mana", "self target") < 65;
+    return AI_VALUE2(bool, "has mana", "self target") && AI_VALUE2(uint8, "mana", "self target") < sPlayerbotAIConfig->highMana;
 }
 
 bool AlmostFullManaTrigger::IsActive()
@@ -74,7 +78,7 @@ bool AlmostFullManaTrigger::IsActive()
 
 bool EnoughManaTrigger::IsActive()
 {
-    return AI_VALUE2(bool, "has mana", "self target") && AI_VALUE2(uint8, "mana", "self target") > 65;
+    return AI_VALUE2(bool, "has mana", "self target") && AI_VALUE2(uint8, "mana", "self target") > sPlayerbotAIConfig->highMana;
 }
 
 bool RageAvailable::IsActive() { return AI_VALUE2(uint8, "rage", "self target") >= amount; }
@@ -82,6 +86,19 @@ bool RageAvailable::IsActive() { return AI_VALUE2(uint8, "rage", "self target") 
 bool EnergyAvailable::IsActive() { return AI_VALUE2(uint8, "energy", "self target") >= amount; }
 
 bool ComboPointsAvailableTrigger::IsActive() { return AI_VALUE2(uint8, "combo", "current target") >= amount; }
+
+bool ComboPointsNotFullTrigger::IsActive() { return AI_VALUE2(uint8, "combo", "current target") < amount; }
+
+bool TargetWithComboPointsLowerHealTrigger::IsActive()
+{
+    Unit* target = AI_VALUE(Unit*, "current target");
+    if (!target || !target->IsAlive() || !target->IsInWorld())
+    {
+        return false;
+    }
+    return ComboPointsAvailableTrigger::IsActive() &&
+           (target->GetHealth() / AI_VALUE(float, "estimated group dps")) <= lifeTime;
+}
 
 bool LoseAggroTrigger::IsActive() { return !AI_VALUE2(bool, "has aggro", "current target"); }
 
@@ -137,7 +154,16 @@ bool OutNumberedTrigger::IsActive()
 bool BuffTrigger::IsActive()
 {
     Unit* target = GetTarget();
-    return SpellTrigger::IsActive() && !botAI->HasAura(spell, target, false, checkIsOwner);
+    if (!target)
+        return false;
+    if (!SpellTrigger::IsActive())
+        return false;
+    Aura* aura = botAI->GetAura(spell, target, checkIsOwner, checkDuration);
+    if (!aura)
+        return true;
+    if (beforeDuration && aura->GetDuration() < beforeDuration)
+        return true;
+    return false;
 }
 
 Value<Unit*>* BuffOnPartyTrigger::GetTargetValue()
@@ -169,6 +195,22 @@ bool NoTargetTrigger::IsActive() { return !AI_VALUE(Unit*, "current target"); }
 bool MyAttackerCountTrigger::IsActive()
 {
     return AI_VALUE2(bool, "combat", "self target") && AI_VALUE(uint8, "my attacker count") >= amount;
+}
+
+bool LowTankThreatTrigger::IsActive()
+{
+    Unit* mt = AI_VALUE(Unit*, "main tank");
+    if (!mt)
+        return false;
+
+    Unit* current_target = AI_VALUE(Unit*, "current target");
+    if (!current_target)
+        return false;
+
+    ThreatMgr& mgr = current_target->GetThreatMgr();
+    float threat = mgr.GetThreat(bot);
+    float tankThreat = mgr.GetThreat(mt);
+    return tankThreat == 0.0f || threat > tankThreat * 0.5f;
 }
 
 bool AoeTrigger::IsActive()
@@ -221,7 +263,7 @@ bool DebuffTrigger::IsActive()
     {
         return false;
     }
-    return BuffTrigger::IsActive() && (target->GetHealth() / AI_VALUE(float, "expected group dps")) >= needLifeTime;
+    return BuffTrigger::IsActive() && (target->GetHealth() / AI_VALUE(float, "estimated group dps")) >= needLifeTime;
 }
 
 bool DebuffOnBossTrigger::IsActive()
@@ -324,6 +366,39 @@ bool GenericBoostTrigger::IsActive()
     if (target && target->ToPlayer())
         return true;
     return AI_VALUE(uint8, "balance") <= balance;
+}
+
+bool HealerShouldAttackTrigger::IsActive() 
+{
+    // nobody can help me
+    if (botAI->GetNearGroupMemberCount(sPlayerbotAIConfig->sightDistance) <= 1)
+        return true;
+    
+    if (AI_VALUE2(uint8, "health", "party member to heal") < sPlayerbotAIConfig->almostFullHealth)
+        return false;
+    
+    // special check for resto druid (dont remove tree of life frequently)
+    if (bot->GetAura(33891))
+    {
+        LastSpellCast& lastSpell = botAI->GetAiObjectContext()->GetValue<LastSpellCast&>("last spell cast")->Get();
+        if (lastSpell.timer + 5 > time(nullptr))
+            return false;
+    }
+
+    int manaThreshold;
+    int balance = AI_VALUE(uint8, "balance");
+    // higher threshold in higher pressure
+    if (balance <= 50)
+        manaThreshold = 85;
+    else if (balance <= 100)
+        manaThreshold = sPlayerbotAIConfig->highMana;
+    else
+        manaThreshold = sPlayerbotAIConfig->mediumMana;
+
+    if (AI_VALUE2(bool, "has mana", "self target") && AI_VALUE2(uint8, "mana", "self target") < manaThreshold)
+        return false;
+
+    return true;
 }
 
 bool ItemCountTrigger::IsActive() { return AI_VALUE2(uint32, "item count", item) < count; }

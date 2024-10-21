@@ -241,6 +241,27 @@ enum class GuilderType : uint8
     VERY_LARGE = 250
 };
 
+enum class ActivePiorityType : uint8
+{
+    IS_REAL_PLAYER = 0,
+    HAS_REAL_PLAYER_MASTER = 1,
+    IN_GROUP_WITH_REAL_PLAYER = 2,
+    IN_INSTANCE = 3,
+    VISIBLE_FOR_PLAYER = 4,
+    IS_ALWAYS_ACTIVE = 5,
+    IN_COMBAT = 6,
+    IN_BG_QUEUE = 7,
+    IN_LFG = 8,
+    NEARBY_PLAYER = 9,
+    PLAYER_FRIEND = 10,
+    PLAYER_GUILD = 11,
+    IN_ACTIVE_AREA = 12,
+    IN_ACTIVE_MAP = 13,
+    IN_INACTIVE_MAP = 14,
+    IN_EMPTY_SERVER = 15,
+    MAX_TYPE
+};
+
 enum ActivityType
 {
     GRIND_ACTIVITY = 1,
@@ -250,8 +271,8 @@ enum ActivityType
     PACKET_ACTIVITY = 5,
     DETAILED_MOVE_ACTIVITY = 6,
     PARTY_ACTIVITY = 7,
-    ALL_ACTIVITY = 8,
-
+    REACT_ACTIVITY = 8,
+    ALL_ACTIVITY = 9,
     MAX_ACTIVITY_TYPE
 };
 
@@ -401,15 +422,16 @@ public:
     void ResetStrategies(bool load = false);
     void ReInitCurrentEngine();
     void Reset(bool full = false);
-    static bool IsTank(Player* player);
-    static bool IsHeal(Player* player);
-    static bool IsDps(Player* player);
-    static bool IsRanged(Player* player);
-    static bool IsMelee(Player* player);
-    static bool IsCaster(Player* player);
-    static bool IsCombo(Player* player);
-    static bool IsRangedDps(Player* player);
+    static bool IsTank(Player* player, bool bySpec = false);
+    static bool IsHeal(Player* player, bool bySpec = false);
+    static bool IsDps(Player* player, bool bySpec = false);
+    static bool IsRanged(Player* player, bool bySpec = false);
+    static bool IsMelee(Player* player, bool bySpec = false);
+    static bool IsCaster(Player* player, bool bySpec = false);
+    static bool IsCombo(Player* player, bool bySpec = false);
+    static bool IsRangedDps(Player* player, bool bySpec = false);
     static bool IsMainTank(Player* player);
+    static uint32 GetGroupTankNum(Player* player);
     bool IsAssistTank(Player* player);
     bool IsAssistTankOfIndex(Player* player, int index);
     bool IsHealAssistantOfIndex(Player* player, int index);
@@ -469,6 +491,7 @@ public:
     void ImbueItem(Item* item);
     void EnchantItemT(uint32 spellid, uint8 slot);
     uint32 GetBuffedCount(Player* player, std::string const spellname);
+    int32 GetNearGroupMemberCount(float dis = sPlayerbotAIConfig->sightDistance);
 
     virtual bool CanCastSpell(std::string const name, Unit* target, Item* itemTarget = nullptr);
     virtual bool CastSpell(std::string const name, Unit* target, Item* itemTarget = nullptr);
@@ -523,6 +546,8 @@ public:
     bool HasPlayerNearby(WorldPosition* pos, float range = sPlayerbotAIConfig->reactDistance);
     bool HasPlayerNearby(float range = sPlayerbotAIConfig->reactDistance);
     bool HasManyPlayersNearby(uint32 trigerrValue = 20, float range = sPlayerbotAIConfig->sightDistance);
+    ActivePiorityType GetPriorityType(ActivityType activityType);
+    std::pair<uint32, uint32> GetPriorityBracket(ActivePiorityType type);
     bool AllowActive(ActivityType activityType);
     bool AllowActivity(ActivityType activityType = ALL_ACTIVITY, bool checkNow = false);
 
@@ -551,6 +576,7 @@ public:
     void ResetJumpDestination() { jumpDestination = Position(); }
 
     bool CanMove();
+    bool IsTaxiFlying();
     bool IsInRealGuild();
     static std::vector<std::string> dispel_whitelist;
     bool EqualLowercaseName(std::string s1, std::string s2);
@@ -568,6 +594,7 @@ public:
     std::set<uint32> GetAllCurrentQuestIds();
     std::set<uint32> GetCurrentIncompleteQuestIds();
     void PetFollow();
+    static float GetItemScoreMultiplier(ItemQualities quality);
 
 private:
     static void _fillGearScoreData(Player* player, Item* item, std::vector<uint32>* gearScore, uint32& twoHandScore,
@@ -601,6 +628,7 @@ protected:
     bool inCombat = false;
     BotCheatMask cheatMask = BotCheatMask::none;
     Position jumpDestination = Position();
+    uint32 nextTransportCheck = 0;
 };
 
 #endif

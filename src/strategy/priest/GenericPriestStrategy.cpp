@@ -31,6 +31,8 @@ void GenericPriestStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
     // NextAction("inner focus", 42.0f), nullptr))); triggers.push_back(new TriggerNode("medium mana",
     // NextAction::array(0, new NextAction("symbol of hope", ACTION_EMERGENCY), nullptr))); triggers.push_back(new
     // TriggerNode("low mana", NextAction::array(0, new NextAction("consume magic", 10.0f), nullptr)));
+    // triggers.push_back(
+    //     new TriggerNode("inner focus", NextAction::array(0, new NextAction("inner focus", 42.0f), nullptr)));
     triggers.push_back(new TriggerNode("critical health", NextAction::array(0, new NextAction("desperate prayer",
         ACTION_HIGH + 5), nullptr))); 
     // triggers.push_back(new TriggerNode("enemy is close", NextAction::array(0, new
@@ -43,7 +45,10 @@ void GenericPriestStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
         new TriggerNode("low health", NextAction::array(0, new NextAction("power word: shield", ACTION_HIGH), NULL)));
 
     triggers.push_back(
-        new TriggerNode("medium mana", NextAction::array(0, new NextAction("shadowfiend", ACTION_HIGH + 1), NULL)));
+        new TriggerNode("medium mana", 
+            NextAction::array(0, 
+                new NextAction("shadowfiend", ACTION_HIGH + 2),
+                new NextAction("inner focus", ACTION_HIGH + 1), nullptr)));
 
     triggers.push_back(
         new TriggerNode("low mana", NextAction::array(0, new NextAction("hymn of hope", ACTION_HIGH), NULL)));
@@ -73,8 +78,6 @@ void PriestCureStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
 void PriestBoostStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
 {
     triggers.push_back(
-        new TriggerNode("inner focus", NextAction::array(0, new NextAction("inner focus", 42.0f), nullptr)));
-    triggers.push_back(
         new TriggerNode("power infusion", NextAction::array(0, new NextAction("power infusion", 41.0f), nullptr)));
     triggers.push_back(new TriggerNode("boost", NextAction::array(0, new NextAction("shadowfiend", 20.0f), nullptr)));
 }
@@ -84,3 +87,23 @@ void PriestCcStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
     triggers.push_back(
         new TriggerNode("shackle undead", NextAction::array(0, new NextAction("shackle undead", 31.0f), nullptr)));
 }
+
+void PriestHealerDpsStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
+{
+    triggers.push_back(
+        new TriggerNode("healer should attack",
+                        NextAction::array(0,
+                            new NextAction("shadow word: pain", ACTION_DEFAULT + 0.5f),
+                            new NextAction("holy fire", ACTION_DEFAULT + 0.4f),
+                            new NextAction("smite", ACTION_DEFAULT + 0.3f),
+                            new NextAction("mind blast", ACTION_DEFAULT + 0.2f),
+                            new NextAction("shoot", ACTION_DEFAULT),
+                            nullptr)));
+    
+    triggers.push_back(
+        new TriggerNode("medium aoe and healer should attack",
+                        NextAction::array(0,
+                            new NextAction("mind sear", ACTION_DEFAULT + 0.5f),
+                            nullptr)));
+}
+

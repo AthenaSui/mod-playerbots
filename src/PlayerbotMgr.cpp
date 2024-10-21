@@ -100,6 +100,8 @@ void PlayerbotHolder::HandlePlayerBotLoginCallback(PlayerbotLoginQueryHolder con
     Player* bot = botSession->GetPlayer();
     if (!bot)
     {
+        // Debug log
+        LOG_DEBUG("mod-playerbots", "Bot player could not be loaded for account ID: {}", botAccountId);
         botSession->LogoutPlayer(true);
         delete botSession;
         botLoading.erase(holder.GetGuid());
@@ -108,6 +110,14 @@ void PlayerbotHolder::HandlePlayerBotLoginCallback(PlayerbotLoginQueryHolder con
 
     uint32 masterAccount = holder.GetMasterAccountId();
     WorldSession* masterSession = masterAccount ? sWorld->FindSession(masterAccount) : nullptr;
+
+    // Check if masterSession->GetPlayer() is valid
+    Player* masterPlayer = masterSession ? masterSession->GetPlayer() : nullptr;
+    if (masterSession && !masterPlayer)
+    {
+        LOG_DEBUG("mod-playerbots", "Master session found but no player is associated for master account ID: {}", masterAccount);
+    }
+
     std::ostringstream out;
     bool allowed = false;
     if (botAccountId == masterAccount)
@@ -115,7 +125,7 @@ void PlayerbotHolder::HandlePlayerBotLoginCallback(PlayerbotLoginQueryHolder con
         allowed = true;
     }
     else if (masterSession && sPlayerbotAIConfig->allowGuildBots && bot->GetGuildId() != 0 &&
-             bot->GetGuildId() == masterSession->GetPlayer()->GetGuildId())
+             bot->GetGuildId() == masterPlayer->GetGuildId())
     {
         allowed = true;
     }
@@ -128,10 +138,15 @@ void PlayerbotHolder::HandlePlayerBotLoginCallback(PlayerbotLoginQueryHolder con
         allowed = false;
         out << "错误：你未被允许控制机器人 " << bot->GetName().c_str();
     }
-    if (allowed && masterSession)
+
+    if (allowed && masterSession && masterPlayer)
     {
-        Player* player = masterSession->GetPlayer();
-        PlayerbotMgr* mgr = GET_PLAYERBOT_MGR(player);
+        PlayerbotMgr* mgr = GET_PLAYERBOT_MGR(masterPlayer);
+        if (!mgr)
+        {
+            LOG_DEBUG("mod-playerbots", "PlayerbotMgr not found for master player with GUID: {}", masterPlayer->GetGUID().GetRawValue());
+        }
+        
         uint32 count = mgr->GetPlayerbotsCount();
         uint32 cls_count = mgr->GetPlayerbotsCountByClass(bot->getClass());
         if (count >= sPlayerbotAIConfig->maxAddedBots)
@@ -145,6 +160,7 @@ void PlayerbotHolder::HandlePlayerBotLoginCallback(PlayerbotLoginQueryHolder con
             out << "错误：你添加的该职业机器人太多了";
         }
     }
+    
     if (allowed)
     {
         sRandomPlayerbotMgr->OnPlayerLogin(bot);
@@ -426,14 +442,17 @@ void PlayerbotHolder::OnBotLogin(Player* const bot)
     PlayerbotAI* botAI = GET_PLAYERBOT_AI(bot);
     if (!botAI)
     {
+        // Log a warning here to indicate that the botAI is null
+        LOG_DEBUG("mod-playerbots", "PlayerbotAI is null for bot with GUID: {}", bot->GetGUID().GetRawValue());
         return;
     }
+
     Player* master = botAI->GetMaster();
-    if (master)
+    if (!master)
     {
-        ObjectGuid masterGuid = master->GetGUID();
-        if (master->GetGroup() && !master->GetGroup()->IsLeader(masterGuid))
-            master->GetGroup()->ChangeLeader(masterGuid);
+        // Log a warning to indicate that the master is null
+        LOG_DEBUG("mod-playerbots", "Master is null for bot with GUID: {}", bot->GetGUID().GetRawValue());
+        return;
     }
 
     Group* group = bot->GetGroup();
@@ -523,7 +542,10 @@ void PlayerbotHolder::OnBotLogin(Player* const bot)
         sGroupMgr->AddGroup(newGroup);
         newGroup->AddMember(bot);
     }
-
+    // if (master)
+    // {
+    //     // bot->TeleportTo(master);
+    // }
     uint32 accountId = bot->GetSession()->GetAccountId();
     bool isRandomAccount = sPlayerbotAIConfig->IsInRandomAccountList(accountId);
 
@@ -727,14 +749,14 @@ std::string const PlayerbotHolder::ProcessBotCommand(std::string const cmd, Obje
                                         sPlayerbotAIConfig->autoInitEquipLevelLimitRatio;
                 PlayerbotFactory factory(bot, master->GetLevel(), ITEM_QUALITY_LEGENDARY, mixedGearScore);
                 factory.Randomize(false);
-                return "成功，GS限制：" + std::to_string(mixedGearScore / (ITEM_QUALITY_EPIC + 1)) +
+                return "成功，GS限制：" + std::to_string(mixedGearScore / PlayerbotAI::GetItemScoreMultiplier(ItemQualities(ITEM_QUALITY_EPIC))) +
                        "(紫装)";
             }
             else if (cmd.starts_with("init=") && sscanf(cmd.c_str(), "init=%d", &gs) != -1)
             {
                 PlayerbotFactory factory(bot, master->GetLevel(), ITEM_QUALITY_LEGENDARY, gs);
                 factory.Randomize(false);
-                return "成功，GS限制：" + std::to_string(gs / (ITEM_QUALITY_EPIC + 1)) + "(紫装)";
+                return "成功，GS限制：" + std::to_string(gs / PlayerbotAI::GetItemScoreMultiplier(ItemQualities(ITEM_QUALITY_EPIC))) + "(紫装)";
             }
         }
 
@@ -848,6 +870,22 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
 
     if (!strncmp(cmd, "initself=", 9))
     {
+        if (!strcmp(cmd, "initself=uncommon"))
+        {
+            if (master->GetSession()->GetSecurity() >= SEC_GAMEMASTER)
+            {
+                // OnBotLogin(master);
+                PlayerbotFactory factory(master, master->GetLevel(), ITEM_QUALITY_UNCOMMON);
+                factory.Randomize(false);
+                messages.push_back("initself ok");
+                return messages;
+            }
+            else
+            {
+                messages.push_back("ERROR: Only GM can use this command.");
+                return messages;
+            }
+        }
         if (!strcmp(cmd, "initself=rare"))
         {
             if (master->GetSession()->GetSecurity() >= SEC_GAMEMASTER)
@@ -877,6 +915,22 @@ std::vector<std::string> PlayerbotHolder::HandlePlayerbotCommand(char const* arg
             else
             {
                 messages.push_back("错误：只有GM可以使用此命令。");
+                return messages;
+            }
+        }
+        if (!strcmp(cmd, "initself=legendary"))
+        {
+            if (master->GetSession()->GetSecurity() >= SEC_GAMEMASTER)
+            {
+                // OnBotLogin(master);
+                PlayerbotFactory factory(master, master->GetLevel(), ITEM_QUALITY_LEGENDARY);
+                factory.Randomize(false);
+                messages.push_back("initself ok");
+                return messages;
+            }
+            else
+            {
+                messages.push_back("ERROR: Only GM can use this command.");
                 return messages;
             }
         }
@@ -1277,7 +1331,7 @@ uint32 PlayerbotHolder::GetPlayerbotsCountByClass(uint32 cls)
     for (PlayerBotMap::const_iterator it = GetPlayerBotsBegin(); it != GetPlayerBotsEnd(); ++it)
     {
         Player* const bot = it->second;
-        if (bot->getClass() == cls)
+        if (bot && bot->IsInWorld() && bot->getClass() == cls)
         {
             count++;
         }
