@@ -104,7 +104,7 @@ public:
     void UpdateAIInternal(uint32 elapsed, bool minimal = false) override;
 
 private:
-    void ScaleBotActivity();
+    //void ScaleBotActivity();
 
 public:
     uint32 activeBots = 0;
@@ -171,6 +171,10 @@ public:
 
     void PrepareAddclassCache();
     std::map<uint8, std::vector<ObjectGuid>> addclassCache;
+    std::map<uint8, std::vector<WorldLocation>> locsPerLevelCache;
+    std::map<uint8, std::vector<WorldLocation>> allianceStarterPerLevelCache;
+    std::map<uint8, std::vector<WorldLocation>> hordeStarterPerLevelCache;
+    std::map<uint8, std::vector<WorldLocation>> bankerLocsPerLevelCache;
 protected:
     void OnBotLoginInternal(Player* const bot) override;
 
@@ -178,6 +182,7 @@ private:
     // pid values are set in constructor
     botPID pid = botPID(1, 50, -50, 0, 0, 0);
     float activityMod = 0.25;
+    bool _isBotInitializing = true;
     uint32 GetEventValue(uint32 bot, std::string const event);
     std::string const GetEventData(uint32 bot, std::string const event);
     uint32 SetEventValue(uint32 bot, std::string const event, uint32 value, uint32 validIn,
@@ -187,6 +192,7 @@ private:
     time_t BgCheckTimer;
     time_t LfgCheckTimer;
     time_t PlayersCheckTimer;
+    time_t printStatsTimer;
     uint32 AddRandomBots();
     bool ProcessBot(uint32 bot);
     void ScheduleRandomize(uint32 bot, uint32 time);
@@ -198,8 +204,7 @@ private:
 
     std::vector<Player*> players;
     uint32 processTicks;
-    std::map<uint8, std::vector<WorldLocation>> locsPerLevelCache;
-    std::map<uint8, std::vector<WorldLocation>> bankerLocsPerLevelCache;
+    
 
     // std::map<uint32, std::vector<WorldLocation>> rpgLocsCache;
     std::map<uint32, std::map<uint32, std::vector<WorldLocation>>> rpgLocsCacheLevel;

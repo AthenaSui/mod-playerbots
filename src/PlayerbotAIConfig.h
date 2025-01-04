@@ -247,6 +247,7 @@ public:
         uint32 spellId;
         uint32 factionId = 0;
         uint32 classId = 0;
+        uint32 specId = 0;
         uint32 minLevel = 0;
         uint32 maxLevel = 0;
     };
@@ -261,13 +262,20 @@ public:
     bool randomBotFixedLevel;
     bool disableRandomLevels;
     uint32 playerbotsXPrate;
+    uint32 randomBotAllianceRatio;
+    uint32 randomBotHordeRatio;
     bool disableDeathKnightLogin;
     uint32 botActiveAlone;
+    uint32 BotActiveAloneForceWhenInRadius;
+    bool BotActiveAloneForceWhenInZone;
+    bool BotActiveAloneForceWhenInMap;
+    bool BotActiveAloneForceWhenIsFriend;
+    bool BotActiveAloneForceWhenInGuild;
     bool botActiveAloneSmartScale;
+    uint32 botActiveAloneSmartScaleDiffLimitfloor;
+    uint32 botActiveAloneSmartScaleDiffLimitCeiling;
     uint32 botActiveAloneSmartScaleWhenMinLevel;
     uint32 botActiveAloneSmartScaleWhenMaxLevel;
-    uint32 botActiveAloneSmartScaleDiffWithPlayer;
-    uint32 botActiveAloneSmartScaleDiffEmpty;
 
     bool freeMethodLoot;
     int32 lootRollLevel;
@@ -277,11 +285,13 @@ public:
     bool twoRoundsGearInit;
     bool syncQuestWithPlayer;
     bool syncQuestForPlayer;
+    bool dropObsoleteQuests;
     std::string autoTrainSpells;
     bool autoPickTalents;
     bool autoUpgradeEquip;
     bool autoLearnTrainerSpells;
     bool autoDoQuests;
+    bool enableNewRpgStrategy;
     bool syncLevelWithPlayers;
     bool freeFood;
     bool autoLearnQuestSpells;
@@ -314,7 +324,7 @@ public:
     int32 addClassCommand;
     int32 addClassAccountPoolSize;
     int32 maintenanceCommand;
-    int32 autoGearCommand, autoGearQualityLimit, autoGearScoreLimit;
+    int32 autoGearCommand, autoGearCommandAltBots, autoGearQualityLimit, autoGearScoreLimit;
 
     std::string const GetTimestampStr();
     bool hasLog(std::string const fileName)
@@ -329,7 +339,7 @@ public:
     }
     void log(std::string const fileName, const char* str, ...);
 
-    void loadWorldBuf(uint32 factionId, uint32 classId, uint32 minLevel, uint32 maxLevel);
+    void loadWorldBuf(uint32 factionId, uint32 classId, uint32 specId, uint32 minLevel, uint32 maxLevel);
     static std::vector<std::vector<uint32>> ParseTempTalentsOrder(uint32 cls, std::string temp_talents_order);
     static std::vector<std::vector<uint32>> ParseTempPetTalentsOrder(uint32 spec, std::string temp_talents_order);
 };

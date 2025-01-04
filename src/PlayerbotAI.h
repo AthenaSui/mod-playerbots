@@ -21,6 +21,7 @@
 #include "PlayerbotTextMgr.h"
 #include "SpellAuras.h"
 #include "WorldPacket.h"
+#include "NewRpgStrategy.h"
 
 class AiObjectContext;
 class Creature;
@@ -241,27 +242,6 @@ enum class GuilderType : uint8
     VERY_LARGE = 250
 };
 
-enum class ActivePiorityType : uint8
-{
-    IS_REAL_PLAYER = 0,
-    HAS_REAL_PLAYER_MASTER = 1,
-    IN_GROUP_WITH_REAL_PLAYER = 2,
-    IN_INSTANCE = 3,
-    VISIBLE_FOR_PLAYER = 4,
-    IS_ALWAYS_ACTIVE = 5,
-    IN_COMBAT = 6,
-    IN_BG_QUEUE = 7,
-    IN_LFG = 8,
-    NEARBY_PLAYER = 9,
-    PLAYER_FRIEND = 10,
-    PLAYER_GUILD = 11,
-    IN_ACTIVE_AREA = 12,
-    IN_ACTIVE_MAP = 13,
-    IN_INACTIVE_MAP = 14,
-    IN_EMPTY_SERVER = 15,
-    MAX_TYPE
-};
-
 enum ActivityType
 {
     GRIND_ACTIVITY = 1,
@@ -271,8 +251,8 @@ enum ActivityType
     PACKET_ACTIVITY = 5,
     DETAILED_MOVE_ACTIVITY = 6,
     PARTY_ACTIVITY = 7,
-    REACT_ACTIVITY = 8,
-    ALL_ACTIVITY = 9,
+    ALL_ACTIVITY = 8,
+
     MAX_ACTIVITY_TYPE
 };
 
@@ -453,7 +433,7 @@ public:
     std::vector<Player*> GetPlayersInGroup();
     const AreaTableEntry* GetCurrentArea();
     const AreaTableEntry* GetCurrentZone();
-    std::string GetLocalizedAreaName(const AreaTableEntry* entry);
+    static std::string GetLocalizedAreaName(const AreaTableEntry* entry);
 
     bool TellMaster(std::ostringstream& stream, PlayerbotSecurityLevel securityLevel = PLAYERBOT_SECURITY_ALLOW_ALL);
     bool TellMaster(std::string const text, PlayerbotSecurityLevel securityLevel = PLAYERBOT_SECURITY_ALLOW_ALL);
@@ -546,10 +526,9 @@ public:
     bool HasPlayerNearby(WorldPosition* pos, float range = sPlayerbotAIConfig->reactDistance);
     bool HasPlayerNearby(float range = sPlayerbotAIConfig->reactDistance);
     bool HasManyPlayersNearby(uint32 trigerrValue = 20, float range = sPlayerbotAIConfig->sightDistance);
-    ActivePiorityType GetPriorityType(ActivityType activityType);
-    std::pair<uint32, uint32> GetPriorityBracket(ActivePiorityType type);
     bool AllowActive(ActivityType activityType);
     bool AllowActivity(ActivityType activityType = ALL_ACTIVITY, bool checkNow = false);
+    uint32 AutoScaleActivity(uint32 mod);
 
     // Check if player is safe to use.
     bool IsSafe(Player* player);
@@ -576,7 +555,6 @@ public:
     void ResetJumpDestination() { jumpDestination = Position(); }
 
     bool CanMove();
-    bool IsTaxiFlying();
     bool IsInRealGuild();
     static std::vector<std::string> dispel_whitelist;
     bool EqualLowercaseName(std::string s1, std::string s2);
@@ -595,6 +573,7 @@ public:
     std::set<uint32> GetCurrentIncompleteQuestIds();
     void PetFollow();
     static float GetItemScoreMultiplier(ItemQualities quality);
+    NewRpgInfo rpgInfo;
 
 private:
     static void _fillGearScoreData(Player* player, Item* item, std::vector<uint32>* gearScore, uint32& twoHandScore,
@@ -603,6 +582,7 @@ private:
 
     void HandleCommands();
     void HandleCommand(uint32 type, const std::string& text, Player& fromPlayer, const uint32 lang = LANG_UNIVERSAL);
+    bool _isBotInitializing = false;
 
 protected:
     Player* bot;

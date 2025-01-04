@@ -202,7 +202,17 @@ bool AutoGearAction::Execute(Event event)
         botAI->TellError("不允许使用autoear命令，请检查配置。");
         return false;
     }
-    botAI->TellMaster("正在升级装备");
+
+    if (!sPlayerbotAIConfig->autoGearCommandAltBots)
+    {
+        if (!sRandomPlayerbotMgr->IsRandomBot(bot))
+        {
+            botAI->TellError("不能对玩家账号机器人使用autogear命令。");
+            return false;
+        }
+    }
+
+    botAI->TellMaster("I'm auto gearing");
     uint32 gs = sPlayerbotAIConfig->autoGearScoreLimit == 0
                     ? 0
                     : PlayerbotFactory::CalcMixedGearScore(sPlayerbotAIConfig->autoGearScoreLimit,

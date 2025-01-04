@@ -11,6 +11,7 @@
 #include "ObjectGuid.h"
 #include "Playerbots.h"
 #include "ServerFacade.h"
+#include "Corpse.h"
 
 bool ReleaseSpiritAction::Execute(Event event)
 {
@@ -21,7 +22,7 @@ bool ReleaseSpiritAction::Execute(Event event)
         return false;
     }
 
-    if (bot->GetCorpse() && bot->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_GHOST))
+    if (bot->GetCorpse() && bot->HasPlayerFlag(PLAYER_FLAGS_GHOST))
     {
         botAI->TellMasterNoFacing("我已经是灵魂了");
         return false;
@@ -148,7 +149,7 @@ bool AutoReleaseSpiritAction::isUseful()
     if (bot->InBattleground())
         return true;
 
-    if (bot->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_GHOST))
+    if (bot->HasPlayerFlag(PLAYER_FLAGS_GHOST))
         return false;
 
     if (!bot->GetGroup())

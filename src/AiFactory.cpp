@@ -312,7 +312,7 @@ void AiFactory::AddDefaultCombatStrategies(Player* player, PlayerbotAI* const fa
             break;
         case CLASS_WARRIOR:
             if (tab == 2)
-                engine->addStrategiesNoInit("tank", "tank assist", "aoe", "mark rti", nullptr);
+                engine->addStrategiesNoInit("tank", "tank assist", "aoe", nullptr);
             else if (player->GetLevel() < 36 || tab == 0)
                 engine->addStrategiesNoInit("arms", "aoe", "dps assist", /*"behind",*/ nullptr);
             else
@@ -530,7 +530,7 @@ void AiFactory::AddDefaultNonCombatStrategies(Player* player, PlayerbotAI* const
             else
                 nonCombatEngine->addStrategiesNoInit("dps assist", "bdps", "baoe", nullptr);
 
-            nonCombatEngine->addStrategiesNoInit("cure", nullptr);
+            nonCombatEngine->addStrategiesNoInit("cure", "bgreater", nullptr);
             break;
         case CLASS_HUNTER:
             nonCombatEngine->addStrategiesNoInit("bdps", "dps assist", "pet", nullptr);
@@ -631,7 +631,11 @@ void AiFactory::AddDefaultNonCombatStrategies(Player* player, PlayerbotAI* const
             // nonCombatEngine->addStrategy("group");
             // nonCombatEngine->addStrategy("guild");
 
-            if (sPlayerbotAIConfig->autoDoQuests)
+            if (sPlayerbotAIConfig->enableNewRpgStrategy)
+            {
+                nonCombatEngine->addStrategy("new rpg", false);
+            }
+            else if (sPlayerbotAIConfig->autoDoQuests)
             {
                 // nonCombatEngine->addStrategy("travel");
                 nonCombatEngine->addStrategy("rpg", false);

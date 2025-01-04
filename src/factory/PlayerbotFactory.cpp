@@ -207,7 +207,10 @@ void PlayerbotFactory::Randomize(bool incremental)
     Prepare();
     LOG_DEBUG("playerbots", "Resetting player...");
     PerformanceMonitorOperation* pmo = sPerformanceMonitor->start(PERF_MON_RNDBOT, "PlayerbotFactory_Reset");
-    bot->resetTalents(true);
+    if (!sPlayerbotAIConfig->equipmentPersistence || level < sPlayerbotAIConfig->equipmentPersistenceLevel)
+    {
+        bot->resetTalents(true);
+    }
     // bot->SaveToDB(false, false);
     ClearSkills();
     // bot->SaveToDB(false, false);
@@ -267,7 +270,7 @@ void PlayerbotFactory::Randomize(bool incremental)
 
     pmo = sPerformanceMonitor->start(PERF_MON_RNDBOT, "PlayerbotFactory_Talents");
     LOG_DEBUG("playerbots", "Initializing talents...");
-    if (!sPlayerbotAIConfig->equipmentPersistence || bot->GetLevel() < sPlayerbotAIConfig->equipmentPersistenceLevel)
+    if (!incremental || !sPlayerbotAIConfig->equipmentPersistence || bot->GetLevel() < sPlayerbotAIConfig->equipmentPersistenceLevel)
     {
         InitTalentsTree();
     }
@@ -302,7 +305,7 @@ void PlayerbotFactory::Randomize(bool incremental)
 
     pmo = sPerformanceMonitor->start(PERF_MON_RNDBOT, "PlayerbotFactory_Equip");
     LOG_DEBUG("playerbots", "Initializing equipmemt...");
-    if (!sPlayerbotAIConfig->equipmentPersistence || bot->GetLevel() < sPlayerbotAIConfig->equipmentPersistenceLevel)
+    if (!incremental || !sPlayerbotAIConfig->equipmentPersistence || bot->GetLevel() < sPlayerbotAIConfig->equipmentPersistenceLevel)
     {
         InitEquipment(incremental, incremental ? false : sPlayerbotAIConfig->twoRoundsGearInit);
     }
@@ -424,7 +427,7 @@ void PlayerbotFactory::Randomize(bool incremental)
     bot->SetHealth(bot->GetMaxHealth());
     bot->SetPower(POWER_MANA, bot->GetMaxPower(POWER_MANA));
     bot->SaveToDB(false, false);
-    LOG_INFO("playerbots", "初始化完成。");
+    // LOG_INFO("playerbots", "Initialization Done.");
     if (pmo)
         pmo->finish();
 }
@@ -3127,7 +3130,7 @@ void PlayerbotFactory::InitReagents()
                 items.push_back({17030, 40});  // Ankh
             break;
         case CLASS_WARLOCK:
-            items.push_back({6265, 10});  // shard
+            items.push_back({6265, 20});  // shard
             break;
         case CLASS_PRIEST:
             if (level >= 48 && level < 60)
@@ -3853,6 +3856,7 @@ void PlayerbotFactory::ApplyEnchantAndGemsNew(bool destoryOld)
     int32 bestGemEnchantId[4] = {-1, -1, -1, -1};  // 1, 2, 4, 8 color
     float bestGemScore[4] = {0, 0, 0, 0};
     std::vector<uint32> curCount = GetCurrentGemsCount();
+    uint8 jewelersCount = 0;
     int requiredActive = bot->GetLevel() <= 70 ? 2 : 1;
     std::vector<uint32> availableGems;
     for (const uint32& enchantGem : enchantGemIdCache)
@@ -3982,6 +3986,7 @@ void PlayerbotFactory::ApplyEnchantAndGemsNew(bool destoryOld)
             }
             int32 enchantIdChosen = -1;
             int32 colorChosen;
+            bool jewelersGemChosen;
             float bestGemScore = -1;
             for (uint32& enchantGem : availableGems)
             {
@@ -3989,6 +3994,11 @@ void PlayerbotFactory::ApplyEnchantAndGemsNew(bool destoryOld)
                 if (!gemTemplate)
                     continue;
 
+                // Limit jewelers (JC) epic gems to 3
+                bool isJewelersGem = gemTemplate->ItemLimitCategory == 2;
+                if (isJewelersGem && jewelersCount >= 3)
+                    continue;
+                
                 const GemPropertiesEntry* gemProperties = sGemPropertiesStore.LookupEntry(gemTemplate->GemProperties);
                 if (!gemProperties)
                     continue;
@@ -4022,6 +4032,7 @@ void PlayerbotFactory::ApplyEnchantAndGemsNew(bool destoryOld)
                     enchantIdChosen = enchant_id;
                     colorChosen = gemProperties->color;
                     bestGemScore = score;
+                    jewelersGemChosen = isJewelersGem;
                 }
             }
             if (enchantIdChosen == -1)
@@ -4030,6 +4041,8 @@ void PlayerbotFactory::ApplyEnchantAndGemsNew(bool destoryOld)
             item->SetEnchantment(EnchantmentSlot(enchant_slot), enchantIdChosen, 0, 0, bot->GetGUID());
             bot->ApplyEnchantment(item, EnchantmentSlot(enchant_slot), true);
             curCount = GetCurrentGemsCount();
+            if (jewelersGemChosen)
+                ++jewelersCount;
         }
     }
 }

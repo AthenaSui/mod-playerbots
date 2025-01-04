@@ -368,6 +368,10 @@ AiPlayerbot.SyncQuestWithPlayer = 1
 # 默认：0（禁用）
 AiPlayerbot.SyncQuestForPlayer = 0
 
+# Bots will drop obsolete quests
+# Default: 1 (enabled)
+AiPlayerbot.DropObsoleteQuests = 1
+
 #
 #
 #
@@ -419,6 +423,10 @@ AiPlayerbot.MaintenanceCommand = 1
 # 启用/禁用 autogear 命令，自动升级机器人装备，装备品质受AutoGearQualityLimit和AutoGearScoreLimit设置限制
 # 默认：1 （启用）
 AiPlayerbot.AutoGearCommand = 1
+
+# 启用/禁用玩家账号机器人 autogear 命令 
+# 默认：1 （启用）
+AiPlayerbot.AutoGearCommandAltBots = 1
 
 #  autogear命令装备品质限制（1 = 普通，2 = 优秀，3 = 稀有，4 = 史诗，5 = 传说）
 # 默认：3 （稀有）
@@ -487,6 +495,11 @@ AiPlayerbot.PreQuests = 0
 
 # 为随机机器人启用LFG
 AiPlayerbot.RandomBotJoinLfg = 1
+
+# 联盟与部落的百分比
+# 更改设置后需要重置随机机器人 （.playerbot rndbot reset）
+AiPlayerbot.RandomBotAllianceRatio = 50
+AiPlayerbot.RandomBotHordeRatio = 50
 
 # 禁用死亡骑士作为机器人登录
 # 更改设置后需要重置随机机器人 （.playerbot rndbot reset）
@@ -588,6 +601,11 @@ AiPlayerbot.RandomBotGroupNearby = 0
 # 随机机器人将自己挑选任务并尝试完成
 # 默认：1 （启用）
 AiPlayerbot.AutoDoQuests = 1
+
+# 随机机器人的行为将更像真实玩家（实验）
+# 此选项将覆盖AutoDoQuests
+# 默认：0 （禁用）
+AiPlayerbot.EnableNewRpgStrategy = 0
 
 # 保留的任务物品（不要摧毁）
 AiPlayerbot.RandomBotQuestItems = "6948,5175,5176,5177,5178,16309,12382,13704,11000"
@@ -709,13 +727,13 @@ AiPlayerbot.RandomBotArenaTeamMinRating = 1000
 # 删除所有随机机器人竞技场队伍
 AiPlayerbot.DeleteRandomBotArenaTeams = 0
 
-# PvP 受限区域（机器人不能 pvp）
-AiPlayerbot.PvpProhibitedZoneIds = "2255,656,2361,2362,2363,976,35,2268,3425,392,541,1446,3828,3712,3738,3565,3539,3623,4152,3988,4658,4284,4418,4436,4275,4323,4395,3703,4298"
-
 # PvP 受限地区（机器人不能 pvp）
-AiPlayerbot.PvpProhibitedAreaIds = "976,35,392"
+AiPlayerbot.PvpProhibitedZoneIds = "2255,656,2361,2362,2363,976,35,2268,3425,392,541,1446,3828,3712,3738,3565,3539,3623,4152,3988,4658,4284,4418,4436,4275,4323,4395,3703,4298,139"
 
-# Improve react speed in battleground and arena (may cause lag)
+# PvP 受限区域（机器人不能 pvp）
+AiPlayerbot.PvpProhibitedAreaIds = "976,35,392,2268"
+
+# 提高战场和竞技场的反应速度（可能导致滞后）
 AiPlayerbot.FastReactInBG = 1
 
 #
@@ -1025,7 +1043,59 @@ AiPlayerbot.PremadeSpecLink.11.3.80 = -553202032322010053100030310511-205503012
 
 ###################################
 #                                 #
-#      随机机器人默认天赋专精     #
+#           世界BUFF			  #
+#                                 #
+###################################
+
+####################################################################################################
+# 
+#
+#
+
+# Applies a permanent buff to all bots when not in combat simulating flasks, food, rune etc.
+# WorldBuff.Faction.Class.Spec.MinLevel.MaxLevel
+
+AiPlayerbot.WorldBuff.0.1.0.80.80 = 53760,57358					#WARRIOR ARMS
+AiPlayerbot.WorldBuff.0.1.1.80.80 = 53760,57358					#WARRIOR FURY
+AiPlayerbot.WorldBuff.0.1.2.80.80 = 53758,57356					#WARRIOR PROTECTION
+AiPlayerbot.WorldBuff.0.2.0.80.80 = 60347,53749,57332			#PALADIN HOLY
+AiPlayerbot.WorldBuff.0.2.1.80.80 = 53758,57356					#PALADIN PROTECTION
+AiPlayerbot.WorldBuff.0.2.2.80.80 = 53760,57371					#PALADIN RETRIBUTION
+AiPlayerbot.WorldBuff.0.3.0.80.80 = 53760,57325					#HUNTER BEAST
+AiPlayerbot.WorldBuff.0.3.1.80.80 = 53760,57358					#HUNTER MARKSMANSHIP
+AiPlayerbot.WorldBuff.0.3.2.80.80 = 53760,57367					#HUNTER SURVIVAL
+AiPlayerbot.WorldBuff.0.4.0.80.80 = 53760,57325					#ROGUE ASSASINATION
+AiPlayerbot.WorldBuff.0.4.1.80.80 = 53760,57358					#ROGUE COMBAT
+AiPlayerbot.WorldBuff.0.4.2.80.80 = 53760,57367					#ROGUE SUBTLETY
+AiPlayerbot.WorldBuff.0.5.0.80.80 = 53755,57327					#PRIEST DISCIPLINE
+AiPlayerbot.WorldBuff.0.5.1.80.80 = 53755,57327					#PRIEST HOLY
+AiPlayerbot.WorldBuff.0.5.2.80.80 = 53755,57327					#PRIEST SHADOW
+AiPlayerbot.WorldBuff.0.6.0.80.80 = 53758,57356					#DEATH KNIGHT BLOOD
+AiPlayerbot.WorldBuff.0.6.1.80.80 = 53760,57358					#DEATH KNIGHT FROST
+AiPlayerbot.WorldBuff.0.6.2.80.80 = 53760,57358					#DEATH KNIGHT UNHOLY
+AiPlayerbot.WorldBuff.0.6.3.80.80 = 53760,57371					#DEATH KNIGHT BLOOD DPS
+AiPlayerbot.WorldBuff.0.7.0.80.80 = 53755,57327					#SHAMAN ELEMENTAL
+AiPlayerbot.WorldBuff.0.7.1.80.80 = 53760,57325					#SHAMAN ENHANCEMENT
+AiPlayerbot.WorldBuff.0.7.2.80.80 = 53755,57327					#SHAMAN RESTORATION
+AiPlayerbot.WorldBuff.0.8.0.80.80 = 53755,57327					#MAGE ARCANE
+AiPlayerbot.WorldBuff.0.8.1.80.80 = 53755,57327					#MAGE FIRE
+AiPlayerbot.WorldBuff.0.8.2.80.80 = 53755,57327					#MAGE FROST
+AiPlayerbot.WorldBuff.0.9.0.80.80 = 53755,57327					#WARLOCK AFFLICTION
+AiPlayerbot.WorldBuff.0.9.1.80.80 = 53755,57327					#WARLOCK DEMONOLOGY
+AiPlayerbot.WorldBuff.0.9.2.80.80 = 53755,57327					#WARLOCK DESTRUCTION
+AiPlayerbot.WorldBuff.0.11.0.80.80 = 53755,57327				#DRUID BALANCE
+AiPlayerbot.WorldBuff.0.11.1.80.80 = 53749,53763,57367			#DRUID FERAL BEAR
+AiPlayerbot.WorldBuff.0.11.2.80.80 = 54212,57334				#DRUID RESTORATION
+AiPlayerbot.WorldBuff.0.11.3.80.80 = 53760,57358			    #DRUID FERAL CAT
+
+#
+#
+#
+###################################################################################################
+
+###################################
+#                                 #
+#       随机机器人默认天赋        #
 #                                 #
 ###################################
 
@@ -1412,9 +1482,6 @@ AiPlayerbot.BroadcastChanceGuildManagement = 30000
 # 例如：AiPlayerbot.AllowedLogFiles = travelNodes.csv,travelPaths.csv,TravelNodeStore.h,bot_movement.csv,bot_location.csv
 AiPlayerbot.AllowedLogFiles = ""
 
-Appender.Playerbots=2,5,0,Playerbots.log,w
-Logger.playerbots=5,Console Playerbots
-
 #
 #
 #
@@ -1456,20 +1523,32 @@ AiPlayerbot.RandombotsWalkingRPG.InDoors = 0
 
 # 指定活动机器人的百分比
 # 默认是10。每分钟将有10%的机器人转为活动或非活动状态。
+# 无论如何，此值仅适用于未检测到真实玩家的非活动区域。
+# 当真实玩家在附近、好友、队伍、公会、战场、副本等时，该值始终强制为100%
 AiPlayerbot.BotActiveAlone = 100
+
+# 强制 botActiveAlone 当机器人跟真实玩家 ... 时
+AiPlayerbot.BotActiveAloneForceWhenInRadius = 150
+AiPlayerbot.BotActiveAloneForceWhenInZone = 1
+AiPlayerbot.BotActiveAloneForceWhenInMap = 0
+AiPlayerbot.BotActiveAloneForceWhenIsFriend = 1
+AiPlayerbot.BotActiveAloneForceWhenInGuild = 1
 
 # 指定是否启用智能缩放。
 # 默认值为1。启用（智能缩放）时，可缩放“BotActiveAlone”值。
+# (缩放将被 BotActiveAloneForceWhen...规则替代)
+#
+#   Limitfloor - when DIFF (latency) above floor, activity scaling is applied starting with 90%
+#   LimitCeiling - when DIFF (latency) above ceiling, activity is 0%;
+#
+#   MinLevel - only apply scaling when level is above or equal to min(bot)Level
+#   MaxLevel - only apply scaling when level is lower or equal of max(bot)Level
+#
 AiPlayerbot.botActiveAloneSmartScale = 1
-
-# 仅当机器人等级介于WhenMinLevel和WhenMaxLevel之间时。
+AiPlayerbot.botActiveAloneSmartScaleDiffLimitfloor = 50
+AiPlayerbot.botActiveAloneSmartScaleDiffLimitCeiling = 200
 AiPlayerbot.botActiveAloneSmartScaleWhenMinLevel = 1
 AiPlayerbot.botActiveAloneSmartScaleWhenMaxLevel = 80
-
-# 服务器将调整机器人活动以达到所需的服务器tick速度（以毫秒为单位）
-# 机器人只有在没有延迟差异的情况下才会加入战场bots will only join battleground when there is no lag based on latency diffs below
-AiPlayerbot.botActiveAloneSmartScaleDiffWithPlayer = 100
-AiPlayerbot.botActiveAloneSmartScaleDiffEmpty = 200
 
 # 要躲避的预置法术（未被发现的法术）
 # 法术ID-半径， ...
