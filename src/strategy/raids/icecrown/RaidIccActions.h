@@ -16,9 +16,12 @@
 
 const Position ICC_LM_TANK_POSITION = Position(-391.0f, 2259.0f, 42.0f);
 const Position ICC_DARK_RECKONING_SAFE_POSITION = Position(-523.33386f, 2211.2031f, 62.823116f);
+const Position ICC_LDW_TANK_POSTION = Position(-589.9879f, 2211.2456f, 49.476616f);
 const Position ICC_ROTTING_FROST_GIANT_TANK_POSITION = Position(-265.90125f, 2209.0605f, 199.97006f);
 const Position ICC_GUNSHIP_TELEPORT_ALLY = Position (-370.04645f, 1993.3536f, 466.65656f);
-const Position ICC_GUNSHIP_TELEPORT_HORDE = Position (-449.5343f, 2477.2024f, 470.17648f); 
+const Position ICC_GUNSHIP_TELEPORT_ALLY2 = Position (-392.66208f, 2064.893f, 466.5672f, 5.058196f);
+const Position ICC_GUNSHIP_TELEPORT_HORDE = Position (-449.5343f, 2477.2024f, 470.17648f);
+const Position ICC_GUNSHIP_TELEPORT_HORDE2 = Position (-429.81586f, 2400.6804f, 471.56537f);
 const Position ICC_DBS_TANK_POSITION = Position(-494.26517f, 2211.549f, 541.11414f);
 const Position ICC_FESTERGUT_TANK_POSITION = Position(4269.1772f, 3144.7673f, 360.38577f);
 const Position ICC_FESTERGUT_RANGED_SPORE = Position(4261.143f, 3109.4146f, 360.38605f);
@@ -26,20 +29,21 @@ const Position ICC_FESTERGUT_MELEE_SPORE = Position(4269.1772f, 3144.7673f, 360.
 const Position ICC_ROTFACE_TANK_POSITION = Position(4447.061f, 3150.9758f, 360.38568f);
 const Position ICC_ROTFACE_BIG_OOZE_POSITION = Position(4432.687f, 3142.3035f, 360.38623f);
 const Position ICC_ROTFACE_SAFE_POSITION = Position(4446.557f, 3065.6594f, 360.51843f);
-const Position ICC_PUTRICIDE_TANK_OOZE_POSITION = Position(4362.709f, 3229.1448f, 389.4083f);
-const Position ICC_PUTRICIDE_TANK_GAS_CLOUD_POSITION = Position(4397.0386f, 3221.385f, 389.3999f);
-const Position ICC_PUTRICIDE_GAS1_POSITION = Position(4350.772f, 3249.9773f, 389.39508f);
-const Position ICC_PUTRICIDE_GAS2_POSITION = Position(4390.002f, 3204.8855f, 389.39938f);
-const Position ICC_PUTRICIDE_GAS3_POSITION = Position(4367.753f, 3177.5894f, 389.39575f);
-const Position ICC_PUTRICIDE_GAS4_POSITION = Position(4321.8486f, 3206.464f, 389.3982f);
+//const Position ICC_PUTRICIDE_TANK_OOZE_POSITION = Position(4362.709f, 3229.1448f, 389.4083f);
+//const Position ICC_PUTRICIDE_TANK_GAS_CLOUD_POSITION = Position(4397.0386f, 3221.385f, 389.3999f);
+//const Position ICC_PUTRICIDE_GAS1_POSITION = Position(4350.772f, 3249.9773f, 389.39508f);
+//const Position ICC_PUTRICIDE_GAS2_POSITION = Position(4390.002f, 3204.8855f, 389.39938f);
+//const Position ICC_PUTRICIDE_GAS3_POSITION = Position(4367.753f, 3177.5894f, 389.39575f);
+//const Position ICC_PUTRICIDE_GAS4_POSITION = Position(4321.8486f, 3206.464f, 389.3982f);
 const Position ICC_BPC_OT_POSITION = Position(4649.2236f, 2796.0972f, 361.1815f);
 const Position ICC_BPC_MT_POSITION = Position(4648.5674f, 2744.847f, 361.18222f);
 const Position ICC_BQL_CENTER_POSITION = Position(4595.0f, 2769.0f, 400.0f);
 const Position ICC_BQL_TANK_POSITION = Position(4616.102f, 2768.9167f, 400.13797f);
+const Position ICC_VDW_GROUP_POSITION = Position(4204.839f, 2484.9338f, 364.87f);
 const Position ICC_SINDRAGOSA_TANK_POSITION = Position(4408.016f, 2508.0647f, 203.37955f);
 const Position ICC_SINDRAGOSA_RANGED_POSITION = Position(4373.7686f, 2498.0042f, 203.38176f);
 const Position ICC_SINDRAGOSA_MELEE_POSITION = Position(4389.22f, 2499.5237f, 203.38033f);
-const Position ICC_SINDRAGOSA_BLISTERING_COLD_POSITION = Position(4357.036f, 2484.5574f, 203.4777f);   
+const Position ICC_SINDRAGOSA_BLISTERING_COLD_POSITION = Position(4345.922f, 2484.708f, 206.22516f);
 const Position ICC_SINDRAGOSA_THOMB1_POSITION = Position(4381.819f, 2471.1448f, 203.37704f);       // Westmost position
 const Position ICC_SINDRAGOSA_THOMB2_POSITION = Position(4381.819f, 2483.1448f, 203.37704f);       // 12y east from pos1
 const Position ICC_SINDRAGOSA_THOMB3_POSITION = Position(4381.819f, 2471.1448f, 203.37704f);       // Same as pos1
@@ -47,10 +51,16 @@ const Position ICC_SINDRAGOSA_THOMB4_POSITION = Position(4381.819f, 2483.1448f, 
 const Position ICC_SINDRAGOSA_THOMB5_POSITION = Position(4381.819f, 2495.1448f, 203.37704f);       // 12y east from pos2/4
 const Position ICC_SINDRAGOSA_CENTER_POSITION = Position(4408.0464f, 2484.478f, 203.37529f);           
 const Position ICC_SINDRAGOSA_THOMBMB2_POSITION = Position(4382.6113f, 2505.4922f, 203.38197f);       
-const Position ICC_SINDRAGOSA_FBOMB_POSITION = Position(4400.031f, 2507.0295f, 203.37929f);       
+const Position ICC_SINDRAGOSA_FBOMB_POSITION = Position(4400.031f, 2507.0295f, 203.37929f);      //old 4400.031f, 2507.0295f, 203.37929f  //alternate for 10 man  4366.0225f, 2501.569f, 203.38226f 
+const Position ICC_SINDRAGOSA_FBOMB10_POSITION = Position(4366.0225f, 2501.569f, 203.38226f);
 const Position ICC_SINDRAGOSA_LOS2_POSITION = Position(4376.0938f, 2511.103f, 203.38303f); 
-const Position ICC_LICH_KING_ADDS_POSITION = Position(486.63647f, -2095.7915f, 840.857f);           
-
+const Position ICC_LICH_KING_ADDS_POSITION = Position(486.63647f, -2095.7915f, 840.857f);
+const Position ICC_LK_FROST1_POSITION = Position(503.96548f, -2183.216f, 840.857f);           
+const Position ICC_LK_FROST2_POSITION = Position(563.07166f, -2125.7578f, 840.857f);           
+const Position ICC_LK_FROST3_POSITION = Position(503.40182f, -2067.3435f, 840.857f); 
+const Position ICC_LK_FROSTR1_POSITION = Position(481.168f, -2177.8723f, 840.857f); 
+const Position ICC_LK_FROSTR2_POSITION = Position(562.20807f, -2100.2393f, 840.857f); 
+const Position ICC_LK_FROSTR3_POSITION = Position(526.35297f, -2071.0317f, 840.857f);
 
 //Lord Marrogwar
 class IccLmTankPositionAction : public AttackAction
@@ -227,14 +237,13 @@ class IccPutricideGasCloudAction : public AttackAction
     IccPutricideGasCloudAction(PlayerbotAI* botAI, std::string const name = "icc putricide gas cloud")
         : AttackAction(botAI, name) {}
         bool Execute(Event event) override;
-    private:
-        static uint8_t lastKnownPosition; // 0 = none, 1-4 = positions 1-4
 };
 
 class AvoidMalleableGooAction : public MovementAction 
 {
     public:
-        AvoidMalleableGooAction(PlayerbotAI* ai) : MovementAction(ai, "avoid malleable goo") {}
+        AvoidMalleableGooAction(PlayerbotAI* botAI, std::string const name = "avoid malleable goo"  ) 
+        : MovementAction(botAI, name) {}
         bool Execute(Event event) override;
 };
 
@@ -263,12 +272,19 @@ public:
     bool Execute(Event event) override;
 };
 
-//BPC Vortex
 class IccBpcEmpoweredVortexAction : public MovementAction
 {
 public:
     IccBpcEmpoweredVortexAction(PlayerbotAI* botAI) 
         : MovementAction(botAI, "icc bpc empowered vortex") {}
+    bool Execute(Event event) override;
+};
+
+class IccBpcKineticBombAction : public AttackAction
+{
+public:
+    IccBpcKineticBombAction(PlayerbotAI* botAI) 
+        : AttackAction(botAI, "icc bpc kinetic bomb") {}
     bool Execute(Event event) override;
 };
 
@@ -347,19 +363,19 @@ public:
     bool Execute(Event event) override;
 };
 
-class IccSindragosaFrostBeaconAction : public AttackAction
+class IccSindragosaFrostBeaconAction : public MovementAction
 {
 public:
     IccSindragosaFrostBeaconAction(PlayerbotAI* botAI) 
-            : AttackAction(botAI, "icc sindragosa frost beacon") {}
+            : MovementAction(botAI, "icc sindragosa frost beacon") {}
     bool Execute(Event event) override;
 };
 
-class IccSindragosaBlisteringColdAction : public AttackAction
+class IccSindragosaBlisteringColdAction : public MovementAction
 {
 public:
     IccSindragosaBlisteringColdAction(PlayerbotAI* botAI) 
-            : AttackAction(botAI, "icc sindragosa blistering cold") {}
+            : MovementAction(botAI, "icc sindragosa blistering cold") {}
     bool Execute(Event event) override;
 };
 
@@ -387,11 +403,11 @@ public:
     bool Execute(Event event) override;
 };
 
-class IccSindragosaFrostBombAction : public AttackAction
+class IccSindragosaFrostBombAction : public MovementAction
 {
 public:
     IccSindragosaFrostBombAction(PlayerbotAI* botAI) 
-            : AttackAction(botAI, "icc sindragosa frost bomb") {}
+            : MovementAction(botAI, "icc sindragosa frost bomb") {}
     bool Execute(Event event) override;
 };
 
@@ -405,6 +421,14 @@ class IccSindragosaTankSwapPositionAction : public AttackAction
 
 
 //LK
+class IccLichKingShadowTrapAction : public MovementAction
+{
+    public:
+        IccLichKingShadowTrapAction(PlayerbotAI* botAI) 
+            : MovementAction(botAI, "icc lich king shadow trap") {}
+        bool Execute(Event event) override;
+};
+
 class IccLichKingNecroticPlagueAction : public MovementAction
 {
     public:

@@ -162,8 +162,10 @@ bool MaintenanceAction::Execute(Event event)
         botAI->TellError("不允许使用maintenance命令，请检查配置。");
         return false;
     }
+
     botAI->TellMaster("正在维护");
     PlayerbotFactory factory(bot, bot->GetLevel());
+    factory.InitAttunementQuests();
     factory.InitBags(false);
     factory.InitAmmo();
     factory.InitFood();
@@ -174,14 +176,17 @@ bool MaintenanceAction::Execute(Event event)
     factory.InitClassSpells();
     factory.InitAvailableSpells();
     factory.InitSkills();
+    factory.InitReputation();
+    factory.InitSpecialSpells();
     factory.InitMounts();
     factory.InitGlyphs(true);
+    factory.InitKeyring();
     if (bot->GetLevel() >= sPlayerbotAIConfig->minEnchantingBotLevel)
-    {
         factory.ApplyEnchantAndGemsNew();
-    }
+
     bot->DurabilityRepairAll(false, 1.0f, false);
     bot->SendTalentsInfoData(false);
+
     return true;
 }
 
@@ -199,20 +204,19 @@ bool AutoGearAction::Execute(Event event)
 {
     if (!sPlayerbotAIConfig->autoGearCommand)
     {
-        botAI->TellError("不允许使用autoear命令，请检查配置。");
+        botAI->TellError("不允许使用autogear命令，请检查配置。");
         return false;
     }
 
-    if (!sPlayerbotAIConfig->autoGearCommandAltBots)
+    if (!sPlayerbotAIConfig->autoGearCommandAltBots &&
+        !sPlayerbotAIConfig->IsInRandomAccountList(bot->GetSession()->GetAccountId()))
     {
-        if (!sRandomPlayerbotMgr->IsRandomBot(bot))
-        {
-            botAI->TellError("不能对玩家账号机器人使用autogear命令。");
-            return false;
-        }
+        botAI->TellError("不能对玩家账号机器人使用autogear命令。");
+        return false;
+        return false;
     }
 
-    botAI->TellMaster("I'm auto gearing");
+    botAI->TellMaster("正在自动装备");
     uint32 gs = sPlayerbotAIConfig->autoGearScoreLimit == 0
                     ? 0
                     : PlayerbotFactory::CalcMixedGearScore(sPlayerbotAIConfig->autoGearScoreLimit,

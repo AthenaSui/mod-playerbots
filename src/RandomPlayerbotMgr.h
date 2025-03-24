@@ -111,6 +111,7 @@ public:
     static bool HandlePlayerbotConsoleCommand(ChatHandler* handler, char const* args);
     bool IsRandomBot(Player* bot);
     bool IsRandomBot(ObjectGuid::LowType bot);
+    bool IsAddclassBot(ObjectGuid::LowType bot);
     void Randomize(Player* bot);
     void Clear(Player* bot);
     void RandomizeFirst(Player* bot);
@@ -170,10 +171,19 @@ public:
     static uint8 GetTeamClassIdx(bool isAlliance, uint8 claz) { return isAlliance * 20 + claz; }
 
     void PrepareAddclassCache();
-    std::map<uint8, std::vector<ObjectGuid>> addclassCache;
+    void PrepareZone2LevelBracket();
+    void PrepareTeleportCache();
+    void Init();
+    std::map<uint8, std::unordered_set<ObjectGuid>> addclassCache;
     std::map<uint8, std::vector<WorldLocation>> locsPerLevelCache;
     std::map<uint8, std::vector<WorldLocation>> allianceStarterPerLevelCache;
     std::map<uint8, std::vector<WorldLocation>> hordeStarterPerLevelCache;
+    struct LevelBracket {
+        uint32 low;
+        uint32 high;
+        bool InsideBracket(uint32 val) { return val >= low && val <= high; }
+    };
+    std::map<uint32, LevelBracket> zone2LevelBracket;
     std::map<uint8, std::vector<WorldLocation>> bankerLocsPerLevelCache;
 protected:
     void OnBotLoginInternal(Player* const bot) override;
@@ -199,7 +209,6 @@ private:
     void RandomTeleport(Player* bot);
     void RandomTeleport(Player* bot, std::vector<WorldLocation>& locs, bool hearth = false);
     uint32 GetZoneLevel(uint16 mapId, float teleX, float teleY, float teleZ);
-    void PrepareTeleportCache();
     typedef void (RandomPlayerbotMgr::*ConsoleCommandHandler)(Player*);
 
     std::vector<Player*> players;

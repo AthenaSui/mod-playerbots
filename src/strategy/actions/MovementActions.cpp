@@ -978,11 +978,13 @@ bool MovementAction::Follow(Unit* target, float distance) { return Follow(target
 
 void MovementAction::UpdateMovementState()
 {
-    if (bot->Unit::IsUnderWater())
+    int8 botInLiquidState = bot->GetLiquidData().Status;
+
+    if (botInLiquidState == LIQUID_MAP_IN_WATER || botInLiquidState == LIQUID_MAP_UNDER_WATER)
     {
         bot->SetSwim(true);
     }
-    else if (!bot->Unit::IsInWater())
+    else
     {
         bot->SetSwim(false);
     }
@@ -990,18 +992,21 @@ void MovementAction::UpdateMovementState()
     bool onGround = bot->GetPositionZ() <
                     bot->GetMapWaterOrGroundLevel(bot->GetPositionX(), bot->GetPositionY(), bot->GetPositionZ()) + 1.0f;
 
+    // Keep bot->SendMovementFlagUpdate() withing the if statements to not intefere with bot behavior on ground/(shallow) waters
     if (!bot->HasUnitMovementFlag(MOVEMENTFLAG_FLYING) &&
         bot->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED) && !onGround)
     {
         bot->AddUnitMovementFlag(MOVEMENTFLAG_FLYING);
+        bot->SendMovementFlagUpdate();
     }
-    if (bot->HasUnitMovementFlag(MOVEMENTFLAG_FLYING) &&
+
+    else if (bot->HasUnitMovementFlag(MOVEMENTFLAG_FLYING) &&
         (!bot->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED) || onGround))
     {
         bot->RemoveUnitMovementFlag(MOVEMENTFLAG_FLYING);
+        bot->SendMovementFlagUpdate();
     }
 
-    bot->SendMovementFlagUpdate();
     // Temporary speed increase in group
     // if (botAI->HasRealPlayerMaster()) {
     //     bot->SetSpeedRate(MOVE_RUN, 1.1f);
@@ -1578,11 +1583,6 @@ bool MovementAction::MoveAway(Unit* target, float distance, bool backwards)
 // just calculates average position of group and runs away from that position
 bool MovementAction::MoveFromGroup(float distance)
 {
-    LOG_ERROR("playerbots", "MovementAction::MoveFromGroup");
-    //if (Player* master = botAI->GetMaster())
-    //{
-    //    return MoveAway(master);
-    //}
     if (Group* group = bot->GetGroup())
     {
         uint32 mapId = bot->GetMapId();
@@ -2017,7 +2017,7 @@ Position MovementAction::BestPositionForMeleeToFlee(Position pos, float radius)
     if (currentTarget)
     {
         // Normally, move to left or right is the best position
-        bool isTanking = (currentTarget->CanFreeMove()) && (currentTarget->GetVictim() == bot);
+        bool isTanking = (!currentTarget->isFrozen() && !currentTarget->HasRootAura()) && (currentTarget->GetVictim() == bot);
         float angle = bot->GetAngle(currentTarget);
         float angleLeft = angle + (float)M_PI / 2;
         float angleRight = angle - (float)M_PI / 2;
@@ -2144,8 +2144,13 @@ Position MovementAction::BestPositionForRangedToFlee(Position pos, float radius)
     return Position();
 }
 
-bool MovementAction::FleePosition(Position pos, float radius)
+bool MovementAction::FleePosition(Position pos, float radius, uint32 minInterval)
 {
+    std::list<FleeInfo>& infoList = AI_VALUE(std::list<FleeInfo>&, "recently flee info");
+
+    if (!infoList.empty() && infoList.back().timestamp + minInterval > getMSTime())
+        return false;
+
     Position bestPos;
     if (botAI->IsMelee(bot))
     {
@@ -2160,7 +2165,6 @@ bool MovementAction::FleePosition(Position pos, float radius)
         if (MoveTo(bot->GetMapId(), bestPos.GetPositionX(), bestPos.GetPositionY(), bestPos.GetPositionZ(), false,
                    false, true, false, MovementPriority::MOVEMENT_COMBAT))
         {
-            std::list<FleeInfo>& infoList = AI_VALUE(std::list<FleeInfo>&, "recently flee info");
             uint32 curTS = getMSTime();
             while (!infoList.empty())
             {

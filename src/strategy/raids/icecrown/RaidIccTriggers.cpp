@@ -1,7 +1,8 @@
 #include "RaidIccTriggers.h"
 #include "RaidIccActions.h"
-
+#include "strategy/values/NearestNpcsValue.h"
 #include "PlayerbotAIConfig.h"
+#include "ObjectAccessor.h"
 #include "GenericTriggers.h"
 #include "DungeonStrategyUtils.h"
 #include "EventMap.h"
@@ -67,7 +68,8 @@ bool IccRangedPositionLadyDeathwhisperTrigger::IsActive()
 bool IccAddsLadyDeathwhisperTrigger::IsActive()
 {
     Unit* boss = AI_VALUE2(Unit*, "find target", "lady deathwhisper");
-    if (!boss) { return false; }
+    if (!boss) 
+        return false;
 
      return true;
 }
@@ -274,7 +276,8 @@ bool IccFestergutSporeTrigger::IsActive()
 bool IccRotfaceTankPositionTrigger::IsActive()
 {
     Unit* boss = AI_VALUE2(Unit*, "find target", "rotface");
-    if (!boss || !(botAI->IsTank(bot) || botAI->IsMainTank(bot) || botAI->IsAssistTank(bot))) { return false; }
+    if (!boss || !(botAI->IsTank(bot) || botAI->IsMainTank(bot) || botAI->IsAssistTank(bot))) 
+        return false;
 
     return true;
 }
@@ -300,18 +303,37 @@ bool IccRotfaceMoveAwayFromExplosionTrigger::IsActive()
 bool IccPutricideGrowingOozePuddleTrigger::IsActive()
 {
     Unit* boss = AI_VALUE2(Unit*, "find target", "professor putricide");
-    bool botHasAura = botAI->HasAura("Gaseous Bloat", bot);
+    bool botHasAura = botAI->HasAura("Gaseous Bloat", bot) || botAI->HasAura("Volatile Ooze Adhesive", bot);
     
     if (!boss || botHasAura) 
         return false;
 
-    return true;
+    // Check for nearby growing ooze puddles (37690) and slime puddles (70341)
+    GuidVector npcs = AI_VALUE(GuidVector, "nearest hostile npcs");
+    for (auto& npc : npcs)
+    {
+        Unit* unit = botAI->GetUnit(npc);
+        if (!unit)
+            continue;
+
+        uint32 entry = unit->GetEntry();
+        if (entry == 37690 || entry == 70341)  // Growing Ooze Puddle or Slime Puddle
+        {
+                return true;
+        }
+    }
+
+    return false;
 }
 
 bool IccPutricideVolatileOozeTrigger::IsActive()
 {
     Unit* boss = AI_VALUE2(Unit*, "find target", "volatile ooze");
-    if (!boss) { return false; }
+    if (!boss)
+        return false;
+
+    if (botAI->HasAura("Gaseous Bloat", bot))
+        return false;
 
     return true;
 }
@@ -319,7 +341,8 @@ bool IccPutricideVolatileOozeTrigger::IsActive()
 bool IccPutricideGasCloudTrigger::IsActive()
 {
     Unit* boss = AI_VALUE2(Unit*, "find target", "gas cloud");
-    if (!boss) { return false; }
+    if (!boss)
+        return false;
 
     return true;
 }
@@ -370,8 +393,17 @@ bool IccPutricideMalleableGooTrigger::IsActive()
 //BPC
 bool IccBpcKelesethTankTrigger::IsActive()
 {
+    Unit* boss = AI_VALUE2(Unit*, "find target", "prince keleseth");
+    if (!boss) 
+        return false;
+
     if (!botAI->IsAssistTank(bot))
         return false;
+
+    Aura* aura = botAI->GetAura("Shadow Prison", bot, false, true);
+    if (aura) 
+        if (aura->GetStackAmount() > 18)
+            return false;
 
     // First priority is to check for nucleuses that need to be picked up
     GuidVector targets = AI_VALUE(GuidVector, "possible targets");
@@ -385,17 +417,22 @@ bool IccBpcKelesethTankTrigger::IsActive()
         }
     }
 
-    Unit* boss = AI_VALUE2(Unit*, "find target", "prince keleseth");
-    if (!boss || boss->GetEntry() != 37972) // Verify it's actually Keleseth
-        return false;
-
     return true;
 }
 
 bool IccBpcNucleusTrigger::IsActive()
 {
+    Unit* boss = AI_VALUE2(Unit*, "find target", "prince keleseth");
+    if (!boss) 
+        return false;
+
     if (!botAI->IsAssistTank(bot))
         return false;
+
+    Aura* aura = botAI->GetAura("Shadow Prison", bot, false, true);
+    if (aura) 
+        if (aura->GetStackAmount() > 18)
+            return false;
 
     // Actively look for any nucleus that isn't targeting us
     GuidVector targets = AI_VALUE(GuidVector, "possible targets");
@@ -414,13 +451,11 @@ bool IccBpcNucleusTrigger::IsActive()
 
 bool IccBpcMainTankTrigger::IsActive()
 {
-    if (!botAI->IsMainTank(bot))
-        return false;
-
     Unit* valanar = AI_VALUE2(Unit*, "find target", "prince valanar");
     Unit* taldaram = AI_VALUE2(Unit*, "find target", "prince taldaram");
-    
-    return valanar != nullptr || taldaram != nullptr;
+    Unit* keleseth = AI_VALUE2(Unit*, "find target", "prince keleseth");
+
+    return valanar != nullptr || taldaram != nullptr || keleseth != nullptr;
 }
 
 bool IccBpcEmpoweredVortexTrigger::IsActive()
@@ -430,29 +465,78 @@ bool IccBpcEmpoweredVortexTrigger::IsActive()
         return false;
 
     Unit* valanar = AI_VALUE2(Unit*, "find target", "prince valanar");
-    if (!valanar || !valanar->IsAlive())
+    if (!valanar)
+        return false;
+
+    Aura* aura = botAI->GetAura("Shadow Prison", bot, false, true);
+    if (aura)
+        if (aura->GetStackAmount() > 12)
+            return false;
+
+    Aura* auraValanar = botAI->GetAura("Invocation of Blood", valanar);
+    if (!auraValanar)
         return false;
 
     // For ranged, spread whenever Valanar is empowered
-    if (botAI->IsRanged(bot))
-        return valanar->HasAura(70952); // Invocation of Blood
+    //if (botAI->IsRanged(bot) && auraValanar)
+        //return true;
 
     // For melee, only spread during vortex cast
-    if (valanar->HasAura(70952) && // Invocation of Blood
-        valanar->GetCurrentSpell(CURRENT_GENERIC_SPELL) && 
-        valanar->GetCurrentSpell(CURRENT_GENERIC_SPELL)->m_spellInfo->Id == 72039)
-    {
+    if (auraValanar && valanar->HasUnitState(UNIT_STATE_CASTING))
         return true;
-    }
 
     return false;
 }
 
-//BQL
+bool IccBpcKineticBombTrigger::IsActive()
+{
+    GuidVector npcs = AI_VALUE(GuidVector, "nearest hostile npcs");
+
+    Aura* aura = botAI->GetAura("Shadow Prison", bot, false, true);
+    if (aura)
+        if (aura->GetStackAmount() > 12)
+            return false;
+
+    // Check for hunters first
+    bool hasHunter = false;
+    Group* group = bot->GetGroup();
+    if (group)
+    {
+        for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
+        {
+            Player* member = itr->GetSource();
+            if (member && member->getClass() == CLASS_HUNTER && member->IsAlive())
+            {
+                hasHunter = true;
+                break;
+            }
+        }
+    }
+
+    for (auto& npc : npcs)
+    {
+        Unit* unit = botAI->GetUnit(npc);
+        if (unit && unit->GetName() == "Kinetic Bomb" && 
+            ((unit->GetPositionZ() - bot->GetPositionZ()) < 25.0f))
+        {
+            if (hasHunter)
+            {
+                return bot->getClass() == CLASS_HUNTER; // Only hunters can handle bombs
+            }
+            else if (botAI->IsRangedDps(bot))
+            {
+                return true; // If no hunters, any ranged DPS can handle bombs
+            }
+        }
+    }
+    return false;
+}
+
+ //BQL
 bool IccBqlTankPositionTrigger::IsActive()
 {
     Unit* boss = AI_VALUE2(Unit*, "find target", "blood-queen lana'thel");
-    if (!boss || !(botAI->IsTank(bot) || botAI->IsMainTank(bot) || botAI->IsAssistTank(bot) || botAI->IsRanged(bot))) 
+    if (!boss) 
         return false;
 
     return true;
@@ -461,7 +545,9 @@ bool IccBqlTankPositionTrigger::IsActive()
 bool IccBqlPactOfDarkfallenTrigger::IsActive()
 {
     Unit* boss = AI_VALUE2(Unit*, "find target", "blood-queen lana'thel");
-    if (!boss || !bot->HasAura(71340)) 
+
+    Aura* aura = botAI->GetAura("Pact of the Darkfallen", bot);
+    if (!boss || !aura) 
         return false;
 
     return true;
@@ -473,8 +559,9 @@ bool IccBqlVampiricBiteTrigger::IsActive()
     if (!boss) 
         return false;
 
+    Aura* aura = botAI->GetAura("Frenzied Bloodthirst", bot);
     // Only trigger when bot has Frenzied Bloodthirst
-    if (!(bot->HasAura(70877) || bot->HasAura(71474)))
+    if (!aura)
         return false;
 
     return true;
@@ -502,8 +589,72 @@ bool IccSisterSvalnaTrigger::IsActive()
 
 bool IccValithriaPortalTrigger::IsActive()
 {
+
+    Unit* boss = bot->FindNearestCreature(36789, 100.0f);
+    if (!boss) 
+        return false;
+
+    //for gruop position for non healers
+    if(!botAI->IsHeal(bot) && (bot->GetDistance(ICC_VDW_GROUP_POSITION) > 35.0f))
+        return true;
+    
     // Only healers should use portals
     if (!botAI->IsHeal(bot) || bot->HasAura(70766))
+        return false;
+
+    Group* group = bot->GetGroup();
+    if (!group)
+        return false;
+
+    // Count healers and collect their GUIDs
+    std::vector<ObjectGuid> healerGuids;
+    int healerCount = 0;
+
+    for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
+    {
+        Player* member = itr->GetSource();
+        if (!member || !member->IsAlive())
+            continue;
+
+        if (botAI->IsHeal(member))
+        {
+            healerCount++;
+            healerGuids.push_back(member->GetGUID());
+        }
+    }
+
+    // Sort GUIDs to ensure consistent ordering
+    std::sort(healerGuids.begin(), healerGuids.end());
+
+    // Find position of current bot's GUID in the sorted list
+    auto botGuidPos = std::find(healerGuids.begin(), healerGuids.end(), bot->GetGUID());
+    if (botGuidPos == healerGuids.end())
+        return false;
+
+    int healerIndex = std::distance(healerGuids.begin(), botGuidPos);
+
+    // Determine if this healer should focus on raid
+    bool shouldHealRaid = false;
+    
+    if (healerCount > 3)
+    {
+        // If more than 3 healers, 2 should heal raid
+        if (bot->getClass() == CLASS_DRUID)
+            shouldHealRaid = true;  // Druids prioritize raid healing
+        else
+            shouldHealRaid = (healerIndex >= (healerCount - 2));  // Last 2 healers (by GUID) heal raid if no druid
+    }
+    else
+    {
+        // If 3 or fewer healers, 1 should heal raid
+        if (bot->getClass() == CLASS_DRUID)
+            shouldHealRaid = true;  // Druids prioritize raid healing
+        else
+            shouldHealRaid = (healerIndex == (healerCount - 1));  // Last healer (by GUID) heals raid if no druid
+    }
+
+    // Raid healers should not use portals
+    if (shouldHealRaid)
         return false;
 
     // Find the nearest portal creature
@@ -515,10 +666,70 @@ bool IccValithriaPortalTrigger::IsActive()
 
 bool IccValithriaHealTrigger::IsActive()
 {
+    Unit* boss = bot->FindNearestCreature(36789, 100.0f);
+    if (!boss) 
+        return false;
+    
     // Only healers should use healing
     if (!botAI->IsHeal(bot) || bot->HasAura(70766))
         return false;
 
+    Group* group = bot->GetGroup();
+    if (!group)
+        return false;
+
+    // Count healers and collect their GUIDs
+    std::vector<ObjectGuid> healerGuids;
+    int healerCount = 0;
+
+    for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
+    {
+        Player* member = itr->GetSource();
+        if (!member || !member->IsAlive())
+            continue;
+
+        if (botAI->IsHeal(member))
+        {
+            healerCount++;
+            healerGuids.push_back(member->GetGUID());
+        }
+    }
+
+    // Sort GUIDs to ensure consistent ordering
+    std::sort(healerGuids.begin(), healerGuids.end());
+
+    // Find position of current bot's GUID in the sorted list
+    auto botGuidPos = std::find(healerGuids.begin(), healerGuids.end(), bot->GetGUID());
+    if (botGuidPos == healerGuids.end())
+        return false;
+
+    int healerIndex = std::distance(healerGuids.begin(), botGuidPos);
+
+    // Determine if this healer should focus on raid
+    bool shouldHealRaid = false;
+    
+    if (healerCount > 3)
+    {
+        // If more than 3 healers, 2 should heal raid
+        if (bot->getClass() == CLASS_DRUID)
+            shouldHealRaid = true;  // Druids prioritize raid healing
+        else
+            shouldHealRaid = (healerIndex >= (healerCount - 2));  // Last 2 healers (by GUID) heal raid if no druid
+    }
+    else
+    {
+        // If 3 or fewer healers, 1 should heal raid
+        if (bot->getClass() == CLASS_DRUID)
+            shouldHealRaid = true;  // Druids prioritize raid healing
+        else
+            shouldHealRaid = (healerIndex == (healerCount - 1));  // Last healer (by GUID) heals raid if no druid
+    }
+
+    // If assigned to raid healing, return false to not heal Valithria
+    if (shouldHealRaid)
+        return false;
+
+    // For Valithria healers, check portal logic
     // If no portal is found within 100 yards, we should heal
     if (!bot->FindNearestCreature(37945, 100.0f) && !bot->FindNearestCreature(38430, 100.0f))
         return true;
@@ -564,6 +775,9 @@ bool IccSindragosaFrostBeaconTrigger::IsActive()
     if (!group)
         return false;
 
+    if (boss->HasUnitMovementFlag(MOVEMENTFLAG_DISABLE_GRAVITY) && !boss->HealthBelowPct(35))
+        return true;
+
     Group::MemberSlotList const& groupSlot = group->GetMemberSlots();
     for (Group::member_citerator itr = groupSlot.begin(); itr != groupSlot.end(); ++itr)
     {
@@ -583,12 +797,17 @@ bool IccSindragosaBlisteringColdTrigger::IsActive()
     if (!boss)
         return false;
 
-    if (botAI->IsMainTank(bot) || botAI->IsAssistTank(bot) || botAI->IsTank(bot))
+    if (botAI->IsMainTank(bot))
         return false;
 
     // Don't move if any bot in group has ice tomb
     Group* group = bot->GetGroup();
     if (!group)
+        return false;
+
+    float dist = bot->GetDistance(boss);
+    
+    if (dist >= 30.0f)
         return false;
 
     bool isCasting = boss->HasUnitState(UNIT_STATE_CASTING);
@@ -622,15 +841,20 @@ bool IccSindragosaMysticBuffetTrigger::IsActive()
     if (!boss)
         return false;
     
-    Aura* aura = bot->GetAura(70127);
-    Aura* aura2 = bot->GetAura(72528);
-    if (!aura && !aura2)
+    if (botAI->IsTank(bot) && boss->GetVictim() == bot)
         return false;
 
-    if (bot->HasAura(70126))  // Ice Block
+    Aura* aura = botAI->GetAura("mystic buffet", bot, false, true);
+    if (!aura)
         return false;
 
-    if ((aura && aura->GetStackAmount() >= 3) || (aura2 && aura2->GetStackAmount() >= 3))
+    if (bot->HasAura(70126))  // Frost Beacon
+        return false;
+
+    if (aura->GetStackAmount() >= 2 && botAI->IsAssistTank(bot))
+        return true;
+
+    if (aura->GetStackAmount() >= 3)
         return true;
 
     return false;
@@ -642,27 +866,35 @@ bool IccSindragosaMainTankMysticBuffetTrigger::IsActive()
     if (!boss)
         return false;
 
-    if (!botAI->IsAssistTankOfIndex(bot, 0))
-    {
+    if (botAI->IsTank(bot) && boss->GetVictim() == bot)
         return false;
-    }
+
+    // Only for assist tank
+    if (!botAI->IsAssistTankOfIndex(bot, 0))
+        return false;
+
+    // Don't swap if we have frost beacon
+    if (bot->HasAura(70126))   // Frost Beacon
+        return false;
+
     Unit* mt = AI_VALUE(Unit*, "main tank");
     if (!mt)
-    {
         return false;
-    }
-    Aura* aura = botAI->GetAura("mystic buffet", mt, false, true);
-    if (!aura || aura->GetStackAmount() < 8)
-    {
+
+    // Check main tank stacks
+    Aura* mtAura = botAI->GetAura("mystic buffet", mt, false, true);
+    if (!mtAura || mtAura->GetStackAmount() < 9)
         return false;
-    }
+
+    // Check our own stacks - don't taunt if we have too many
+    Aura* selfAura = botAI->GetAura("mystic buffet", bot, false, true);
+    if (selfAura && selfAura->GetStackAmount() > 6)
+        return false;
 
     // Only taunt if we're in position
     float distToTankPos = bot->GetExactDist2d(ICC_SINDRAGOSA_TANK_POSITION);
     if (distToTankPos > 3.0f)
-    {
         return false;
-    }
 
     return true;
 }
@@ -670,26 +902,41 @@ bool IccSindragosaMainTankMysticBuffetTrigger::IsActive()
 bool IccSindragosaTankSwapPositionTrigger::IsActive()
 {
     Unit* boss = AI_VALUE2(Unit*, "find target", "sindragosa");
-    if (!boss) return false;
+    if (!boss)
+        return false;
 
-    if (!botAI->IsAssistTankOfIndex(bot, 0)) return false;
+    // Only for assist tank
+    if (!botAI->IsAssistTankOfIndex(bot, 0))
+        return false;
 
-    // Don't tank swap if we have frost beacon
-    if (bot->HasAura(70126)) return false;  // Frost Beacon
+    // Don't move to position if we have frost beacon
+    if (bot->HasAura(70126))   // Frost Beacon
+        return false;
 
-    // First check our own stacks - don't try to tank if we have too many
+    // Check our own stacks - don't try to tank if we have too many
     Aura* selfAura = botAI->GetAura("mystic buffet", bot, false, true);
-    if (selfAura && selfAura->GetStackAmount() >= 8) return false;
+    if (selfAura && selfAura->GetStackAmount() > 6)
+        return false;
 
     // Check if main tank has high stacks
     Unit* mt = AI_VALUE(Unit*, "main tank");
-    if (!mt) return false;
+    if (!mt)    
+        return false;
 
-    Aura* aura = botAI->GetAura("mystic buffet", mt, false, true);
-    if (!aura) return false;
+    Aura* mtAura = botAI->GetAura("mystic buffet", mt, false, true);
+    if (!mtAura)
+        return false;
 
-    uint32 stacks = aura->GetStackAmount();
-    return (stacks >= 7);  // Start moving at 7 stacks
+    uint32 mtStacks = mtAura->GetStackAmount();
+    if (mtStacks < 9)  // Only start moving when MT has 5+ stacks
+        return false;
+
+    // Check if we're already in position
+    float distToTankPos = bot->GetExactDist2d(ICC_SINDRAGOSA_TANK_POSITION);
+    if (distToTankPos <= 3.0f)
+        return false;
+
+    return true;  // Move to position if all conditions are met
 }
 
 bool IccSindragosaFrostBombTrigger::IsActive()
@@ -712,6 +959,17 @@ bool IccSindragosaFrostBombTrigger::IsActive()
     return false;
 }
 
+//LK
+
+bool IccLichKingShadowTrapTrigger::IsActive()
+{
+    Unit* boss = AI_VALUE2(Unit*, "find target", "the lich king");
+    if (!boss)
+        return false;
+
+    return true;
+}
+
 bool IccLichKingNecroticPlagueTrigger::IsActive()
 {
     if (!bot || !bot->IsAlive())
@@ -732,17 +990,25 @@ bool IccLichKingWinterTrigger::IsActive()
     // Check for either Remorseless Winter
     bool hasWinterAura = boss->HasAura(72259) || boss->HasAura(74273) || boss->HasAura(74274) || boss->HasAura(74275);
     bool hasWinter2Aura = boss->HasAura(68981) || boss->HasAura(74270) || boss->HasAura(74271) || boss->HasAura(74272);
+    bool isCasting = boss->HasUnitState(UNIT_STATE_CASTING);
+    bool isWinter = boss->FindCurrentSpellBySpellId(77259) || boss->FindCurrentSpellBySpellId(74273) || boss->FindCurrentSpellBySpellId(68981) || boss->FindCurrentSpellBySpellId(74270) ||
+                    boss->FindCurrentSpellBySpellId(74274) || boss->FindCurrentSpellBySpellId(74275) || boss->FindCurrentSpellBySpellId(74271) || boss->FindCurrentSpellBySpellId(74272);
 
-    if (!hasWinterAura && !hasWinter2Aura)
-        return false;   
+    if (hasWinterAura || hasWinter2Aura)
+        return true;   
 
-    return true;
+    if (isCasting && isWinter)
+        return true;
+
+    return false;
 }
 
 bool IccLichKingAddsTrigger::IsActive()
 {
     Unit* boss = AI_VALUE2(Unit*, "find target", "the lich king");
-    if (!boss) 
+    Unit* spiritWarden = AI_VALUE2(Unit*, "find target", "spirit warden");
+
+    if (!boss && !spiritWarden)  
         return false;
 
     return true;

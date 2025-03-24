@@ -76,39 +76,42 @@ void RaidIccStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
 
     //PP
     triggers.push_back(new TriggerNode("icc putricide volatile ooze",
-        NextAction::array(0, new NextAction("icc putricide volatile ooze", ACTION_EMERGENCY + 4), nullptr)));
+        NextAction::array(0, new NextAction("icc putricide volatile ooze", ACTION_RAID + 4), nullptr)));
 
     triggers.push_back(new TriggerNode("icc putricide gas cloud",
-        NextAction::array(0, new NextAction("icc putricide gas cloud", ACTION_EMERGENCY + 5), nullptr)));
+        NextAction::array(0, new NextAction("icc putricide gas cloud", ACTION_RAID + 5), nullptr)));
 
     triggers.push_back(new TriggerNode("icc putricide growing ooze puddle",
-        NextAction::array(0, new NextAction("icc putricide growing ooze puddle", ACTION_EMERGENCY + 3), nullptr)));
+        NextAction::array(0, new NextAction("icc putricide growing ooze puddle", ACTION_RAID + 3), nullptr)));
 
     triggers.push_back(new TriggerNode("icc putricide main tank mutated plague",
-        NextAction::array(0, new NextAction("taunt spell", ACTION_EMERGENCY + 6), nullptr)));
+        NextAction::array(0, new NextAction("taunt spell", ACTION_RAID + 6), nullptr)));
 
     triggers.push_back(new TriggerNode("icc putricide malleable goo",
-        NextAction::array(0, new NextAction("avoid malleable goo", ACTION_EMERGENCY + 2), nullptr)));
+        NextAction::array(0, new NextAction("avoid malleable goo", ACTION_RAID + 2), nullptr)));
 
     //BPC
     triggers.push_back(new TriggerNode("icc bpc keleseth tank",
-        NextAction::array(0, new NextAction("icc bpc keleseth tank", ACTION_EMERGENCY + 1), nullptr)));
+        NextAction::array(0, new NextAction("icc bpc keleseth tank", ACTION_RAID + 1), nullptr)));
 
     triggers.push_back(new TriggerNode("icc bpc nucleus",
-        NextAction::array(0, new NextAction("icc bpc nucleus", ACTION_EMERGENCY + 3), nullptr)));
+        NextAction::array(0, new NextAction("icc bpc nucleus", ACTION_RAID + 2), nullptr)));
 
     triggers.push_back(new TriggerNode("icc bpc main tank",
-        NextAction::array(0, new NextAction("icc bpc main tank", ACTION_EMERGENCY + 2), nullptr)));
+        NextAction::array(0, new NextAction("icc bpc main tank", ACTION_RAID + 3), nullptr)));
 
     triggers.push_back(new TriggerNode("icc bpc empowered vortex",
-        NextAction::array(0, new NextAction("icc bpc empowered vortex", ACTION_INTERRUPT), nullptr)));
+        NextAction::array(0, new NextAction("icc bpc empowered vortex", ACTION_RAID + 4), nullptr)));
+
+    triggers.push_back(new TriggerNode("icc bpc kinetic bomb",
+        NextAction::array(0, new NextAction("icc bpc kinetic bomb", ACTION_RAID + 6), nullptr)));
     
     //BQL
     triggers.push_back(new TriggerNode("icc bql tank position",
         NextAction::array(0, new NextAction("icc bql tank position", ACTION_RAID), nullptr)));
 
     triggers.push_back(new TriggerNode("icc bql pact of darkfallen",
-        NextAction::array(0, new NextAction("icc bql pact of darkfallen", ACTION_EMERGENCY +1), nullptr)));
+        NextAction::array(0, new NextAction("icc bql pact of darkfallen", ACTION_RAID +1), nullptr)));
 
     triggers.push_back(new TriggerNode("icc bql vampiric bite",
         NextAction::array(0, new NextAction("icc bql vampiric bite", ACTION_EMERGENCY + 5), nullptr)));
@@ -158,11 +161,14 @@ void RaidIccStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)
         NextAction::array(0, new NextAction("icc sindragosa tank swap position", ACTION_EMERGENCY + 2), nullptr)));
 
     //LICH KING
+    triggers.push_back(new TriggerNode("icc lich king shadow trap",
+        NextAction::array(0, new NextAction("icc lich king shadow trap", ACTION_RAID + 6), nullptr)));
+
     triggers.push_back(new TriggerNode("icc lich king necrotic plague",
-        NextAction::array(0, new NextAction("icc lich king necrotic plague", ACTION_EMERGENCY + 3), nullptr)));
+        NextAction::array(0, new NextAction("icc lich king necrotic plague", ACTION_RAID + 3), nullptr)));
 
     triggers.push_back(new TriggerNode("icc lich king winter",
-        NextAction::array(0, new NextAction("icc lich king winter", ACTION_RAID +1), nullptr)));
+        NextAction::array(0, new NextAction("icc lich king winter", ACTION_RAID +5), nullptr)));
 
     triggers.push_back(new TriggerNode("icc lich king adds",
         NextAction::array(0, new NextAction("icc lich king adds", ACTION_RAID +2), nullptr)));

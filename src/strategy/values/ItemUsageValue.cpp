@@ -64,8 +64,9 @@ ItemUsage ItemUsageValue::Calculate()
 
     if (proto->Class == ITEM_CLASS_KEY)
         return ITEM_USAGE_USE;
-
-    if (proto->Class == ITEM_CLASS_CONSUMABLE)
+    
+    if (proto->Class == ITEM_CLASS_CONSUMABLE && 
+        (proto->MaxCount == 0 || AI_VALUE2(uint32, "item count", proto->Name1) < proto->MaxCount))
     {
         std::string const foodType = GetConsumableType(proto, bot->GetPower(POWER_MANA));
 
@@ -91,10 +92,25 @@ ItemUsage ItemUsageValue::Calculate()
     if (equip != ITEM_USAGE_NONE)
         return equip;
 
+    // Get item instance to check if it's soulbound
+    Item* item = bot->GetItemByEntry(proto->ItemId);
+    bool isSoulbound = item && item->IsSoulBound();
+
     if ((proto->Class == ITEM_CLASS_ARMOR || proto->Class == ITEM_CLASS_WEAPON) &&
-        proto->Bonding != BIND_WHEN_PICKED_UP && botAI->HasSkill(SKILL_ENCHANTING) &&
+        botAI->HasSkill(SKILL_ENCHANTING) &&
         proto->Quality >= ITEM_QUALITY_UNCOMMON)
-        return ITEM_USAGE_DISENCHANT;
+    {
+        // Retrieve the bot's Enchanting skill level
+        uint32 enchantingSkill = bot->GetSkillValue(SKILL_ENCHANTING);
+
+        // Check if the bot has a high enough skill to disenchant this item
+        if (proto->RequiredDisenchantSkill > 0 && enchantingSkill < proto->RequiredDisenchantSkill)
+            return ITEM_USAGE_NONE; // Not skilled enough to disenchant
+
+        // BoE (Bind on Equip) items should NOT be disenchanted unless they are already bound
+        if (proto->Bonding == BIND_WHEN_PICKED_UP || (proto->Bonding == BIND_WHEN_EQUIPPED && isSoulbound))
+            return ITEM_USAGE_DISENCHANT;
+    }
 
     // While sync is on, do not loot quest items that are also Useful for master. Master
     if (!botAI->GetMaster() || !sPlayerbotAIConfig->syncQuestWithPlayer ||
@@ -103,44 +119,72 @@ ItemUsage ItemUsageValue::Calculate()
             return ITEM_USAGE_QUEST;
 
     if (proto->Class == ITEM_CLASS_PROJECTILE && bot->CanUseItem(proto) == EQUIP_ERR_OK)
+    {
         if (bot->getClass() == CLASS_HUNTER || bot->getClass() == CLASS_ROGUE || bot->getClass() == CLASS_WARRIOR)
         {
-            if (Item* const pItem = bot->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_RANGED))
+            Item* rangedWeapon = bot->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_RANGED);
+            uint32 requiredSubClass = 0;
+
+            if (rangedWeapon)
             {
-                uint32 subClass = 0;
-                switch (pItem->GetTemplate()->SubClass)
+                switch (rangedWeapon->GetTemplate()->SubClass)
                 {
                     case ITEM_SUBCLASS_WEAPON_GUN:
-                        subClass = ITEM_SUBCLASS_BULLET;
+                        requiredSubClass = ITEM_SUBCLASS_BULLET;
                         break;
                     case ITEM_SUBCLASS_WEAPON_BOW:
                     case ITEM_SUBCLASS_WEAPON_CROSSBOW:
-                        subClass = ITEM_SUBCLASS_ARROW;
+                        requiredSubClass = ITEM_SUBCLASS_ARROW;
                         break;
                 }
+            }
 
-                if (proto->SubClass == subClass)
+            // Ensure the item is the correct ammo type for the equipped ranged weapon
+            if (proto->SubClass == requiredSubClass)
+            {
+                float ammoCount = BetterStacks(proto, "ammo");
+                float requiredAmmo = (bot->getClass() == CLASS_HUNTER) ? 8 : 2; // Hunters get 8 stacks, others 2
+                uint32 currentAmmoId = bot->GetUInt32Value(PLAYER_AMMO_ID);
+
+                // Check if the bot has an ammo type assigned
+                if (currentAmmoId == 0)
                 {
-                    float ammo = BetterStacks(proto, "ammo");
-                    float needAmmo = (bot->getClass() == CLASS_HUNTER) ? 8 : 2;
-
-                    if (ammo < needAmmo)  // We already have enough of the current ammo.
+                    return ITEM_USAGE_EQUIP;  // Equip the ammo if no ammo
+                }
+                // Compare new ammo vs current equipped ammo
+                ItemTemplate const* currentAmmoProto = sObjectMgr->GetItemTemplate(currentAmmoId);
+                if (currentAmmoProto)
+                {
+                    uint32 currentAmmoDPS = (currentAmmoProto->Damage[0].DamageMin + currentAmmoProto->Damage[0].DamageMax) * 1000 / 2;
+                    uint32 newAmmoDPS = (proto->Damage[0].DamageMin + proto->Damage[0].DamageMax) * 1000 / 2;
+    
+                    if (newAmmoDPS > currentAmmoDPS) // New ammo meets upgrade condition
                     {
-                        ammo += CurrentStacks(proto);
-
-                        if (ammo < needAmmo)  // Buy ammo to get to the proper supply
-                            return ITEM_USAGE_AMMO;
-                        else if (ammo < needAmmo + 1)
-                            return ITEM_USAGE_KEEP;  // Keep the ammo until we have too much.
+                        return ITEM_USAGE_EQUIP;
                     }
+                    if (newAmmoDPS < currentAmmoDPS) // New ammo is worse
+                    {
+                        return ITEM_USAGE_NONE;
+                    }
+                }
+                // Ensure we have enough ammo in the inventory
+                if (ammoCount < requiredAmmo)
+                {
+                    ammoCount += CurrentStacks(proto);
+    
+                    if (ammoCount < requiredAmmo)  // Buy ammo to reach the proper supply
+                        return ITEM_USAGE_AMMO;
+                    else if (ammoCount < requiredAmmo + 1)
+                        return ITEM_USAGE_KEEP;  // Keep the ammo if we don't have too much.
                 }
             }
         }
+    }
 
     // Need to add something like free bagspace or item value.
     if (proto->SellPrice > 0)
     {
-        if (proto->Quality > ITEM_QUALITY_NORMAL)
+        if (proto->Quality >= ITEM_QUALITY_NORMAL && !isSoulbound)
         {
             return ITEM_USAGE_AH;
         }

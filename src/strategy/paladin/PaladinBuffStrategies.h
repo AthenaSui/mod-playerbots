@@ -64,6 +64,15 @@ public:
     std::string const getName() override { return "bcast"; }
 };
 
+class PaladinBuffSpeedStrategy : public Strategy
+{
+public:
+    PaladinBuffSpeedStrategy(PlayerbotAI* botAI) : Strategy(botAI) {}
+
+    void InitTriggers(std::vector<TriggerNode*>& triggers) override;
+    std::string const getName() override { return "bspeed"; }
+};
+
 class PaladinBuffThreatStrategy : public Strategy
 {
 public:
@@ -107,15 +116,6 @@ public:
 
     void InitTriggers(std::vector<TriggerNode*>& triggers) override;
     std::string const getName() override { return "rfire"; }
-};
-
-class PaladinBuffGreaterBlessingStrategy : public Strategy
-{
-public:
-    PaladinBuffGreaterBlessingStrategy(PlayerbotAI* botAI) : Strategy(botAI) {}
-
-    void InitTriggers(std::vector<TriggerNode*>& triggers) override;
-    std::string const getName() override { return "bgreater"; }
 };
 
 #endif

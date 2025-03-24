@@ -18,6 +18,7 @@
 #include "RaidUlduarBossHelper.h"
 #include "RaidUlduarScripts.h"
 #include "RaidUlduarStrategy.h"
+#include "RaidUlduarTriggers.h"
 #include "RtiValue.h"
 #include "ScriptedCreature.h"
 #include "ServerFacade.h"
@@ -398,6 +399,7 @@ bool FlameLeviathanEnterVehicleAction::AllMainVehiclesOnUse()
     int maxC = (diff == RAID_DIFFICULTY_10MAN_NORMAL || diff == RAID_DIFFICULTY_10MAN_HEROIC) ? 2 : 5;
     return demolisher >= maxC && siege >= maxC;
 }
+
 bool RazorscaleAvoidDevouringFlameAction::Execute(Event event)
 {
     RazorscaleBossHelper razorscaleHelper(botAI);
@@ -481,7 +483,6 @@ bool RazorscaleAvoidDevouringFlameAction::isUseful()
 
 bool RazorscaleAvoidSentinelAction::Execute(Event event)
 {
-    bool isTank = botAI->IsTank(bot);
     bool isMainTank = botAI->IsMainTank(bot);
     bool isRanged = botAI->IsRanged(bot);
     const float radius = 8.0f;
@@ -721,6 +722,11 @@ bool RazorscaleIgnoreBossAction::isUseful()
 
 bool RazorscaleIgnoreBossAction::Execute(Event event)
 {
+    if (!bot)
+    {
+        return false;
+    }
+
     Unit* boss = AI_VALUE2(Unit*, "find target", "razorscale");
     if (!boss)
     {
@@ -979,6 +985,11 @@ bool RazorscaleGroundedAction::Execute(Event event)
 
 bool RazorscaleHarpoonAction::Execute(Event event)
 {
+    if (!bot)
+    {
+        return false;
+    }
+
     RazorscaleBossHelper razorscaleHelper(botAI);
 
     // Update the boss AI context
@@ -1153,4 +1164,265 @@ bool RazorscaleFuseArmorAction::Execute(Event event)
     // Attempt to reassign the roles based on health/Fuse Armor debuff
     bossHelper.AssignRolesBasedOnHealth();
     return true;
+}
+
+bool IronAssemblyLightningTendrilsAction::isUseful()
+{
+    IronAssemblyLightningTendrilsTrigger ironAssemblyLightningTendrilsTrigger(botAI);
+    return ironAssemblyLightningTendrilsTrigger.IsActive();
+}
+
+bool IronAssemblyLightningTendrilsAction::Execute(Event event)
+{
+    const float radius = 18.0f + 10.0f;  // 18 yards + 10 yards for safety
+
+    Unit* boss = AI_VALUE2(Unit*, "find target", "stormcaller brundir");
+    if (!boss)
+        return false;
+
+    float currentDistance = bot->GetDistance2d(boss);
+
+    if (currentDistance < radius)
+    {
+        return MoveAway(boss, radius - currentDistance);
+    }
+
+    return false;
+}
+
+bool IronAssemblyOverloadAction::isUseful()
+{
+    IronAssemblyOverloadTrigger ironAssemblyOverloadTrigger(botAI);
+    return ironAssemblyOverloadTrigger.IsActive();
+}
+
+bool IronAssemblyOverloadAction::Execute(Event event)
+{
+    const float radius = 20.0f + 5.0f;  // 20 yards + 5 yards for safety
+
+    Unit* boss = AI_VALUE2(Unit*, "find target", "stormcaller brundir");
+    if (!boss)
+        return false;
+
+    float currentDistance = bot->GetDistance2d(boss);
+
+    if (currentDistance < radius)
+    {
+        return MoveAway(boss, radius - currentDistance);
+    }
+
+    return false;
+}
+
+bool HodirMoveSnowpackedIcicleAction::isUseful()
+{
+    // Check boss and it is alive
+    Unit* boss = AI_VALUE2(Unit*, "find target", "hodir");
+    if (!boss || !boss->IsAlive())
+    {
+        return false;
+    }
+
+    // Check if boss is casting Flash Freeze
+    if (!boss->HasUnitState(UNIT_STATE_CASTING) || !boss->FindCurrentSpellBySpellId(SPELL_FLASH_FREEZE))
+    {
+        return false;
+    }
+
+    // Find the nearest Snowpacked Icicle Target
+    Creature* target = bot->FindNearestCreature(NPC_SNOWPACKED_ICICLE, 100.0f);
+    if (!target)
+        return false;
+
+    // Check that bot is stacked on Snowpacked Icicle
+    if (bot->GetDistance2d(target->GetPositionX(), target->GetPositionY()) <= 5.0f)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool HodirMoveSnowpackedIcicleAction::Execute(Event event)
+{
+    Creature* target = bot->FindNearestCreature(NPC_SNOWPACKED_ICICLE, 100.0f);
+    if (!target)
+        return false;
+
+    return MoveTo(target->GetMapId(), target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), false,
+                  false, false, true, MovementPriority::MOVEMENT_NORMAL, true);
+}
+
+bool HodirBitingColdJumpAction::Execute(Event event)
+{
+    // This needs improving but maybe it should be done in the playerbot core.
+
+    int mapId = bot->GetMap()->GetId();
+    int x = bot->GetPositionX();
+    int y = bot->GetPositionY();
+    int z = bot->GetPositionZ() + 3.98f;
+    float speed = 7.96f;
+
+    UpdateMovementState();
+    if (!IsMovingAllowed(mapId, x, y, z))
+    {
+        return false;
+    }
+    MovementPriority priority;
+    if (IsWaitingForLastMove(priority))
+    {
+        return false;
+    }
+
+    MotionMaster& mm = *bot->GetMotionMaster();
+    mm.Clear();
+    mm.MoveJump(x, y, z, speed, speed, 1, AI_VALUE(Unit*, "current target"));
+    mm.MoveFall(0, true);
+    AI_VALUE(LastMovement&, "last movement").Set(mapId, x, y, z, bot->GetOrientation(), 1000, priority);
+
+    return true;
+}
+
+bool FreyaMoveAwayNatureBombAction::isUseful()
+{
+    // Check boss and it is alive
+    Unit* boss = AI_VALUE2(Unit*, "find target", "freya");
+    if (!boss || !boss->IsAlive())
+    {
+        return false;
+    }
+
+    // Find the nearest Nature Bomb
+    GameObject* target = bot->FindNearestGameObject(GOBJECT_NATURE_BOMB, 12.0f);
+    if (!target)
+        return false;
+
+    return true;
+}
+
+bool FreyaMoveAwayNatureBombAction::Execute(Event event)
+{
+    GameObject* target = bot->FindNearestGameObject(GOBJECT_NATURE_BOMB, 12.0f);
+    if (!target)
+        return false;
+
+    return FleePosition(target->GetPosition(), 13.0f);
+}
+
+bool FreyaMarkEonarsGiftAction::isUseful()
+{
+    // Only tank bot can mark target
+    if (!botAI->IsTank(bot))
+    {
+        return false;
+    }
+
+    // Check Eonar's gift and it is alive
+
+    // Target is not findable from threat table using AI_VALUE2(),
+    // therefore need to search manually for the unit id
+    GuidVector targets = AI_VALUE(GuidVector, "possible targets");
+    Unit* target = nullptr;
+    for (auto i = targets.begin(); i != targets.end(); ++i)
+    {
+        target = botAI->GetUnit(*i);
+        if (!target)
+        {
+            continue;
+        }
+
+        uint32 creatureId = target->GetEntry();
+        if (creatureId == NPC_EONARS_GIFT && target->IsAlive())
+        {
+            break;
+        }
+    }
+
+    // Check if Eonar's Gift is already set as the skull marker
+    Group* group = bot->GetGroup();
+    if (!group)
+    {
+        return false;
+    }
+
+    int8 skullIndex = 7;
+    ObjectGuid currentSkullTarget = group->GetTargetIcon(skullIndex);
+    if (!target || currentSkullTarget == target->GetGUID())
+    {
+        return false;  // Skull marker is already correctly set or no Eonar's Gift found
+    }
+
+    return true;
+}
+
+bool FreyaMarkEonarsGiftAction::Execute(Event event)
+{
+    bool isMainTank = botAI->IsMainTank(bot);
+    Unit* mainTankUnit = AI_VALUE(Unit*, "main tank");
+    Player* mainTank = mainTankUnit ? mainTankUnit->ToPlayer() : nullptr;
+
+    GuidVector targets = AI_VALUE(GuidVector, "possible targets");
+    Unit* target = nullptr;
+    for (auto i = targets.begin(); i != targets.end(); ++i)
+    {
+        Unit* unit = botAI->GetUnit(*i);
+        if (!unit)
+        {
+            continue;
+        }
+
+        uint32 creatureId = unit->GetEntry();
+        if (creatureId == NPC_EONARS_GIFT && unit->IsAlive())
+        {
+            target = unit;
+        }
+    }
+
+    if (!target)
+    {
+        return false;
+    }
+
+    if (mainTank && !GET_PLAYERBOT_AI(mainTank))  // Main tank is a real player
+    {
+        // Iterate through the first 3 bot tanks to assign the Skull marker
+        for (int i = 0; i < 3; ++i)
+        {
+            if (botAI->IsAssistTankOfIndex(bot, i) && GET_PLAYERBOT_AI(bot))  // Bot is a valid tank
+            {
+                Group* group = bot->GetGroup();
+                if (group && target)
+                {
+                    int8 skullIndex = 7;  // Skull
+                    ObjectGuid currentSkullTarget = group->GetTargetIcon(skullIndex);
+
+                    // If there's no skull set yet, or the skull is on a different target, set the Eonar's Gift
+                    if (!currentSkullTarget || (target->GetGUID() != currentSkullTarget))
+                    {
+                        group->SetTargetIcon(skullIndex, bot->GetGUID(), target->GetGUID());
+                        return true;
+                    }
+                }
+                break;  // Stop after finding the first valid bot tank
+            }
+        }
+    }
+    else if (isMainTank)  // Bot is the main tank
+    {
+        Group* group = bot->GetGroup();
+        if (group)
+        {
+            int8 skullIndex = 7;  // Skull
+            ObjectGuid currentSkullTarget = group->GetTargetIcon(skullIndex);
+
+            // If there's no skull set yet, or the skull is on a different target, set the Eonar's Gift
+            if (!currentSkullTarget || (target->GetGUID() != currentSkullTarget))
+            {
+                group->SetTargetIcon(skullIndex, bot->GetGUID(), target->GetGUID());
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

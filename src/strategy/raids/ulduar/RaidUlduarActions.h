@@ -106,4 +106,51 @@ public:
     bool isUseful() override;
 };
 
+class HodirMoveSnowpackedIcicleAction : public MovementAction
+{
+public:
+    HodirMoveSnowpackedIcicleAction(PlayerbotAI* botAI) : MovementAction(botAI, "hodir move snowpacked icicle") {}
+    bool Execute(Event event) override;
+    bool isUseful() override;
+};
+
+class IronAssemblyLightningTendrilsAction : public MovementAction
+{
+public:
+    IronAssemblyLightningTendrilsAction(PlayerbotAI* botAI) : MovementAction(botAI, "iron assembly lightning tendrils action") {}
+    bool Execute(Event event) override;
+    bool isUseful() override;
+};
+
+class IronAssemblyOverloadAction : public MovementAction
+{
+public:
+    IronAssemblyOverloadAction(PlayerbotAI* botAI) : MovementAction(botAI, "iron assembly overload action") {}
+    bool Execute(Event event) override;
+    bool isUseful() override;
+};
+
+class HodirBitingColdJumpAction : public MovementAction
+{
+public:
+    HodirBitingColdJumpAction(PlayerbotAI* ai) : MovementAction(ai, "hodir biting cold jump") {}
+    bool Execute(Event event) override;
+};
+
+class FreyaMoveAwayNatureBombAction : public MovementAction
+{
+public:
+    FreyaMoveAwayNatureBombAction(PlayerbotAI* botAI) : MovementAction(botAI, "freya move away nature bomb") {}
+    bool Execute(Event event) override;
+    bool isUseful() override;
+};
+
+class FreyaMarkEonarsGiftAction : public MovementAction
+{
+public:
+    FreyaMarkEonarsGiftAction(PlayerbotAI* botAI) : MovementAction(botAI, "freya mark eonars gift") {}
+    bool Execute(Event event) override;
+    bool isUseful() override;
+};
+
 #endif

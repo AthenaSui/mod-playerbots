@@ -10,16 +10,12 @@
 
 bool ArcaneIntellectOnPartyTrigger::IsActive()
 {
-    return BuffOnPartyTrigger::IsActive() &&
-        !botAI->HasAnyAuraOf(GetTarget(), "arcane brilliance", "arcane intellect", "dalaran brilliance",
-            "dalaran intellect", nullptr);
+    return BuffOnPartyTrigger::IsActive() && !botAI->HasAura("arcane brilliance", GetTarget());
 }
 
 bool ArcaneIntellectTrigger::IsActive()
 {
-    return BuffTrigger::IsActive() &&
-        !botAI->HasAnyAuraOf(GetTarget(), "arcane brilliance", "arcane intellect", "dalaran brilliance",
-            "dalaran intellect", nullptr);
+    return BuffTrigger::IsActive() && !botAI->HasAura("arcane brilliance", GetTarget());
 }
 
 bool MageArmorTrigger::IsActive()
@@ -35,6 +31,17 @@ bool FingersOfFrostSingleTrigger::IsActive()
     // The value is instead stored in the charges.
     Aura* aura = botAI->GetAura("fingers of frost", bot, false, true, -1);
     return (aura && aura->GetCharges() == 1);
+}
+
+bool ArcaneBlastStackTrigger::IsActive()
+{
+    Aura* aura = botAI->GetAura(getName(), GetTarget(), false, true, 3);
+    if (!aura)
+        return false;
+    if (aura->GetStackAmount() >= 4)
+        return true;
+    bool hasMissileBarrage = botAI->HasAura(44401, bot);
+    return hasMissileBarrage;
 }
 
 bool FrostNovaOnTargetTrigger::IsActive()
@@ -55,4 +62,25 @@ bool FrostbiteOnTargetTrigger::IsActive()
         return false;
     }
     return botAI->HasAura(spell, target);
+}
+
+bool NoFocusMagicTrigger::IsActive()
+{
+    if (!bot->HasSpell(54646))
+        return false;
+    
+    Group* group = bot->GetGroup();
+    if (!group)
+        return false;
+
+    for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+    {
+        Player* member = ref->GetSource();
+        if (!member || member == bot || !member->IsAlive())
+            continue;
+
+        if (member->HasAura(54646, bot->GetGUID()))
+            return false;
+    }
+    return true;
 }

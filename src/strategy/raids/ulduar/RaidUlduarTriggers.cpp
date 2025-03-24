@@ -241,3 +241,133 @@ bool RazorscaleFuseArmorTrigger::IsActive()
 
     return false;
 }
+
+bool IronAssemblyLightningTendrilsTrigger::IsActive()
+{
+    // Check boss and it is alive
+    Unit* boss = AI_VALUE2(Unit*, "find target", "stormcaller brundir");
+    if (!boss || !boss->IsAlive())
+        return false;
+
+    // Check if bot is within 35 yards of the boss
+    if (boss->GetDistance(bot) > 35.0f)
+        return false;
+
+    // Check if the boss has the Lightning Tendrils aura
+    return boss->HasAura(SPELL_LIGHTNING_TENDRILS_10_MAN) || boss->HasAura(SPELL_LIGHTNING_TENDRILS_25_MAN);
+}
+
+bool IronAssemblyOverloadTrigger::IsActive()
+{
+    // Check if bot is tank
+    if (botAI->IsTank(bot))
+        return false;
+
+    // Check boss and it is alive
+    Unit* boss = AI_VALUE2(Unit*, "find target", "stormcaller brundir");
+    if (!boss || !boss->IsAlive())
+        return false;
+
+    // Check if bot is within 35 yards of the boss
+    if (boss->GetDistance(bot) > 35.0f)
+        return false;
+
+    // Check if the boss has the Overload aura
+    return boss->HasAura(SPELL_OVERLOAD_10_MAN) || boss->HasAura(SPELL_OVERLOAD_25_MAN) ||
+           boss->HasAura(SPELL_OVERLOAD_10_MAN_2) || boss->HasAura(SPELL_OVERLOAD_25_MAN_2);
+}
+
+bool HodirBitingColdTrigger::IsActive()
+{
+    Unit* boss = AI_VALUE2(Unit*, "find target", "hodir");
+
+    // Check boss and it is alive
+    if (!boss || !boss->IsAlive())
+    {
+        return false;
+    }
+
+    // Override if boss is casting Flash Freeze
+    if (!boss->HasUnitState(UNIT_STATE_CASTING) || !boss->FindCurrentSpellBySpellId(SPELL_FLASH_FREEZE))
+    {
+        return true;
+    }
+
+    return boss && botAI->GetAura("biting cold", bot, false, false, 2);
+}
+
+//Snowpacked Icicle Target
+bool HodirNearSnowpackedIcicleTrigger::IsActive()
+{
+    // Check boss and it is alive
+    Unit* boss = AI_VALUE2(Unit*, "find target", "hodir");
+    if (!boss || !boss->IsAlive())
+    {
+        return false;
+    }
+
+    // Check if boss is casting Flash Freeze
+    if (!boss->HasUnitState(UNIT_STATE_CASTING) || !boss->FindCurrentSpellBySpellId(SPELL_FLASH_FREEZE))
+    {
+        return false;
+    }
+
+    // Find the nearest Snowpacked Icicle Target
+    Creature* target = bot->FindNearestCreature(NPC_SNOWPACKED_ICICLE, 100.0f);
+    if (!target)
+        return false;
+
+    // Check that bot is stacked on Snowpacked Icicle
+    if (bot->GetDistance2d(target->GetPositionX(), target->GetPositionY()) <= 5.0f)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool FreyaNearNatureBombTrigger::IsActive()
+{
+    // Check boss and it is alive
+    Unit* boss = AI_VALUE2(Unit*, "find target", "freya");
+    if (!boss || !boss->IsAlive())
+    {
+        return false;
+    }
+
+    // Find the nearest Nature Bomb
+    GameObject* target = bot->FindNearestGameObject(GOBJECT_NATURE_BOMB, 12.0f);
+    return target != nullptr;
+}
+
+bool FreyaTankNearEonarsGiftTrigger::IsActive()
+{
+    // Only tank bot can mark target
+    if (!botAI->IsTank(bot))
+    {
+        return false;
+    }
+
+    // Check Eonar's gift and it is alive
+
+    // Target is not findable from threat table using AI_VALUE2(),
+    // therefore need to search manually for the unit id
+    GuidVector targets = AI_VALUE(GuidVector, "possible targets");
+
+    for (auto i = targets.begin(); i != targets.end(); ++i)
+    {
+        Unit* unit = botAI->GetUnit(*i);
+        if (!unit)
+        {
+            continue;
+        }
+
+        uint32 creatureId = unit->GetEntry();
+        if (creatureId == NPC_EONARS_GIFT && unit->IsAlive())
+        {
+            return true;
+        }
+    }
+
+    return false;
+}

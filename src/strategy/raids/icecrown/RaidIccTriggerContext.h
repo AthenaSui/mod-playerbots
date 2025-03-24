@@ -40,6 +40,7 @@ public:
         creators["icc bpc nucleus"] = &RaidIccTriggerContext::icc_bpc_nucleus;
         creators["icc bpc main tank"] = &RaidIccTriggerContext::icc_bpc_main_tank;
         creators["icc bpc empowered vortex"] = &RaidIccTriggerContext::icc_bpc_empowered_vortex;
+        creators["icc bpc kinetic bomb"] = &RaidIccTriggerContext::icc_bpc_kinetic_bomb;
         creators["icc bql tank position"] = &RaidIccTriggerContext::icc_bql_tank_position;
         creators["icc bql pact of darkfallen"] = &RaidIccTriggerContext::icc_bql_pact_of_darkfallen;
         creators["icc bql vampiric bite"] = &RaidIccTriggerContext::icc_bql_vampiric_bite;
@@ -57,6 +58,7 @@ public:
         creators["icc sindragosa main tank mystic buffet"] = &RaidIccTriggerContext::icc_sindragosa_main_tank_mystic_buffet;
         creators["icc sindragosa frost bomb"] = &RaidIccTriggerContext::icc_sindragosa_frost_bomb;
         creators["icc sindragosa tank swap position"] = &RaidIccTriggerContext::icc_sindragosa_tank_swap_position;
+        creators["icc lich king shadow trap"] = &RaidIccTriggerContext::icc_lich_king_shadow_trap;
         creators["icc lich king necrotic plague"] = &RaidIccTriggerContext::icc_lich_king_necrotic_plague;
         creators["icc lich king winter"] = &RaidIccTriggerContext::icc_lich_king_winter;
         creators["icc lich king adds"] = &RaidIccTriggerContext::icc_lich_king_adds;
@@ -93,6 +95,7 @@ private:
     static Trigger* icc_bpc_nucleus(PlayerbotAI* ai) { return new IccBpcNucleusTrigger(ai); }
     static Trigger* icc_bpc_main_tank(PlayerbotAI* ai) { return new IccBpcMainTankTrigger(ai); }
     static Trigger* icc_bpc_empowered_vortex(PlayerbotAI* ai) { return new IccBpcEmpoweredVortexTrigger(ai); }
+    static Trigger* icc_bpc_kinetic_bomb(PlayerbotAI* ai) { return new IccBpcKineticBombTrigger(ai); }
     static Trigger* icc_bql_tank_position(PlayerbotAI* ai) { return new IccBqlTankPositionTrigger(ai); }
     static Trigger* icc_bql_pact_of_darkfallen(PlayerbotAI* ai) { return new IccBqlPactOfDarkfallenTrigger(ai); }
     static Trigger* icc_bql_vampiric_bite(PlayerbotAI* ai) { return new IccBqlVampiricBiteTrigger(ai); }
@@ -110,6 +113,7 @@ private:
     static Trigger* icc_sindragosa_main_tank_mystic_buffet(PlayerbotAI* ai) { return new IccSindragosaMainTankMysticBuffetTrigger(ai); }
     static Trigger* icc_sindragosa_frost_bomb(PlayerbotAI* ai) { return new IccSindragosaFrostBombTrigger(ai); }
     static Trigger* icc_sindragosa_tank_swap_position(PlayerbotAI* ai) { return new IccSindragosaTankSwapPositionTrigger(ai); }
+    static Trigger* icc_lich_king_shadow_trap(PlayerbotAI* ai) { return new IccLichKingShadowTrapTrigger(ai); }
     static Trigger* icc_lich_king_necrotic_plague(PlayerbotAI* ai) { return new IccLichKingNecroticPlagueTrigger(ai); }
     static Trigger* icc_lich_king_winter(PlayerbotAI* ai) { return new IccLichKingWinterTrigger(ai); }
     static Trigger* icc_lich_king_adds(PlayerbotAI* ai) { return new IccLichKingAddsTrigger(ai); }

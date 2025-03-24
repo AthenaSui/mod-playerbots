@@ -4,14 +4,27 @@
  */
 
 #include "MageActions.h"
+#include <cmath>
 
+#include "PlayerbotAIConfig.h"
 #include "Playerbots.h"
 #include "ServerFacade.h"
+#include "SharedDefines.h"
 
 Value<Unit*>* CastPolymorphAction::GetTargetValue() { return context->GetValue<Unit*>("cc target", getName()); }
 
 bool CastFrostNovaAction::isUseful()
 {
+    Unit* target = AI_VALUE(Unit*, "current target");
+    if (!target || !target->IsInWorld())
+        return false;
+
+    if (target->ToCreature() && target->ToCreature()->HasMechanicTemplateImmunity(1 << (MECHANIC_FREEZE - 1)))
+        return false;
+
+    if (target->isFrozen())
+        return false;
+    
     return sServerFacade->IsDistanceLessOrEqualThan(AI_VALUE2(float, "distance", GetTargetName()), 10.f);
 }
 
@@ -22,23 +35,74 @@ bool CastConeOfColdAction::isUseful()
     return facingTarget && targetClose;
 }
 
-bool CastArcaneIntellectOnPartyAction::Execute(Event event)
+bool CastDragonsBreathAction::isUseful()
 {
-    Unit* target = GetTarget();
+    Unit* target = AI_VALUE(Unit*, "current target");
     if (!target)
         return false;
+    bool facingTarget = AI_VALUE2(bool, "facing", "current target");
+    bool targetClose = bot->IsWithinCombatRange(target, 10.0f);
+    return facingTarget && targetClose;
+}
 
-    Group* group = botAI->GetBot()->GetGroup();
+bool CastBlastWaveAction::isUseful()
+{
+    Unit* target = AI_VALUE(Unit*, "current target");
+    if (!target)
+        return false;
+    bool targetClose = bot->IsWithinCombatRange(target, 10.0f);
+    return targetClose;
+}
 
-    if (group)
+Unit* CastFocusMagicOnPartyAction::GetTarget()
+{
+    Group* group = bot->GetGroup();
+    if (!group)
+        return nullptr;
+
+    Unit* casterDps = nullptr;
+    Unit* healer = nullptr;
+    Unit* target = nullptr;
+    for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
     {
-        if (botAI->CanCastSpell("dalaran brilliance", target))
-            return botAI->CastSpell("dalaran brilliance", target);
+        Player* member = ref->GetSource();
+        if (!member || member == bot || !member->IsAlive())
+            continue;
+        
+        if (member->GetMap() != bot->GetMap() || bot->GetDistance(member) > sPlayerbotAIConfig->spellDistance)
+            continue;
 
-        if (botAI->CanCastSpell("arcane brilliance", target))
-            return botAI->CastSpell("arcane brilliance", target);
+        if (member->HasAura(54646))
+            continue;
+
+        if (member->getClass() == CLASS_MAGE)
+            return member;
+
+        if (!casterDps && botAI->IsCaster(member) && botAI->IsDps(member))
+            casterDps = member;
+        
+        if (!healer && botAI->IsHeal(member))
+            healer = member;
+
+        if (!target)
+            target = member;
     }
+    
+    if (casterDps)
+        return casterDps;
 
-    // If not in a group or we cannot cast brilliance, fall back to arcane intellect
-    return botAI->CastSpell("arcane intellect", target);
+    if (healer)
+        return healer;
+
+    return target;
+}
+
+bool CastBlinkBackAction::Execute(Event event)
+{
+    Unit* target = AI_VALUE(Unit*, "current target");
+    if (!target)
+        return false;
+    // can cast spell check passed in isUseful()
+    bot->SetOrientation(bot->GetAngle(target) + M_PI);
+    return CastSpellAction::Execute(event);
 }
