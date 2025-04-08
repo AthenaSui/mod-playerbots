@@ -978,7 +978,7 @@ std::string ChatReplyAction::GenerateReplyMessage(Player* bot, std::string& inco
                 msg = "是的%s，但那已经是过去的事了";
                 break;
             case 2:
-                msg = word[verb_pos - 1] + " 将 " + word[verb_pos + 1] + " 尽管%s";
+                msg = word[verb_pos ? verb_pos - 1 : verb_pos + 1] + " 将 " + word[verb_pos + 1] + " 尽管 %s";
                 break;
             }
             msg = std::regex_replace(msg, std::regex("%s"), name);
@@ -1022,7 +1022,7 @@ std::string ChatReplyAction::GenerateReplyMessage(Player* bot, std::string& inco
                 msg = "%s，会发生什么%s？";
                 break;
             case 2:
-                msg = "你是说" + word[verb_pos - 1] + "要" + word[verb_pos + 1] + " " + word[verb_pos + 2] + " %s？";
+                msg = "你是说" + word[verb_pos ? verb_pos - 1 : verb_pos + 1] + "要" + word[verb_pos + 1] + " " + word[verb_pos + 2] + " %s?";
                 break;
             }
             msg = std::regex_replace(msg, std::regex("%s"), name);
